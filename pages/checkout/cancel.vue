@@ -1,0 +1,2 @@
+<script setup lang="ts">useSeoMeta({ title: 'Checkout cancelled' })</script>
+<template><main class="container centered-page"><div class="big-emoji">🐾</div><span class="eyebrow">No charge was made</span><h1>Your bag is still here.</h1><p>You can review your items or continue shopping.</p><div class="hero-actions"><NuxtLink to="/cart" class="btn btn-primary">Return to bag</NuxtLink><NuxtLink to="/shop" class="btn btn-secondary">Continue shopping</NuxtLink></div></main></template>
