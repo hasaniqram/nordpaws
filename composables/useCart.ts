@@ -9,14 +9,14 @@ export const useCart = () => {
   const hydrate = () => {
     if (!import.meta.client || hydrated.value) return
     try {
-      const raw = localStorage.getItem('nordpaws-cart')
+      const raw = localStorage.getItem('norrli-pets-cart')
       if (raw) lines.value = JSON.parse(raw)
     } catch { /* ignore invalid local storage */ }
     hydrated.value = true
   }
 
   const persist = () => {
-    if (import.meta.client) localStorage.setItem('nordpaws-cart', JSON.stringify(lines.value))
+    if (import.meta.client) localStorage.setItem('norrli-pets-cart', JSON.stringify(lines.value))
   }
 
   const add = (product: Product, quantity = 1) => {
