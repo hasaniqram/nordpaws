@@ -32,13 +32,13 @@ export const sendOrderConfirmation = async (input: BrevoEmailInput) => {
     method: 'POST',
     body: JSON.stringify({
       sender: {
-        name: config.brevoSenderName || 'NORDPAWS',
+        name: config.brevoSenderName || 'Norrli Pets',
         email: config.brevoSenderEmail
       },
       to: [{ email: input.to }],
-      subject: `Order ${input.orderNumber} confirmed · NORDPAWS`,
-      htmlContent: `<!DOCTYPE html><html><body style="margin:0;background:#f7f5ef;font-family:Arial,Helvetica,sans-serif;color:#171714"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="padding:32px 16px"><table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:20px"><tr><td style="padding:36px 36px 12px;font-size:12px;letter-spacing:2px;font-weight:bold">NORDPAWS</td></tr><tr><td style="padding:10px 36px;font-size:32px;line-height:38px;font-weight:bold">Thank you for your order.</td></tr><tr><td style="padding:8px 36px;font-size:16px;line-height:25px;color:#696861">We received order <strong style="color:#171714">${input.orderNumber}</strong>.</td></tr><tr><td style="padding:8px 36px;font-size:16px;line-height:25px;color:#696861">Order total: <strong style="color:#171714">${total}</strong></td></tr><tr><td style="padding:8px 36px 36px;font-size:14px;line-height:22px;color:#696861">We’ll email you again when your order is on the way.</td></tr></table></td></tr></table></body></html>`,
-      tags: ['nordpaws-order-confirmation']
+      subject: `Order ${input.orderNumber} confirmed · Norrli Pets`,
+      htmlContent: `<!DOCTYPE html><html><body style="margin:0;background:#f7f5ef;font-family:Arial,Helvetica,sans-serif;color:#171714"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="padding:32px 16px"><table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:20px"><tr><td style="padding:36px 36px 12px;font-size:12px;letter-spacing:2px;font-weight:bold">Norrli Pets</td></tr><tr><td style="padding:10px 36px;font-size:32px;line-height:38px;font-weight:bold">Thank you for your order.</td></tr><tr><td style="padding:8px 36px;font-size:16px;line-height:25px;color:#696861">We received order <strong style="color:#171714">${input.orderNumber}</strong>.</td></tr><tr><td style="padding:8px 36px;font-size:16px;line-height:25px;color:#696861">Order total: <strong style="color:#171714">${total}</strong></td></tr><tr><td style="padding:8px 36px 36px;font-size:14px;line-height:22px;color:#696861">We’ll email you again when your order is on the way.</td></tr></table></td></tr></table></body></html>`,
+      tags: ['norrli-pets-order-confirmation']
     })
   })
 }
