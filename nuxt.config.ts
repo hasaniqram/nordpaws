@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css', '~/assets/css/enhancements.css', '~/assets/css/admin.css'],
   app: {
     head: {
-      titleTemplate: '%s · NORDPAWS',
+      titleTemplate: '%s · Norrli Pets',
       meta: [
         { name: 'description', content: 'Scandinavian pet essentials for cleaner homes, safer trips and happier pets.' },
         { name: 'theme-color', content: '#f7f5ef' }
@@ -16,7 +16,7 @@ export default defineNuxtConfig({
     mollieApiKey: '',
     brevoApiKey: '',
     brevoSenderEmail: '',
-    brevoSenderName: 'NORDPAWS',
+    brevoSenderName: 'Norrli Pets',
     brevoListId: '',
     checkoutEnabled: false,
     public: {
