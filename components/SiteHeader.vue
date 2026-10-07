@@ -5,7 +5,7 @@ const { count } = useCart()
 </script>
 
 <template>
-  <>
+  <div>
     <div class="announcement">Free shipping in Sweden over 599 SEK · 30-day returns</div>
     <header class="header container">
       <NuxtLink to="/" class="brand" aria-label="NORDPAWS home">
@@ -34,5 +34,5 @@ const { count } = useCart()
       <NuxtLink to="/shop?category=Travel" @click="open=false">Travel</NuxtLink>
       <NuxtLink to="/about" @click="open=false">Our story</NuxtLink>
     </nav>
-  </>
+  </div>
 </template>
