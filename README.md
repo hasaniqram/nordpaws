@@ -26,5 +26,8 @@ See `.env.example`. Keep all secret values in Vercel environment variables, neve
 ## Payment flow
 Cart → customer/delivery details → Mollie hosted checkout → Mollie webhook → Supabase order → Brevo order confirmation.
 
+## Target domain
+- Primary launch domain: `norrlipets.se` (attach after registration and DNS ownership verification)
+
 ## Launch note
 Shipping pricing, the verified Norrli Pets sending domain, Brevo API credentials and Mollie API credentials must be finalized before live checkout is enabled.
