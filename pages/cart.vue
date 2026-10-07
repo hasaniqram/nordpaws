@@ -103,7 +103,7 @@ useSeoMeta({ title: 'Your bag' })
           {{ loading ? 'Preparing…' : (showDetails ? 'Continue to payment' : 'Checkout') }}
         </button>
 
-        <p class="checkout-note">Payment provider: Mollie. Planned methods: Swish, Klarna, cards and Apple Pay. Live charging remains disabled until the NORDPAWS Mollie account and shipping rules are approved.</p>
+        <p class="checkout-note">Payment provider: Mollie. Planned methods: Swish, Klarna, cards and Apple Pay. Live charging remains disabled until the Norrli Pets Mollie account and shipping rules are approved.</p>
         <p v-if="error" class="checkout-error">{{ error }}</p>
       </aside>
     </div>
