@@ -16,7 +16,7 @@ const toMoney = (ore: number) => (ore / 100).toFixed(2)
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
   if (!config.checkoutEnabled || !config.mollieApiKey) {
-    throw createError({ statusCode: 503, statusMessage: 'Checkout is not live yet. The NORDPAWS Mollie account still needs to be connected.' })
+    throw createError({ statusCode: 503, statusMessage: 'Checkout is not live yet. The Norrli Pets Mollie account still needs to be connected.' })
   }
 
   const body = await readBody<{ lines?: IncomingLine[]; customer?: CheckoutCustomer }>(event)
@@ -59,7 +59,7 @@ export default defineEventHandler(async (event) => {
   })
 
   const totalOre = normalizedLines.reduce((sum, line) => sum + line.product.price * line.quantity, 0)
-  const orderNumber = `NP-${crypto.randomUUID().slice(0, 8).toUpperCase()}`
+  const orderNumber = `NR-${crypto.randomUUID().slice(0, 8).toUpperCase()}`
   const siteUrl = config.public.siteUrl.replace(/\/$/, '')
 
   const mollieLines = normalizedLines.map(({ product, quantity }) => ({
@@ -79,7 +79,7 @@ export default defineEventHandler(async (event) => {
     },
     body: {
       amount: { currency: 'SEK', value: toMoney(totalOre) },
-      description: `NORDPAWS ${orderNumber}`,
+      description: `Norrli Pets ${orderNumber}`,
       redirectUrl: `${siteUrl}/checkout/success?order=${encodeURIComponent(orderNumber)}`,
       cancelUrl: `${siteUrl}/checkout/cancel`,
       webhookUrl: `${siteUrl}/api/mollie/webhook`,
