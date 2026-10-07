@@ -29,7 +29,7 @@ useSeoMeta({ title: product.name, description: product.description })
       <p class="description">{{ product.description }}</p>
       <ul class="feature-list"><li v-for="feature in product.features" :key="feature"><Check :size="17"/>{{ feature }}</li></ul>
       <div class="buy-row"><div class="quantity"><button @click="quantity=Math.max(1,quantity-1)"><Minus :size="17"/></button><span>{{ quantity }}</span><button @click="quantity=Math.min(10,quantity+1)"><Plus :size="17"/></button></div><button class="btn btn-primary buy-btn" @click="addToCart">{{ added ? 'Added to bag' : 'Add to bag' }}</button></div>
-      <div class="purchase-notes"><div><Truck :size="20"/><span><strong>Sweden delivery</strong>Tracked delivery options at checkout.</span></div><div><ShieldCheck :size="20"/><span><strong>Secure payment</strong>Checkout powered by Stripe when enabled.</span></div></div>
+      <div class="purchase-notes"><div><Truck :size="20"/><span><strong>Sweden delivery</strong>Tracked delivery options at checkout.</span></div><div><ShieldCheck :size="20"/><span><strong>Secure payment</strong>Mollie checkout with Swedish payment methods when enabled.</span></div></div>
     </div>
   </main>
 </template>
