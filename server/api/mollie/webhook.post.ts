@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const metadata = payment.metadata || {}
-  const orderNumber = metadata.orderNumber || `NP-${String(payment.id).slice(-8).toUpperCase()}`
+  const orderNumber = metadata.orderNumber || `NR-${String(payment.id).slice(-8).toUpperCase()}`
   const email = payment.billingAddress?.email || metadata.email || null
   const amountTotal = toOre(payment.amount?.value)
   const paymentStatus = String(payment.status || 'unknown')
