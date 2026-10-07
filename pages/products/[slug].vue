@@ -1,18 +1,27 @@
 <script setup lang="ts">
 import { Check, Minus, Plus, ShieldCheck, Truck } from 'lucide-vue-next'
-import { formatSEK, products } from '~/data/products'
+import { formatSEK, type Product } from '~/data/products'
+
 const route = useRoute()
-const product = products.find((p) => p.slug === route.params.slug)
+const { data: catalog } = await useFetch<{ products: Product[]; source: string }>('/api/products')
+const product = (catalog.value?.products || []).find((p) => p.slug === route.params.slug)
+
 if (!product) throw createError({ statusCode: 404, statusMessage: 'Product not found' })
+
 const quantity = ref(1)
 const { add } = useCart()
 const added = ref(false)
-const addToCart = () => { add(product!, quantity.value); added.value = true; setTimeout(() => added.value = false, 1200) }
+const addToCart = () => {
+  add(product, quantity.value)
+  added.value = true
+  setTimeout(() => added.value = false, 1200)
+}
+
 useSeoMeta({ title: product.name, description: product.description })
 </script>
 
 <template>
-  <main v-if="product" class="container product-page">
+  <main class="container product-page">
     <div class="product-detail-art" :style="{ background: product.gradient }"><span v-if="product.badge" class="badge">{{ product.badge }}</span><span class="detail-emoji">{{ product.emoji }}</span><span class="art-caption">NORDPAWS / {{ product.category.toUpperCase() }}</span></div>
     <div class="product-detail-copy">
       <span class="eyebrow">{{ product.category }}</span><h1>{{ product.name }}</h1><p class="subtitle">{{ product.subtitle }}</p>
