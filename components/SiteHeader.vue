@@ -8,8 +8,8 @@ const { count } = useCart()
   <div>
     <div class="announcement">Free shipping in Sweden over 599 SEK · 30-day returns</div>
     <header class="header container">
-      <NuxtLink to="/" class="brand" aria-label="NORDPAWS home">
-        <span class="brand-mark">N</span><span>NORDPAWS</span>
+      <NuxtLink to="/" class="brand" aria-label="Norrli Pets home">
+        <span class="brand-mark">N</span><span>Norrli Pets</span>
       </NuxtLink>
       <nav class="desktop-nav" aria-label="Main navigation">
         <NuxtLink to="/shop">Shop</NuxtLink>
