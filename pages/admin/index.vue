@@ -149,7 +149,7 @@ useSeoMeta({ title: 'Admin dashboard', robots: 'noindex,nofollow' })
       </section>
 
       <section v-if="tab==='orders'" class="admin-panel">
-        <div v-if="!orders.length" class="admin-empty">No orders yet. Orders will appear here after Stripe checkout is activated.</div>
+        <div v-if="!orders.length" class="admin-empty">No orders yet. Orders will appear here after Mollie checkout is activated.</div>
         <article v-for="order in orders" :key="order.id" class="admin-list-row">
           <div><strong>{{ order.order_number }}</strong><span>{{ order.email || 'No email' }}</span></div>
           <div><strong>{{ (order.amount_total/100).toFixed(2) }} {{ order.currency?.toUpperCase() }}</strong><span>{{ order.fulfillment_status }}</span></div>
