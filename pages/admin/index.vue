@@ -89,7 +89,7 @@ useSeoMeta({ title: 'Admin dashboard', robots: 'noindex,nofollow' })
 <template>
   <main class="admin-shell">
     <header class="admin-topbar">
-      <NuxtLink to="/" class="brand"><span class="brand-mark">N</span><span>NORDPAWS</span></NuxtLink>
+      <NuxtLink to="/" class="brand"><span class="brand-mark">N</span><span>Norrli Pets</span></NuxtLink>
       <div class="admin-top-actions">
         <button class="icon-btn" title="Refresh" @click="load"><RefreshCw :size="18"/></button>
         <button class="btn btn-secondary" @click="signOut"><LogOut :size="16"/>Sign out</button>
@@ -101,7 +101,7 @@ useSeoMeta({ title: 'Admin dashboard', robots: 'noindex,nofollow' })
     <section v-else-if="!authorized" class="admin-center admin-denied">
       <span class="eyebrow">Authenticated</span>
       <h1>Admin access not granted yet.</h1>
-      <p>Your account is valid, but it is not in the NORDPAWS admin allow-list.</p>
+      <p>Your account is valid, but it is not in the Norrli Pets admin allow-list.</p>
       <div class="user-id"><span>User ID</span><code>{{ userId }}</code></div>
       <p class="muted">This ID can be promoted in the Supabase <strong>admins</strong> table.</p>
     </section>
@@ -110,7 +110,7 @@ useSeoMeta({ title: 'Admin dashboard', robots: 'noindex,nofollow' })
       <section class="admin-heading">
         <div>
           <span class="eyebrow">Operations</span>
-          <h1>NORDPAWS Admin</h1>
+          <h1>Norrli Pets Admin</h1>
           <p>Catalog, orders, customer messages and subscribers.</p>
         </div>
         <div class="admin-stats">
