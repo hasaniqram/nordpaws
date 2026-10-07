@@ -1,5 +1,6 @@
 import { getSupabasePublic } from '~/server/utils/supabase'
 import { enforceRateLimit } from '~/server/utils/rateLimit'
+import { syncBrevoContact } from '~/server/utils/email'
 
 export default defineEventHandler(async (event) => {
   enforceRateLimit(event, 'newsletter', 5)
@@ -22,6 +23,12 @@ export default defineEventHandler(async (event) => {
 
   if (error && error.code !== '23505') {
     throw createError({ statusCode: 500, statusMessage: 'We could not save your signup.' })
+  }
+
+  try {
+    await syncBrevoContact(email)
+  } catch {
+    // Supabase remains the source of truth; Brevo can be resynced later.
   }
 
   return { ok: true, alreadySubscribed: error?.code === '23505' }
