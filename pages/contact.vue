@@ -25,7 +25,7 @@ useSeoMeta({ title: 'Contact' })
 <template>
   <main class="container page-shell contact-page">
     <span class="eyebrow">Contact</span><h1>How can we help?</h1>
-    <p>Send us a message here. A branded support email address will be added when the NORDPAWS domain is connected.</p>
+    <p>Send us a message here. A branded support email address will be added when the Norrli Pets domain is connected.</p>
     <form class="contact-form" @submit.prevent="submit">
       <label>Name<input v-model="form.name" required minlength="2" maxlength="100"></label>
       <label>Email<input v-model="form.email" required type="email" maxlength="254"></label>
