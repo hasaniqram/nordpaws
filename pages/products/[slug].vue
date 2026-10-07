@@ -22,7 +22,7 @@ useSeoMeta({ title: product.name, description: product.description })
 
 <template>
   <main class="container product-page">
-    <div class="product-detail-art" :style="{ background: product.gradient }"><span v-if="product.badge" class="badge">{{ product.badge }}</span><span class="detail-emoji">{{ product.emoji }}</span><span class="art-caption">NORDPAWS / {{ product.category.toUpperCase() }}</span></div>
+    <div class="product-detail-art" :style="{ background: product.gradient }"><span v-if="product.badge" class="badge">{{ product.badge }}</span><span class="detail-emoji">{{ product.emoji }}</span><span class="art-caption">Norrli Pets / {{ product.category.toUpperCase() }}</span></div>
     <div class="product-detail-copy">
       <span class="eyebrow">{{ product.category }}</span><h1>{{ product.name }}</h1><p class="subtitle">{{ product.subtitle }}</p>
       <div class="detail-price"><strong>{{ formatSEK(product.price) }}</strong><del v-if="product.compareAt">{{ formatSEK(product.compareAt) }}</del></div>
