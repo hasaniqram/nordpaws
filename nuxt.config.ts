@@ -13,10 +13,11 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     supabaseSecretKey: '',
-    stripeSecretKey: '',
-    stripeWebhookSecret: '',
-    resendApiKey: '',
-    resendFrom: '',
+    mollieApiKey: '',
+    brevoApiKey: '',
+    brevoSenderEmail: '',
+    brevoSenderName: 'NORDPAWS',
+    brevoListId: '',
     checkoutEnabled: false,
     public: {
       supabaseUrl: '',
