@@ -39,7 +39,7 @@ useSeoMeta({ title: 'Admin login', robots: 'noindex,nofollow' })
 <template>
   <main class="admin-auth">
     <div class="admin-auth-card">
-      <NuxtLink to="/" class="brand"><span class="brand-mark">N</span><span>NORDPAWS</span></NuxtLink>
+      <NuxtLink to="/" class="brand"><span class="brand-mark">N</span><span>Norrli Pets</span></NuxtLink>
       <span class="eyebrow">Store administration</span>
       <h1>{{ mode === 'signin' ? 'Admin sign in' : 'Create admin account' }}</h1>
       <p>Authentication is handled by Supabase. Only approved accounts can access store data.</p>
