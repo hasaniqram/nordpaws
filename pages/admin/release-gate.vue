@@ -39,9 +39,9 @@ const load=async()=>{
    supabase.from('prelaunch_tasks').select('code,status').limit(100),
    supabase.from('supplier_leads').select('id,status,shipping_to_sweden').limit(300),
    supabase.from('supplier_quotes').select('id,supplier_lead_id,product_id,status,quote_reference,source_url,unit_cost,shipping_per_order,fx_to_sek,payment_fee_pct,payment_fixed_sek,returns_reserve_pct,delivery_min_days,delivery_max_days').limit(500),
-   supabase.from('products').select('id,active,material,supplier_sku').limit(400),
+   supabase.from('products').select('id,active,material,supplier_id,supplier_sku').limit(400),
    supabase.from('product_images').select('product_id,is_concept').limit(750),
-   supabase.from('supplier_catalog_items').select('id,supplier_lead_id,product_id,stock_status,stock_quantity,verified_at').limit(1000),
+   supabase.from('supplier_catalog_items').select('id,supplier_lead_id,product_id,supplier_sku,stock_status,stock_quantity,verified_at').limit(1000),
    supabase.from('contact_messages').select('id,status').order('created_at',{ascending:false}).limit(200)
   ])
   const failure=[tasks,leads,quotes,products,images,catalog,contacts].find(x=>x.error)?.error
