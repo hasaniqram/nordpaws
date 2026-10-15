@@ -209,3 +209,47 @@
  .norrli-support-admin-state{align-items:stretch;flex-direction:column}
  .norrli-support-admin-state select,.norrli-support-admin-state button{width:100%}
 }
+
+
+/* Norrli Pets — copyright and third-party rights. Footer is intentionally compact. */
+.nordic-footer-bottom{flex-wrap:wrap;align-items:start;column-gap:24px;row-gap:14px}
+.nordic-footer-copyright{display:grid;gap:6px;max-width:510px;min-width:0}
+.nordic-footer-copyright-main{font-size:11px;font-weight:800;color:#f2f6ed;line-height:1.5}
+.nordic-footer-copyright-main>span{color:#83ae91;margin:0 4px}
+.nordic-footer-copyright small{color:#a6c4af;line-height:1.55;font-size:10px}
+.nordic-footer-legal-links{display:flex;align-items:center;flex-wrap:wrap;gap:8px 15px;margin-left:auto;padding-top:2px}
+.nordic-footer-legal-links a{font-size:11px;color:#c6dfc8;text-decoration:none;white-space:nowrap}
+.nordic-footer-legal-links a:hover,.nordic-footer-legal-links a:focus-visible{color:#fff;text-decoration:underline;text-underline-offset:4px}
+.nordic-footer-signature{font-size:10px;color:#afc9b6;padding-top:2px;white-space:nowrap}
+.norrli-copyright-summary{display:flex;align-items:flex-start;gap:19px;padding:25px;border:1px solid #d8e7d3;background:linear-gradient(130deg,#f0f7ec,#f8fbf5);border-radius:19px;margin-bottom:24px}
+.norrli-copyright-summary-icon,.norrli-copyright-card-icon,.norrli-copyright-contact-icon{flex:0 0 auto;display:grid;place-items:center;border-radius:15px;background:#e1ecdd;color:#366c4c}
+.norrli-copyright-summary-icon{width:58px;height:58px}
+.norrli-copyright-summary h2{font:500 clamp(27px,3vw,36px)/1.15 Georgia,'Times New Roman',serif;letter-spacing:-.045em;color:#244f38;margin:10px 0}
+.norrli-copyright-summary p{color:#5b7763;font-size:13px;line-height:1.8;margin:0}
+.norrli-copyright-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin:22px 0 0}
+.norrli-copyright-grid article{background:#f7faf4;border:1px solid #dfebda;border-radius:15px;padding:22px}
+.norrli-copyright-card-icon{width:45px;height:45px}
+.norrli-copyright-grid h3{font:500 22px Georgia,serif;margin:15px 0 8px;color:#29513b}
+.norrli-copyright-grid p{font-size:12px;line-height:1.75;color:#6c806f;margin:0}
+.norrli-copyright-contact{display:flex;gap:17px;align-items:start;margin:24px 0 0;border:1px solid #d3e5d0;background:#eef5ea;border-radius:17px;padding:25px}
+.norrli-copyright-contact-icon{width:49px;height:49px}
+.norrli-copyright-contact h2{font:500 clamp(24px,2.4vw,32px)/1.2 Georgia,serif;letter-spacing:-.025em;margin:8px 0 11px;color:#224936}
+.norrli-copyright-contact p{font-size:13px;color:#637b66;line-height:1.75;margin:0 0 17px}
+.norrli-copyright-action{display:inline-flex;align-items:center;justify-content:center;gap:10px;border-radius:99px;background:#1f4e39;color:#fff!important;padding:13px 18px;font-weight:800;font-size:12px}
+.norrli-copyright-action:hover{background:#123f2a}
+.norrli-support-reference>strong{display:inline-flex;align-items:center;gap:8px}
+.norrli-support-reference a svg{vertical-align:middle}
+@media(max-width:1000px){
+ .nordic-footer-bottom{justify-content:flex-start}
+ .nordic-footer-legal-links{margin-left:0}
+ .nordic-footer-signature{width:100%}
+}
+@media(max-width:670px){
+ .nordic-footer-copyright,.nordic-footer-legal-links{width:100%;max-width:none}
+ .nordic-footer-copyright-main{font-size:11px}
+ .norrli-copyright-summary,.norrli-copyright-contact{padding:18px;gap:12px}
+ .norrli-copyright-summary-icon{width:45px;height:45px}
+ .norrli-copyright-grid{grid-template-columns:1fr}
+ .norrli-copyright-contact{flex-direction:column}
+ .norrli-copyright-action{width:100%;text-align:center}
+}
