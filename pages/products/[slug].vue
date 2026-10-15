@@ -13,6 +13,8 @@ const { add } = useCart()
 const added = ref(false)
 const selectedVariantId = ref(product.variants?.[0]?.id || '')
 const selectedImage = ref(product.primaryImage || product.images?.[0]?.publicUrl || '')
+const imageFailed = ref(false)
+watch(selectedImage, () => { imageFailed.value = false })
 const selectedImageIsConcept = computed(() => product.images?.find(image => image.publicUrl === selectedImage.value)?.isConcept ?? product.primaryIsConcept ?? false)
 
 const selectedVariant = computed<ProductVariant | null>(() =>
@@ -40,7 +42,7 @@ useSeoMeta({ title: product.name, description: product.description })
     <section class="product-gallery">
       <div class="product-detail-art" :style="{ background: product.gradient }">
         <span v-if="product.badge" class="badge">{{ product.badge }}</span>
-        <img v-if="selectedImage" class="detail-product-image" :src="selectedImage" :alt="product.name" decoding="async" width="768" height="768">
+        <img v-if="selectedImage && !imageFailed" class="detail-product-image" :src="selectedImage" :alt="product.name" decoding="async" width="768" height="768" @error="imageFailed = true">
         <span v-else class="detail-emoji">{{ product.emoji }}</span>
         <span class="art-caption">Norrli Pets / {{ product.category.toUpperCase() }}</span>
       </div>
