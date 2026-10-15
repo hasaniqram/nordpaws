@@ -1,7 +1,7 @@
 export default defineNuxtConfig({
   compatibilityDate: '2026-10-01',
   devtools: { enabled: false },
-  css: ['~/assets/css/main.css', '~/assets/css/enhancements.css', '~/assets/css/admin.css', '~/assets/css/nordic.css'],
+  css: ['~/assets/css/main.css', '~/assets/css/enhancements.css', '~/assets/css/admin.css', '~/assets/css/nordic.css', '~/assets/css/storefront-v2.css'],
   app: {
     head: {
       link: [

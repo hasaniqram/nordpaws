@@ -1,0 +1,101 @@
+/* Norrli Pets 2.0 — reviewable visual layer. Approved logo artwork remains untouched. */
+:root{--norrli-forest:#183e32;--norrli-sage:#e5ece4;--norrli-cream:#fcfaf5;--norrli-logo-width:180px}
+body{background:var(--norrli-cream)}
+.nordic-site-header{position:relative}
+.nordic-header-main{min-height:116px;grid-template-columns:minmax(190px,.8fr) minmax(250px,1.45fr) minmax(130px,.65fr)}
+.nordic-header-main .nordic-brand{width:var(--norrli-logo-width)}
+.nordic-category-links{justify-content:space-between;gap:15px}
+.nordic-category-links a{font-size:12px}
+.nordic-header-action{min-height:44px;min-width:44px}
+.nordic-home{padding-top:22px}
+.nordic-hero-scene{min-height:530px;border-radius:22px}
+.nordic-hero-copy{padding-top:86px;padding-bottom:85px}
+.nordic-hero-copy h1{font-size:clamp(44px,4.85vw,74px);line-height:1.035}
+.nordic-hero-copy>p{font-size:16px}
+.nordic-hero-copy h1 em{font-style:italic}
+.nordic-section{padding-top:60px}
+.nordic-section-heading h2{font-size:clamp(32px,3.4vw,48px)}
+.nordic-category-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.nordic-category-photo{height:clamp(160px,18vw,235px)}
+.nordic-category-label{min-height:59px;padding:10px 14px}
+.nordic-category-label>span:first-child{font-size:18px}
+.nordic-category-tile,.nordic-product-card{border-radius:18px}
+.nordic-featured-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.nordic-featured-grid .nordic-product-info{min-height:190px}
+.nordic-product-info{padding:18px;min-height:180px}
+.nordic-product-info h3{font-size:19px}
+.nordic-product-info p{font-size:13px;min-height:0}
+.nordic-product-type{font-size:10px}
+.nordic-price-caption{font-size:11px}
+.nordic-product-button{font-size:13px;padding:12px}
+.nordic-art-link img{transition:transform .4s ease}
+.nordic-product-card:hover .nordic-art-link img{transform:scale(1.045)}
+.nordic-story-card{height:340px}
+.nordic-story-content{padding:37px}
+.nordic-detail-photo{border-radius:23px}
+.nordic-detail-info h1{font-size:clamp(40px,4.4vw,65px)}
+.norrli-shop-intro{display:flex;align-items:end;justify-content:space-between;gap:24px}
+.norrli-shop-count{color:#587366;font-weight:700;font-size:13px;white-space:nowrap}
+.norrli-shop-empty{display:grid;justify-items:center;gap:14px;padding:55px 20px}
+.norrli-shop-empty p{margin:0}
+.norrli-shop-empty a{background:var(--norrli-forest);padding:12px 20px;border-radius:999px;color:white;font-size:13px;font-weight:700}
+.nordic-mobile-nav{display:none}
+@media(max-width:1190px){
+ .nordic-header-main{grid-template-columns:190px minmax(210px,1fr) 135px}
+ .nordic-category-links{gap:13px}
+ .nordic-category-links a{font-size:11px}
+ .nordic-category-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .nordic-featured-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:850px){
+ :root{--norrli-logo-width:132px}
+ .nordic-header-main{grid-template-columns:1fr auto;min-height:82px}
+ .nordic-category-nav,.nordic-header-search{display:none}
+ .nordic-menu-toggle{display:grid}
+ .nordic-mobile-nav{display:block;position:absolute;z-index:40;top:100%;left:0;right:0;background:#fffdf9;border-top:1px solid #e0e8dd;box-shadow:0 20px 35px rgba(18,53,41,.13);max-height:calc(100dvh - 120px);overflow:auto;overscroll-behavior:contain;padding:12px 0 26px}
+ .nordic-mobile-nav-inner{display:block}
+ .nordic-mobile-search{display:flex;margin:8px 0 24px;padding:5px 13px}
+ .nordic-mobile-nav-heading{display:block;font-size:10px;font-weight:850;letter-spacing:.16em;color:#587568;margin:20px 4px 7px}
+ .nordic-mobile-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .nordic-mobile-links a{display:flex;justify-content:space-between;align-items:center;padding:15px 14px;border:1px solid #e2e9de;border-radius:12px;background:#f8faf6;color:#214738;font-size:13px;font-weight:750}
+ .nordic-mobile-links-secondary a{background:#fff}
+ .nordic-mobile-footnote{font:italic 19px Georgia,serif;text-align:center;margin:25px 0 0;color:#597763}
+ .nordic-hero-scene{min-height:465px}
+ .nordic-hero-copy{padding-top:64px;padding-bottom:64px}
+}
+@media(max-width:580px){
+ :root{--norrli-logo-width:112px}
+ .nordic-header-main{min-height:74px}
+ .nordic-header-actions{gap:9px}
+ .nordic-header-action{min-width:36px}
+ .nordic-mobile-nav{max-height:calc(100dvh - 108px)}
+ .nordic-mobile-links a{font-size:12px;padding:14px 10px}
+ .nordic-hero-scene{min-height:570px}
+ .nordic-hero-copy{padding:32px 22px}
+ .nordic-hero-copy h1{font-size:clamp(38px,9.5vw,54px)}
+ .nordic-hero-copy>p{font-size:13px}
+ .nordic-section{padding-top:42px}
+ .nordic-category-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+ .nordic-category-photo{height:165px}
+ .nordic-category-label>span:first-child{font-size:16px}
+ .nordic-featured-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .nordic-featured-grid .nordic-product-info{min-height:190px}
+ .nordic-product-info{padding:12px}
+ .nordic-product-info h3{font-size:15px}
+ .nordic-product-info p{font-size:11px}
+ .nordic-product-button{font-size:11px;padding:10px 7px;white-space:normal}
+ .nordic-story-card{height:260px}
+ .nordic-story-content{padding:22px}
+ .norrli-shop-intro{display:block}
+ .norrli-shop-count{display:block;margin-top:14px}
+}
+@media(prefers-reduced-motion:reduce){.nordic-art-link img{transition:none}.nordic-product-card:hover .nordic-art-link img{transform:none}}
+
+/* Approved logo is a complete image asset; size the image without retypesetting it. */
+.nordic-header-main .nordic-brand{width:var(--norrli-logo-width);height:108px}
+.nordic-header-main .nordic-approved-logo-image{width:auto;max-width:100%;height:100%;max-height:108px;object-fit:contain}
+.norrli-gallery-controls{position:absolute;left:16px;right:16px;top:50%;transform:translateY(-50%);display:flex;justify-content:space-between;pointer-events:none;z-index:2}
+.norrli-gallery-controls button{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;border:1px solid #e0e8dc;background:rgba(255,255,255,.94);color:#194b3c;cursor:pointer;pointer-events:auto;box-shadow:0 4px 14px rgba(17,50,36,.12)}
+.norrli-gallery-controls button:hover{background:#e9f0e7}
+@media(max-width:850px){.nordic-header-main .nordic-brand{height:72px}.nordic-header-main .nordic-approved-logo-image{max-height:72px}}
+@media(max-width:580px){.nordic-header-main .nordic-brand{height:65px}.nordic-header-main .nordic-approved-logo-image{max-height:65px}.norrli-gallery-controls{left:9px;right:9px}.norrli-gallery-controls button{height:35px;width:35px}}

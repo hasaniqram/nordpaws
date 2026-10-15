@@ -18,7 +18,7 @@ withDefaults(defineProps<{
   >
     <img
       class="nordic-approved-logo-image"
-      :src="showWordmark ? '/branding/norrli-approved-logo.png?v=3' : '/branding/norrli-emblem.png'"
+      :src="showWordmark ? '/branding/norrli-approved-logo.png' : '/branding/norrli-emblem.png'"
       :alt="showWordmark ? 'Norrli Pets' : 'Norrli Pets emblem'"
       :width="showWordmark ? 245 : 191"
       :height="showWordmark ? 198 : 116"
