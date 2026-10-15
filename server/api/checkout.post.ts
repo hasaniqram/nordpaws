@@ -1,6 +1,6 @@
 import { getSupabasePublic } from '~/server/utils/supabase'
 
-type IncomingLine = { id: string; quantity: number }
+type IncomingLine = { id: string; variantId?: string | null; quantity: number }
 type CheckoutCustomer = {
   givenName: string
   familyName: string
@@ -39,36 +39,60 @@ export default defineEventHandler(async (event) => {
   const supabase = getSupabasePublic()
   if (!supabase) throw createError({ statusCode: 503, statusMessage: 'Product catalog is temporarily unavailable.' })
 
-  const ids = [...new Set(body.lines.map((line) => line.id))]
-  const { data: dbProducts, error } = await supabase
-    .from('products')
-    .select('id,name,price,active')
-    .in('id', ids)
-    .eq('active', true)
+  const productIds = [...new Set(body.lines.map((line) => line.id))]
+  const variantIds = [...new Set(body.lines.map((line) => line.variantId).filter(Boolean) as string[])]
 
-  if (error || !dbProducts || dbProducts.length !== ids.length) {
+  const [{ data: dbProducts, error: productError }, { data: dbVariants, error: variantError }] = await Promise.all([
+    supabase
+      .from('products')
+      .select('id,name,price,active,supplier_sku,supplier_cost')
+      .in('id', productIds)
+      .eq('active', true),
+    variantIds.length
+      ? supabase
+          .from('product_variants')
+          .select('id,product_id,name,sku,price,supplier_sku,supplier_cost,stock_quantity,active')
+          .in('id', variantIds)
+          .eq('active', true)
+      : Promise.resolve({ data: [], error: null } as any)
+  ])
+
+  if (productError || !dbProducts || dbProducts.length !== productIds.length || variantError) {
     throw createError({ statusCode: 400, statusMessage: 'One or more products are no longer available.' })
   }
 
-  const byId = new Map(dbProducts.map((product) => [product.id, product]))
+  const productsById = new Map(dbProducts.map((product) => [product.id, product]))
+  const variantsById = new Map((dbVariants || []).map((variant:any) => [variant.id, variant]))
+
   const normalizedLines = body.lines.map((line) => {
-    const product = byId.get(line.id)
+    const product:any = productsById.get(line.id)
     if (!product) throw createError({ statusCode: 400, statusMessage: 'One product is no longer available.' })
+
     const quantity = Math.max(1, Math.min(10, Number(line.quantity) || 1))
-    return { product, quantity }
+    const variant:any = line.variantId ? variantsById.get(line.variantId) : null
+
+    if (line.variantId && (!variant || variant.product_id !== product.id)) {
+      throw createError({ statusCode: 400, statusMessage: 'One selected product option is no longer available.' })
+    }
+    if (variant?.stock_quantity != null && quantity > variant.stock_quantity) {
+      throw createError({ statusCode: 400, statusMessage: `${product.name} · ${variant.name} does not have enough stock.` })
+    }
+
+    const unitAmount = variant?.price ?? product.price
+    return { product, variant, quantity, unitAmount }
   })
 
-  const totalOre = normalizedLines.reduce((sum, line) => sum + line.product.price * line.quantity, 0)
+  const totalOre = normalizedLines.reduce((sum, line) => sum + line.unitAmount * line.quantity, 0)
   const orderNumber = `NR-${crypto.randomUUID().slice(0, 8).toUpperCase()}`
   const siteUrl = config.public.siteUrl.replace(/\/$/, '')
 
-  const mollieLines = normalizedLines.map(({ product, quantity }) => ({
+  const mollieLines = normalizedLines.map(({ product, variant, quantity, unitAmount }) => ({
     type: 'physical',
-    description: product.name,
+    description: variant ? `${product.name} · ${variant.name}` : product.name,
     quantity,
-    sku: product.id,
-    unitPrice: { currency: 'SEK', value: toMoney(product.price) },
-    totalAmount: { currency: 'SEK', value: toMoney(product.price * quantity) }
+    sku: variant?.sku || variant?.supplier_sku || product.supplier_sku || product.id,
+    unitPrice: { currency: 'SEK', value: toMoney(unitAmount) },
+    totalAmount: { currency: 'SEK', value: toMoney(unitAmount * quantity) }
   }))
 
   const payment = await $fetch<any>('https://api.mollie.com/v2/payments', {
@@ -108,11 +132,15 @@ export default defineEventHandler(async (event) => {
       metadata: {
         orderNumber,
         email: customer.email.trim().toLowerCase(),
-        items: normalizedLines.map(({ product, quantity }) => ({
+        items: normalizedLines.map(({ product, variant, quantity, unitAmount }) => ({
           id: product.id,
-          name: product.name,
+          variantId: variant?.id || null,
+          variantName: variant?.name || null,
+          name: variant ? `${product.name} · ${variant.name}` : product.name,
           quantity,
-          unitAmount: product.price
+          unitAmount,
+          supplierSku: variant?.supplier_sku || product.supplier_sku || null,
+          supplierCost: variant?.supplier_cost ?? product.supplier_cost ?? null
         }))
       }
     }
