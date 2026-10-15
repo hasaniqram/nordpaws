@@ -59,19 +59,19 @@ useSeoMeta({ title: 'Your bag' })
     <div v-else class="cart-grid">
       <section>
         <div class="cart-lines">
-          <article v-for="line in lines" :key="line.id" class="cart-line">
-            <div class="cart-thumb">{{ line.emoji }}</div>
+          <article v-for="line in lines" :key="line.key" class="cart-line">
+            <div class="cart-thumb"><img v-if="line.image" :src="line.image" :alt="line.name"><span v-else>{{ line.emoji }}</span></div>
             <div class="cart-meta">
               <NuxtLink :to="`/products/${line.slug}`"><h3>{{ line.name }}</h3></NuxtLink>
-              <p>{{ formatSEK(line.price) }}</p>
+              <p v-if="line.variantName" class="cart-variant">{{ line.variantName }}</p><p>{{ formatSEK(line.price) }}</p>
               <div class="quantity small">
-                <button @click="setQuantity(line.id,line.quantity-1)"><Minus :size="15"/></button>
+                <button @click="setQuantity(line.key,line.quantity-1)"><Minus :size="15"/></button>
                 <span>{{ line.quantity }}</span>
-                <button @click="setQuantity(line.id,line.quantity+1)"><Plus :size="15"/></button>
+                <button @click="setQuantity(line.key,line.quantity+1)"><Plus :size="15"/></button>
               </div>
             </div>
             <strong>{{ formatSEK(line.price * line.quantity) }}</strong>
-            <button class="trash" @click="remove(line.id)" aria-label="Remove item"><Trash2 :size="18"/></button>
+            <button class="trash" @click="remove(line.key)" aria-label="Remove item"><Trash2 :size="18"/></button>
           </article>
         </div>
 
