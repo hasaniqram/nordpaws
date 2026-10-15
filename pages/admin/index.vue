@@ -335,6 +335,7 @@ useSeoMeta({title:'Admin dashboard',robots:'noindex,nofollow'})
       <div class="admin-top-actions">
         <NuxtLink to="/admin/operations" class="btn btn-primary compact"><Truck :size="16"/> Operations center</NuxtLink>
         <NuxtLink to="/admin/support" class="btn btn-secondary compact"><Mail :size="16"/> Kundservice Inbox</NuxtLink>
+        <NuxtLink to="/admin/release-gate" class="btn btn-secondary compact"><ShieldCheck :size="16"/> Release Gate</NuxtLink>
         <NuxtLink to="/admin/launch" class="btn btn-secondary compact"><ClipboardCheck :size="16"/> Launch workspace</NuxtLink>
         <NuxtLink to="/admin/quotes" class="btn btn-secondary compact">Compare supplier quotes</NuxtLink>
         <NuxtLink to="/admin/decisions" class="btn btn-secondary compact">Product Decision Board</NuxtLink>
