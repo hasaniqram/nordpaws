@@ -4,6 +4,7 @@ export type ProductImage = {
   altText?: string | null
   sortOrder: number
   isPrimary: boolean
+  isConcept?: boolean
 }
 
 export type ProductVariant = {
@@ -12,8 +13,6 @@ export type ProductVariant = {
   sku?: string | null
   options: Record<string, string>
   price?: number | null
-  supplierSku?: string | null
-  supplierCost?: number | null
   stockQuantity?: number | null
   active: boolean
   sortOrder: number
@@ -34,6 +33,7 @@ export type Product = {
   features: string[]
   images?: ProductImage[]
   primaryImage?: string | null
+  primaryIsConcept?: boolean
   variants?: ProductVariant[]
   material?: string | null
   weightGrams?: number | null
