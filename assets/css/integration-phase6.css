@@ -1,0 +1,42 @@
+/* Phase 6: isolated admin integration review. Approved logos/storefront remain untouched. */
+.phase6-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+.phase6-shell .phase4-section-head .phase6-action{flex:none}
+.phase6-controls{display:flex;flex-wrap:wrap;gap:16px;padding:23px 27px;align-items:end}
+.phase6-controls label{display:grid;gap:8px;min-width:min(300px,100%);flex:1;font-size:12px;color:#3e684e;font-weight:800}
+.phase6-controls select,.phase6-controls input{min-width:0;width:100%;background:#fff;border:1px solid #d6e3d2;border-radius:12px;padding:13px;color:#234b39;font:inherit;font-size:13px;max-width:100%}
+.phase6-controls input[type=file]{padding:11px}
+.phase6-action{display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;border:1px solid #c8dbcb;background:#f3f8f1;border-radius:99px;padding:12px 17px;font-size:12px;font-weight:800;color:#245c40;white-space:nowrap}
+.phase6-action:hover{background:#e5f0e3}
+.phase6-info{display:flex;align-items:start;gap:10px;color:#3e6e50;border:1px solid #d4e6d4;border-radius:13px;background:#eef6ec;padding:16px;margin:0 27px 22px;font-size:12px;line-height:1.6}
+.phase6-info svg{flex:none}
+.phase6-note{font-size:12px;color:#7b673f;background:#faf4e9;padding:10px 15px;margin:8px 27px}
+.phase6-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:5px 27px 20px}
+.phase6-summary>div{background:#f2f6ef;border:1px solid #dfe8dc;border-radius:14px;padding:17px;min-width:0}
+.phase6-summary strong{display:block;color:#21513a;font-size:23px;overflow-wrap:anywhere}
+.phase6-summary span{display:block;margin-top:6px;color:#63816a;font-size:11px}
+.phase6-report-head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin:0 27px 16px;color:#315541;font-size:13px;flex-wrap:wrap}
+.phase6-table{min-width:850px}
+.phase6-row-warning{background:#fff3e4;border-radius:7px;padding:7px;color:#805d3a;font-size:11px;margin:4px 0}
+.phase6-footer{padding:0 27px 25px;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+.phase6-footer span,.phase6-footer a{display:inline-flex;align-items:center;gap:8px;font-weight:750;color:#3b664d;font-size:12px}
+.phase6-alert-list{padding:0 27px 26px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.phase6-alert-list article{padding:18px;border:1px solid #dfe8dc;border-radius:15px;background:#fcfdf9}
+.phase6-alert-list strong,.phase6-alert-list small{display:block}
+.phase6-alert-list strong{color:#25513a;font-size:14px}
+.phase6-alert-list small{color:#798c7b;font-size:11px;margin-top:6px}
+.phase6-alert-list ul,.phase6-shipping-card ul{padding-left:18px;color:#86563c;font-size:12px;line-height:1.9}
+.phase6-search{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #d6e3d2;border-radius:12px;padding-left:12px;color:#427052}
+.phase6-search input{border:0}
+.phase6-shipping-card{margin:0 27px 25px;padding:24px;border:1px solid #d8e4d7;border-radius:16px;background:#f9fbf7}
+.phase6-shipping-card h3{font:500 25px Georgia,serif;color:#214d37;margin:0 0 11px}
+.phase6-shipping-card h4{color:#2b5d40;margin:21px 0 8px}
+.phase6-shipping-card p{font-size:13px;color:#5b7461;line-height:1.6}
+.phase6-demo{display:inline-flex;align-items:center;gap:8px;color:#266344;font-size:12px;font-weight:800;background:#e1efe3;border-radius:99px;padding:12px 16px}
+.phase6-email{margin:0 27px 27px;border:1px solid #dbe7d8;border-radius:16px;padding:23px;background:#fafcf8}
+.phase6-email>div{display:grid;grid-template-columns:95px 1fr;gap:12px;padding:10px 0;font-size:13px;border-bottom:1px solid #e4ebe2;overflow-wrap:anywhere}
+.phase6-email>div strong{color:#45664e}
+.phase6-email pre{background:#fff;border:1px solid #e0e8df;border-radius:12px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7;color:#244a36;padding:20px;font:13px/1.8 inherit;min-height:180px}
+.phase6-email>p{display:flex;align-items:center;gap:8px;color:#627968;font-size:12px}
+@media(max-width:1100px){.phase6-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.phase6-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.phase6-controls{padding:17px;display:grid}.phase6-alert-list{grid-template-columns:1fr;padding:0 17px 20px}.phase6-info{margin:0 17px 18px}.phase6-summary{margin:0 17px 20px}.phase6-report-head{margin:0 17px 16px}.phase6-shipping-card{margin:0 17px 20px;padding:17px}.phase6-email{margin:0 17px 17px;padding:15px}.phase6-footer{padding:0 17px 20px}}
+@media(max-width:500px){.phase6-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.phase6-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.phase6-summary strong{font-size:18px}.phase6-email>div{grid-template-columns:1fr;gap:4px}}
