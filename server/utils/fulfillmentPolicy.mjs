@@ -5,7 +5,7 @@ const STEP = new Map(FULFILLMENT_STEPS.map((v,i)=>[v,i]))
 
 export function mayFulfill(order) {
   return !!order && order.payment_status === 'paid'
-    && order.payment_provider !== 'stripe_test'
+    && order.payment_provider === 'mollie'
     && !String(order.order_number || '').startsWith('NR-TEST-')
     && !['refunded','cancelled'].includes(order.fulfillment_status)
 }
