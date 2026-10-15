@@ -2,11 +2,14 @@
 import { Menu, ShoppingBag, X } from 'lucide-vue-next'
 const open = ref(false)
 const { count } = useCart()
+const config = useRuntimeConfig()
+const previewOnly = computed(() => !config.public.checkoutEnabled)
 </script>
 
 <template>
   <div>
-    <div class="announcement">Free shipping in Sweden over 599 SEK · 30-day returns</div>
+    <div class="announcement" v-if="previewOnly">Norrli Pets preview · Product concepts only · Not accepting orders</div>
+    <div class="announcement" v-else>Swedish pet essentials</div>
     <header class="header container">
       <NorrliLogo />
       <nav class="desktop-nav" aria-label="Main navigation">
@@ -17,7 +20,7 @@ const { count } = useCart()
         <NuxtLink to="/about">Our story</NuxtLink>
       </nav>
       <div class="header-actions">
-        <NuxtLink to="/cart" class="icon-btn cart-link" aria-label="Shopping cart">
+        <NuxtLink v-if="!previewOnly" to="/cart" class="icon-btn cart-link" aria-label="Shopping cart">
           <ShoppingBag :size="21" /> <span v-if="count" class="cart-count">{{ count }}</span>
         </NuxtLink>
         <button class="icon-btn mobile-menu-btn" @click="open = !open" aria-label="Toggle menu">
