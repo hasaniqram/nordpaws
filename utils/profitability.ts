@@ -62,7 +62,7 @@ export type QuoteResult = {
 }
 
 const num = (value: number | null | undefined) => Number.isFinite(Number(value)) && value != null ? Number(value) : 0
-const positive = (v: number | null | undefined) => v != null && Number.isFinite(Number(v)) && Number(v) >= 0
+const positive = (v: number | null | undefined) => v != null && String(v).trim() !== '' && Number.isFinite(Number(v)) && Number(v) >= 0
 const round = (n:number) => Math.round((n + Number.EPSILON) * 100) / 100
 
 export function calculateQuote(quote: SupplierQuote, catalogUnitPriceSek: number, targetMarginPct = 25): QuoteResult {
@@ -87,7 +87,7 @@ export function calculateQuote(quote: SupplierQuote, catalogUnitPriceSek: number
   const fx = num(quote.fx_to_sek)
   const quantity = num(quote.units_per_order)
   const vat = num(quote.vat_assumption_pct) / 100
-  const price = quote.price_override_sek == null ? catalogUnitPriceSek : num(quote.price_override_sek)
+  const price = quote.price_override_sek == null || String(quote.price_override_sek).trim() === '' ? catalogUnitPriceSek : num(quote.price_override_sek)
   if (!(fx > 0)) missing.push('Exchange rate to SEK')
   if (!(quantity >= 1 && Number.isInteger(quantity))) missing.push('Units per customer order')
   if (!(price > 0)) missing.push('Selling price incl. VAT')
