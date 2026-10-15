@@ -13,6 +13,7 @@ const { add } = useCart()
 const added = ref(false)
 const selectedVariantId = ref(product.variants?.[0]?.id || '')
 const selectedImage = ref(product.primaryImage || product.images?.[0]?.publicUrl || '')
+const selectedImageIsConcept = computed(() => product.images?.find(image => image.publicUrl === selectedImage.value)?.isConcept ?? product.primaryIsConcept ?? false)
 
 const selectedVariant = computed<ProductVariant | null>(() =>
   product.variants?.find((variant) => variant.id === selectedVariantId.value) || null
@@ -39,10 +40,11 @@ useSeoMeta({ title: product.name, description: product.description })
     <section class="product-gallery">
       <div class="product-detail-art" :style="{ background: product.gradient }">
         <span v-if="product.badge" class="badge">{{ product.badge }}</span>
-        <img v-if="selectedImage" class="detail-product-image" :src="selectedImage" :alt="product.name">
+        <img v-if="selectedImage" class="detail-product-image" :src="selectedImage" :alt="product.name" decoding="async" width="768" height="768">
         <span v-else class="detail-emoji">{{ product.emoji }}</span>
         <span class="art-caption">Norrli Pets / {{ product.category.toUpperCase() }}</span>
       </div>
+      <p v-if="selectedImageIsConcept" class="product-concept-note">Illustrative AI concept image. Final product appearance and specifications will be confirmed after supplier selection.</p>
       <div v-if="product.images?.length" class="product-thumbs">
         <button
           v-for="image in product.images"
@@ -50,7 +52,7 @@ useSeoMeta({ title: product.name, description: product.description })
           :class="['product-thumb-btn',{active:selectedImage===image.publicUrl}]"
           @click="selectedImage=image.publicUrl"
         >
-          <img :src="image.publicUrl" :alt="image.altText || product.name">
+          <img :src="image.publicUrl" :alt="image.altText || product.name" loading="lazy" width="80" height="80">
         </button>
       </div>
     </section>
