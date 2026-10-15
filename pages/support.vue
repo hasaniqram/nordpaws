@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowRight, PackageCheck, RotateCcw, ShieldCheck, FileText, MessageCircle, Truck, Search, ChevronRight } from 'lucide-vue-next'
+import { ArrowRight, PackageCheck, RotateCcw, ShieldCheck, FileText, MessageCircle, Truck, Search, ChevronRight, Copyright } from 'lucide-vue-next'
 const query=ref('')
 const subjects=[
  {title:'Kontakta oss',to:'/contact',subtitle:'Ställ en fråga till kundservice',icon:MessageCircle},
@@ -7,7 +7,8 @@ const subjects=[
  {title:'Leveransvillkor',to:'/legal/shipping',subtitle:'När leveransvillkor och avgifter fastställs',icon:PackageCheck},
  {title:'Returer och ångerrätt',to:'/legal/returns',subtitle:'Ångerrätt, reklamation och returprocess',icon:RotateCcw},
  {title:'Integritetspolicy',to:'/legal/privacy',subtitle:'Hur personuppgifter hanteras',icon:ShieldCheck},
- {title:'Köpvillkor',to:'/legal/terms',subtitle:'Köp, betalning och konsumentskydd',icon:FileText}
+ {title:'Köpvillkor',to:'/legal/terms',subtitle:'Köp, betalning och konsumentskydd',icon:FileText},
+ {title:'Upphovsrätt och innehåll',to:'/legal/copyright',subtitle:'Bilder, texter, varumärken och tillstånd',icon:Copyright}
 ]
 const faqs=[
  {q:'Går det att beställa från Norrli Pets just nu?',a:'Inte ännu. Sortimentet visas som förhandsvisning och vi tar inte emot betalda beställningar. Vi kommer att publicera aktuella priser och köpvillkor före försäljningsstart.',to:'/legal/terms'},
@@ -15,7 +16,8 @@ const faqs=[
  {q:'Hur fungerar ångerrätt och reklamation?',a:'Vid distansköp av varor från företag gäller normalt 14 dagars ångerrätt med lagstadgade undantag. Reklamationsrätten är normalt tre år enligt konsumentköplagen.',to:'/legal/returns'},
  {q:'Hur kontaktar jag kundservice?',a:'Använd kontaktformuläret. Beskriv ärendet, men skicka inte känsliga personuppgifter eller betalningsinformation.',to:'/contact'},
  {q:'Kan jag se mina beställningar?',a:'Kundsidan finns redan, men funktionerna testas fortfarande inför lanseringen. Eventuella testbeställningar är inte riktiga köp.',to:'/account'},
- {q:'Hur använder ni min information?',a:'Kontaktformuläret lagrar namn, e-postadress och meddelande för att kunna hantera frågan. Läs om fler behandlingar och information som ännu behöver kompletteras före lansering.',to:'/legal/privacy'}
+ {q:'Hur använder ni min information?',a:'Kontaktformuläret lagrar namn, e-postadress och meddelande för att kunna hantera frågan. Läs om fler behandlingar och information som ännu behöver kompletteras före lansering.',to:'/legal/privacy'},
+ {q:'Får jag använda Norrli Pets bilder och texter?',a:'För skyddat material kan tillstånd från rättighetshavaren krävas om inget lagligt undantag gäller. En del fotografier, illustrationer och andra resurser på webbplatsen kan tillhöra tredje part.',to:'/legal/copyright'}
 ]
 const results=computed(()=>faqs.filter(f=>!query.value.trim()||(f.q+' '+f.a).toLocaleLowerCase('sv-SE').includes(query.value.toLocaleLowerCase('sv-SE').trim())))
 useSeoMeta({title:'Kundservice och hjälpcenter',description:'Norrli Pets hjälpcenter – kontakt, leveranser, returer, integritet och köpvillkor.'})
