@@ -17,7 +17,7 @@ type Item={
 }
 type Check={
   id:string;checked_at:string;stock_status:StockStatus;stock_quantity:number|null
-  unit_cost:number|null;notes:string
+  unit_cost:number|null;currency:Currency;notes:string
 }
 type Supplier={id:string;name:string;status:string}
 type Product={id:string;name:string;slug:string}
@@ -191,7 +191,7 @@ const fetchHistory=async(id:string)=>{
   if(historyItemId.value===id){historyItemId.value='';return}
   historyItemId.value=id;historyLoading.value=true;history.value=[]
   const {data,error:dbError}=await client.from('supplier_stock_checks')
-    .select('id,checked_at,stock_status,stock_quantity,unit_cost,notes')
+    .select('id,checked_at,stock_status,stock_quantity,unit_cost,currency,notes')
     .eq('catalog_item_id',id).order('checked_at',{ascending:false}).limit(12)
   if(dbError)feedback.value=dbError.message
   else history.value=(data||[]) as Check[]
@@ -414,7 +414,7 @@ useSeoMeta({
               <div v-for="check in history" :key="check.id">
                 <span>{{formatDate(check.checked_at)}}</span>
                 <strong>{{statusNames[check.stock_status]}} · {{check.stock_quantity??'?'}} units</strong>
-                <small>{{check.unit_cost==null?'Price not recorded':item.currency+' '+check.unit_cost}}</small>
+                <small>{{check.unit_cost==null?'Price not recorded':check.currency+' '+check.unit_cost}}</small>
                 <p v-if="check.notes">{{check.notes}}</p>
               </div>
             </div>
