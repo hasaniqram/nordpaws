@@ -1,16 +1,36 @@
-import type { Product } from '~/data/products'
+import type { Product, ProductVariant } from '~/data/products'
 
-type CartLine = Pick<Product, 'id' | 'slug' | 'name' | 'price' | 'emoji'> & { quantity: number }
+export type CartLine = Pick<Product, 'id' | 'slug' | 'name' | 'emoji'> & {
+  key: string
+  price: number
+  quantity: number
+  variantId?: string | null
+  variantName?: string | null
+  image?: string | null
+}
 
 export const useCart = () => {
   const lines = useState<CartLine[]>('cart-lines', () => [])
   const hydrated = useState('cart-hydrated', () => false)
 
+  const normalize = (raw: any[]): CartLine[] => raw.map((line) => ({
+    key: line.key || `${line.id}:${line.variantId || 'base'}`,
+    id: line.id,
+    slug: line.slug,
+    name: line.name,
+    emoji: line.emoji || '🐾',
+    price: Number(line.price) || 0,
+    quantity: Math.max(1, Math.min(10, Number(line.quantity) || 1)),
+    variantId: line.variantId || null,
+    variantName: line.variantName || null,
+    image: line.image || null
+  }))
+
   const hydrate = () => {
     if (!import.meta.client || hydrated.value) return
     try {
       const raw = localStorage.getItem('norrli-pets-cart')
-      if (raw) lines.value = JSON.parse(raw)
+      if (raw) lines.value = normalize(JSON.parse(raw))
     } catch { /* ignore invalid local storage */ }
     hydrated.value = true
   }
@@ -19,24 +39,39 @@ export const useCart = () => {
     if (import.meta.client) localStorage.setItem('norrli-pets-cart', JSON.stringify(lines.value))
   }
 
-  const add = (product: Product, quantity = 1) => {
+  const add = (product: Product, quantity = 1, variant?: ProductVariant | null) => {
     hydrate()
-    const found = lines.value.find((line) => line.id === product.id)
-    if (found) found.quantity += quantity
-    else lines.value.push({ id: product.id, slug: product.slug, name: product.name, price: product.price, emoji: product.emoji, quantity })
+    const key = `${product.id}:${variant?.id || 'base'}`
+    const found = lines.value.find((line) => line.key === key)
+    if (found) {
+      found.quantity = Math.min(10, found.quantity + quantity)
+    } else {
+      lines.value.push({
+        key,
+        id: product.id,
+        slug: product.slug,
+        name: product.name,
+        emoji: product.emoji,
+        price: variant?.price ?? product.price,
+        quantity: Math.min(10, quantity),
+        variantId: variant?.id || null,
+        variantName: variant?.name || null,
+        image: product.primaryImage || null
+      })
+    }
     lines.value = [...lines.value]
     persist()
   }
 
-  const remove = (id: string) => {
-    lines.value = lines.value.filter((line) => line.id !== id)
+  const remove = (key: string) => {
+    lines.value = lines.value.filter((line) => line.key !== key)
     persist()
   }
 
-  const setQuantity = (id: string, quantity: number) => {
-    const line = lines.value.find((item) => item.id === id)
+  const setQuantity = (key: string, quantity: number) => {
+    const line = lines.value.find((item) => item.key === key)
     if (!line) return
-    if (quantity <= 0) return remove(id)
+    if (quantity <= 0) return remove(key)
     line.quantity = Math.min(10, quantity)
     lines.value = [...lines.value]
     persist()
