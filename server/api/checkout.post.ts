@@ -11,144 +11,189 @@ type CheckoutCustomer = {
   country: 'SE'
 }
 
-const toMoney = (ore: number) => (ore / 100).toFixed(2)
+type StripeCheckoutSession = {
+  id: string
+  url: string | null
+  livemode: boolean
+}
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
-  if (!config.checkoutEnabled || !config.mollieApiKey) {
-    throw createError({ statusCode: 503, statusMessage: 'Checkout is not live yet. The Norrli Pets Mollie account still needs to be connected.' })
-  }
+  const apiKey = String(config.stripeSecretKey || '')
 
-  const body = await readBody<{ lines?: IncomingLine[]; customer?: CheckoutCustomer }>(event)
-  if (!body.lines?.length) throw createError({ statusCode: 400, statusMessage: 'Your bag is empty.' })
-
-  const customer = body.customer
-  if (!customer) throw createError({ statusCode: 400, statusMessage: 'Customer details are required.' })
-
-  const required = ['givenName','familyName','email','streetAndNumber','postalCode','city'] as const
-  for (const key of required) {
-    if (!String(customer[key] || '').trim()) {
-      throw createError({ statusCode: 400, statusMessage: 'Complete your delivery details before checkout.' })
-    }
-  }
-
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer.email)) {
-    throw createError({ statusCode: 400, statusMessage: 'Enter a valid email address.' })
+  // NEVER allow a live key through this test-only checkout implementation.
+  if (!config.checkoutEnabled || !apiKey.startsWith('sk_test_')) {
+    throw createError({
+      statusCode: 503,
+      statusMessage: 'Norrli Pets Stripe test checkout is not connected yet. No real payments are accepted.'
+    })
   }
 
   const supabase = getSupabaseAdmin()
-  if (!supabase) throw createError({ statusCode: 503, statusMessage: 'Product catalog is temporarily unavailable.' })
-
-  const productIds = [...new Set(body.lines.map((line) => line.id))]
-  const variantIds = [...new Set(body.lines.map((line) => line.variantId).filter(Boolean) as string[])]
-
-  const [{ data: dbProducts, error: productError }, { data: dbVariants, error: variantError }] = await Promise.all([
-    supabase
-      .from('products')
-      .select('id,name,price,active,supplier_id,supplier_sku,supplier_cost')
-      .in('id', productIds)
-      .eq('active', true),
-    variantIds.length
-      ? supabase
-          .from('product_variants')
-          .select('id,product_id,name,sku,price,supplier_sku,supplier_cost,stock_quantity,active')
-          .in('id', variantIds)
-          .eq('active', true)
-      : Promise.resolve({ data: [], error: null } as any)
-  ])
-
-  if (productError || !dbProducts || dbProducts.length !== productIds.length || variantError) {
-    throw createError({ statusCode: 400, statusMessage: 'One or more products are no longer available.' })
+  if (!supabase) {
+    throw createError({ statusCode: 503, statusMessage: 'Secure order storage is not configured.' })
   }
 
-  const productsById = new Map(dbProducts.map((product) => [product.id, product]))
-  const variantsById = new Map((dbVariants || []).map((variant:any) => [variant.id, variant]))
+  const body = await readBody<{ lines?: IncomingLine[]; customer?: CheckoutCustomer }>(event)
+  if (!Array.isArray(body?.lines) || body.lines.length < 1 || body.lines.length > 25) {
+    throw createError({ statusCode: 400, statusMessage: 'Please check the items in your bag.' })
+  }
 
-  const normalizedLines = body.lines.map((line) => {
-    const product:any = productsById.get(line.id)
-    if (!product) throw createError({ statusCode: 400, statusMessage: 'One product is no longer available.' })
-
-    const quantity = Math.max(1, Math.min(10, Number(line.quantity) || 1))
-    const variant:any = line.variantId ? variantsById.get(line.variantId) : null
-
-    if (line.variantId && (!variant || variant.product_id !== product.id)) {
-      throw createError({ statusCode: 400, statusMessage: 'One selected product option is no longer available.' })
+  const customer = body.customer
+  if (!customer || customer.country !== 'SE') {
+    throw createError({ statusCode: 400, statusMessage: 'This test checkout supports Sweden only.' })
+  }
+  const required = ['givenName', 'familyName', 'email', 'streetAndNumber', 'postalCode', 'city'] as const
+  for (const key of required) {
+    if (typeof customer[key] !== 'string' || !customer[key].trim() || customer[key].length > 200) {
+      throw createError({ statusCode: 400, statusMessage: 'Complete your delivery details before checkout.' })
     }
-    if (variant?.stock_quantity != null && quantity > variant.stock_quantity) {
-      throw createError({ statusCode: 400, statusMessage: `${product.name} · ${variant.name} does not have enough stock.` })
-    }
+  }
+  const email = customer.email.trim().toLowerCase()
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    throw createError({ statusCode: 400, statusMessage: 'Enter a valid email address.' })
+  }
 
-    const unitAmount = variant?.price ?? product.price
+  const productIds = [...new Set(body.lines.map(line => line.id))]
+  const variantIds = [...new Set(body.lines.map(line => line.variantId).filter(Boolean) as string[])]
+  const [{ data: products, error: productError }, { data: variants, error: variantError }] = await Promise.all([
+    supabase.from('products')
+      .select('id,name,price,active,supplier_id,supplier_sku,supplier_cost,stock_quantity')
+      .in('id', productIds).eq('active', true),
+    variantIds.length
+      ? supabase.from('product_variants')
+          .select('id,product_id,name,sku,price,supplier_sku,supplier_cost,stock_quantity,active')
+          .in('id', variantIds).eq('active', true)
+      : Promise.resolve({ data: [], error: null } as any)
+  ])
+  if (productError || variantError || !products || products.length !== productIds.length) {
+    throw createError({ statusCode: 400, statusMessage: 'One or more products are unavailable.' })
+  }
+  const byId = new Map(products.map(product => [product.id, product]))
+  const byVariant = new Map((variants || []).map((variant: any) => [variant.id, variant]))
+  const quantityBySku = new Map<string, number>()
+
+  const lines = body.lines.map(line => {
+    const product: any = byId.get(line.id)
+    const variant: any = line.variantId ? byVariant.get(line.variantId) : null
+    if (!product || (line.variantId && (!variant || variant.product_id !== product.id))) {
+      throw createError({ statusCode: 400, statusMessage: 'One selected product option is not available.' })
+    }
+    const quantity = Number(line.quantity)
+    if (!Number.isInteger(quantity) || quantity < 1 || quantity > 10) {
+      throw createError({ statusCode: 400, statusMessage: 'Invalid quantity in bag.' })
+    }
+    const skuKey = `${product.id}:${variant?.id || 'base'}`
+    const newQuantity = (quantityBySku.get(skuKey) || 0) + quantity
+    quantityBySku.set(skuKey, newQuantity)
+    const available = variant?.stock_quantity ?? product.stock_quantity
+    if (available != null && newQuantity > available) {
+      throw createError({ statusCode: 400, statusMessage: `${product.name} exceeds available stock.` })
+    }
+    const unitAmount = Number(variant?.price ?? product.price)
+    if (!Number.isSafeInteger(unitAmount) || unitAmount < 50 || unitAmount > 100000000) {
+      throw createError({ statusCode: 400, statusMessage: 'Invalid catalog price.' })
+    }
     return { product, variant, quantity, unitAmount }
   })
+  const amount = lines.reduce((sum, line) => sum + line.unitAmount * line.quantity, 0)
+  if (!Number.isSafeInteger(amount) || amount < 50 || amount > 100000000) {
+    throw createError({ statusCode: 400, statusMessage: 'Invalid order amount.' })
+  }
 
-  const totalOre = normalizedLines.reduce((sum, line) => sum + line.unitAmount * line.quantity, 0)
-  const orderNumber = `NR-${crypto.randomUUID().slice(0, 8).toUpperCase()}`
-  const siteUrl = config.public.siteUrl.replace(/\/$/, '')
-
-  const mollieLines = normalizedLines.map(({ product, variant, quantity, unitAmount }) => ({
-    type: 'physical',
-    description: variant ? `${product.name} · ${variant.name}` : product.name,
-    quantity,
-    sku: variant?.sku || variant?.supplier_sku || product.supplier_sku || product.id,
-    unitPrice: { currency: 'SEK', value: toMoney(unitAmount) },
-    totalAmount: { currency: 'SEK', value: toMoney(unitAmount * quantity) }
-  }))
-
-  const payment = await $fetch<any>('https://api.mollie.com/v2/payments', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${config.mollieApiKey}`,
-      'Content-Type': 'application/json'
-    },
-    body: {
-      amount: { currency: 'SEK', value: toMoney(totalOre) },
-      description: `Norrli Pets ${orderNumber}`,
-      redirectUrl: `${siteUrl}/checkout/success?order=${encodeURIComponent(orderNumber)}`,
-      cancelUrl: `${siteUrl}/checkout/cancel`,
-      webhookUrl: `${siteUrl}/api/mollie/webhook`,
-      locale: 'sv_SE',
-      restrictPaymentMethodsToCountry: 'SE',
-      method: ['swish', 'klarna', 'creditcard', 'applepay'],
-      billingAddress: {
-        givenName: customer.givenName.trim(),
-        familyName: customer.familyName.trim(),
-        streetAndNumber: customer.streetAndNumber.trim(),
-        postalCode: customer.postalCode.trim(),
+  // All prices are fetched from Supabase, never trusted from the browser.
+  // Shipping is 0 ONLY for sandbox transactions; live checkout must remain disabled
+  // until supplier shipping, Swedish VAT and consumer policies are approved.
+  const orderNumber = `NR-TEST-${crypto.randomUUID().slice(0, 8).toUpperCase()}`
+  const fullName = `${customer.givenName.trim()} ${customer.familyName.trim()}`
+  const { data: order, error: orderError } = await supabase.from('orders')
+    .insert({
+      order_number: orderNumber,
+      email,
+      customer_name: fullName,
+      currency: 'sek',
+      amount_total: amount,
+      payment_provider: 'stripe_test',
+      payment_status: 'unpaid',
+      status: 'pending',
+      shipping_address: {
+        line1: customer.streetAndNumber.trim(),
+        postal_code: customer.postalCode.trim(),
         city: customer.city.trim(),
-        country: 'SE',
-        email: customer.email.trim().toLowerCase()
-      },
-      shippingAddress: {
-        givenName: customer.givenName.trim(),
-        familyName: customer.familyName.trim(),
-        streetAndNumber: customer.streetAndNumber.trim(),
-        postalCode: customer.postalCode.trim(),
-        city: customer.city.trim(),
-        country: 'SE',
-        email: customer.email.trim().toLowerCase()
-      },
-      lines: mollieLines,
-      metadata: {
-        orderNumber,
-        email: customer.email.trim().toLowerCase(),
-        items: normalizedLines.map(({ product, variant, quantity, unitAmount }) => ({
-          id: product.id,
-          variantId: variant?.id || null,
-          variantName: variant?.name || null,
-          name: variant ? `${product.name} · ${variant.name}` : product.name,
-          quantity,
-          unitAmount,
-          supplierId: product.supplier_id || null,
-          supplierSku: variant?.supplier_sku || product.supplier_sku || null,
-          supplierCost: variant?.supplier_cost ?? product.supplier_cost ?? null
-        }))
+        country: 'SE'
       }
-    }
+    })
+    .select('id')
+    .single()
+  if (orderError || !order) {
+    throw createError({ statusCode: 503, statusMessage: 'Could not prepare your test order.' })
+  }
+
+  const { error: itemsError } = await supabase.from('order_items').insert(lines.map(({ product, variant, quantity, unitAmount }) => ({
+    order_id: order.id,
+    product_id: product.id,
+    variant_id: variant?.id || null,
+    variant_name: variant?.name || null,
+    name: variant ? `${product.name} · ${variant.name}` : product.name,
+    quantity,
+    unit_amount: unitAmount,
+    supplier_id: product.supplier_id || null,
+    supplier_sku: variant?.supplier_sku || product.supplier_sku || null,
+    supplier_cost: variant?.supplier_cost ?? product.supplier_cost ?? null
+  })))
+  if (itemsError) {
+    await supabase.from('orders').delete().eq('id', order.id)
+    throw createError({ statusCode: 503, statusMessage: 'Could not prepare the test order items.' })
+  }
+
+  const siteUrl = String(config.public.siteUrl || 'https://norrlipets.se').replace(/\/$/, '')
+  const params = new URLSearchParams({
+    mode: 'payment',
+    client_reference_id: orderNumber,
+    customer_email: email,
+    locale: 'sv',
+    billing_address_collection: 'required',
+    'shipping_address_collection[allowed_countries][0]': 'SE',
+    success_url: `${siteUrl}/checkout/success?order=${encodeURIComponent(orderNumber)}&session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${siteUrl}/checkout/cancel`,
+    'metadata[orderNumber]': orderNumber,
+    'metadata[sandboxOnly]': 'true',
+    'payment_intent_data[metadata][orderNumber]': orderNumber
+  })
+  lines.forEach(({ product, variant, quantity, unitAmount }, index) => {
+    params.set(`line_items[${index}][price_data][currency]`, 'sek')
+    params.set(`line_items[${index}][price_data][unit_amount]`, String(unitAmount))
+    params.set(`line_items[${index}][price_data][product_data][name]`,
+      variant ? `${product.name} · ${variant.name}` : product.name)
+    params.set(`line_items[${index}][quantity]`, String(quantity))
   })
 
-  const url = payment?._links?.checkout?.href
-  if (!url) throw createError({ statusCode: 502, statusMessage: 'Payment checkout could not be created.' })
+  let session: StripeCheckoutSession
+  try {
+    session = await $fetch<StripeCheckoutSession>('https://api.stripe.com/v1/checkout/sessions', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Idempotency-Key': orderNumber
+      },
+      body: params.toString()
+    })
+  } catch {
+    await supabase.from('orders').update({ status: 'checkout_failed' }).eq('id', order.id)
+    throw createError({ statusCode: 502, statusMessage: 'Stripe test checkout could not be created. Please try again.' })
+  }
 
-  return { url, orderNumber }
+  if (!session?.id?.startsWith('cs_test_') || session.livemode !== false || !session.url?.startsWith('https://checkout.stripe.com/')) {
+    throw createError({ statusCode: 502, statusMessage: 'Unexpected Stripe checkout response. No charge was made.' })
+  }
+
+  const { error: updateError } = await supabase.from('orders')
+    .update({ stripe_checkout_session_id: session.id, provider_checkout_url: session.url })
+    .eq('id', order.id)
+  if (updateError) {
+    throw createError({ statusCode: 503, statusMessage: 'Could not save the checkout session.' })
+  }
+
+  return { url: session.url, orderNumber, sandbox: true }
 })
