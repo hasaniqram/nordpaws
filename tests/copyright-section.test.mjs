@@ -1,5 +1,6 @@
 import {test} from 'node:test'
 import assert from 'node:assert/strict'
+import {createHash} from 'node:crypto'
 import {readFileSync} from 'node:fs'
 import {prepareSupportMessage, SUPPORT_TOPICS} from '../server/utils/supportMessage.mjs'
 const read=path=>readFileSync(new URL('../'+path,import.meta.url),'utf8')
@@ -51,4 +52,18 @@ test('creator credit is prominent on the copyright page without assigning third-
  assert.match(page,/Skapad av <strong>Hasan Iqram<\/strong>/)
  assert.match(page,/Initiativtagare · Konceptskapare · Webbplatsutvecklare/)
  assert.match(page,/Material från tredje part omfattas av respektive rättighetshavares villkor/)
+})
+
+test('uploaded founder photo has correct optimized original bytes and is displayed accessibly',()=>{
+ const file=read('components/FounderPortrait.vue')
+ const match=file.match(/src="data:image\/webp;base64,([A-Za-z0-9+/=]+)"/)
+ assert.ok(match,'Founder portrait image data is missing')
+ const buffer=Buffer.from(match[1],'base64')
+ assert.equal(buffer.length,4878)
+ assert.equal(buffer.toString('ascii',0,4),'RIFF')
+ assert.equal(buffer.toString('ascii',8,12),'WEBP')
+ assert.equal(buffer.readUInt32LE(4)+8,buffer.length)
+ assert.equal(createHash('sha256').update(buffer).digest('hex'),'7b817bcaf7b617d48644c584f6933365a0053b483038b0db905491cba36124d8')
+ assert.match(file,/alt="Porträtt av Hasan Iqram/)
+ assert.match(read('pages/legal/copyright.vue'),/<FounderPortrait \/>/)
 })
