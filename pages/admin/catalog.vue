@@ -72,12 +72,14 @@ const stats=computed(()=>({
   needsCheck:items.value.filter(isStale).length,
   out:items.value.filter(item=>['out_of_stock','discontinued'].includes(item.stock_status)).length
 }))
+const emptyNumeric=(value:unknown)=>value===null||value===undefined||value===''
+const optionalNumber=(value:unknown)=>emptyNumeric(value)?null:Number(value)
 const validated=(x:Item)=>{
   if(!x.supplier_lead_id||!x.supplier_sku.trim()||!x.title.trim())return 'Supplier, SKU and title are required.'
   if(x.supplier_sku.trim().length>120||x.title.trim().length>250)return 'SKU or product title exceeds the size limit.'
-  if(x.unit_cost!=null&&(!Number.isFinite(Number(x.unit_cost))||Number(x.unit_cost)<0||Number(x.unit_cost)>9999999999))return 'Unit cost must be nonnegative.'
-  if(x.stock_quantity!=null&&(!Number.isInteger(Number(x.stock_quantity))||Number(x.stock_quantity)<0||Number(x.stock_quantity)>10000000))return 'Stock quantity must be an integer within the allowed range.'
-  if(x.lead_time_days!=null&&(!Number.isInteger(Number(x.lead_time_days))||Number(x.lead_time_days)<0||Number(x.lead_time_days)>365))return 'Lead time must be 0–365 days.'
+  if(!emptyNumeric(x.unit_cost)&&(!Number.isFinite(Number(x.unit_cost))||Number(x.unit_cost)<0||Number(x.unit_cost)>9999999999))return 'Unit cost must be nonnegative.'
+  if(!emptyNumeric(x.stock_quantity)&&(!Number.isInteger(Number(x.stock_quantity))||Number(x.stock_quantity)<0||Number(x.stock_quantity)>10000000))return 'Stock quantity must be an integer within the allowed range.'
+  if(!emptyNumeric(x.lead_time_days)&&(!Number.isInteger(Number(x.lead_time_days))||Number(x.lead_time_days)<0||Number(x.lead_time_days)>365))return 'Lead time must be 0–365 days.'
   if(x.source_url?.trim()){
     try{const url=new URL(x.source_url);if(!['https:','http:'].includes(url.protocol))return 'Use a valid HTTP(S) source URL.'}
     catch{return 'Use a valid HTTP(S) source URL.'}
@@ -117,13 +119,14 @@ const saveEdit=async()=>{
   const err=validated(e);if(err){feedback.value=err;return}
   saving.value=true;feedback.value=''
   try{
-    const changed=Number(e.unit_cost)!==Number(o.unit_cost)||
-      e.stock_status!==o.stock_status||Number(e.stock_quantity)!==Number(o.stock_quantity)
+    const changed=optionalNumber(e.unit_cost)!==optionalNumber(o.unit_cost)||
+      e.stock_status!==o.stock_status||optionalNumber(e.stock_quantity)!==optionalNumber(o.stock_quantity)||
+      e.currency!==o.currency
     const payload={
       product_id:e.product_id||null,supplier_sku:e.supplier_sku.trim(),title:e.title.trim(),
-      stock_status:e.stock_status,stock_quantity:e.stock_quantity==null?null:Number(e.stock_quantity),
-      unit_cost:e.unit_cost==null?null:Number(e.unit_cost),
-      currency:e.currency,lead_time_days:e.lead_time_days==null?null:Number(e.lead_time_days),
+      stock_status:e.stock_status,stock_quantity:optionalNumber(e.stock_quantity),
+      unit_cost:optionalNumber(e.unit_cost),
+      currency:e.currency,lead_time_days:optionalNumber(e.lead_time_days),
       source_url:e.source_url?.trim()||null,notes:e.notes.trim(),
       source_type:'manual',verified_at:changed?null:e.verified_at,updated_at:new Date().toISOString()
     }
@@ -149,9 +152,9 @@ const addManual=async()=>{
     const {error:dbError}=await client.from('supplier_catalog_items').insert({
       supplier_lead_id:newItem.supplier_lead_id,product_id:newItem.product_id||null,
       supplier_sku:newItem.supplier_sku.trim(),title:newItem.title.trim(),
-      stock_status:newItem.stock_status,stock_quantity:newItem.stock_quantity,
-      unit_cost:newItem.unit_cost,currency:newItem.currency,
-      lead_time_days:newItem.lead_time_days,source_url:newItem.source_url.trim()||null,
+      stock_status:newItem.stock_status,stock_quantity:optionalNumber(newItem.stock_quantity),
+      unit_cost:optionalNumber(newItem.unit_cost),currency:newItem.currency,
+      lead_time_days:optionalNumber(newItem.lead_time_days),source_url:newItem.source_url.trim()||null,
       notes:newItem.notes.trim(),source_type:'manual'
     })
     if(dbError)throw dbError
