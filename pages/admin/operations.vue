@@ -150,6 +150,7 @@ useSeoMeta({title:'Operations workspace',robots:'noindex,nofollow'})
       <div class="phase4-quick-links">
         <NuxtLink to="/admin"><ArrowLeft :size="16" /> Admin dashboard</NuxtLink>
         <NuxtLink to="/admin/quotes">Supplier quotes</NuxtLink>
+        <NuxtLink to="/admin/integrations">Integration lab</NuxtLink>
         <NuxtLink to="/admin/catalog">Stock lab</NuxtLink>
         <NuxtLink to="/admin/verify">Launch verification</NuxtLink>
         <button type="button" :disabled="loading" @click="load"><RefreshCw :size="16" /> Refresh</button>
