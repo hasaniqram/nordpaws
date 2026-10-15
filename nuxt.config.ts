@@ -14,6 +14,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     supabaseSecretKey: '',
     mollieApiKey: '',
+    stripeSecretKey: '',
+    stripeWebhookSecret: '',
     brevoApiKey: '',
     brevoSenderEmail: '',
     brevoSenderName: 'Norrli Pets',
