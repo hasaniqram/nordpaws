@@ -24,7 +24,7 @@ export function validateFulfillmentTransition(order, target, fields = {}) {
     return {ok:false,reason:'One of the reference fields is too long.'}
   if(next>=1 && !ref) return {ok:false,reason:'Supplier order reference is required.'}
   if(next>=3 && (!carrier || !tracking)) return {ok:false,reason:'Carrier and tracking number are required before shipping.'}
-  if(next>=4 && !order.shipped_at && current!=='shipped')
+  if(next>=4 && !order.shipped_at)
     return {ok:false,reason:'The order must be shipped before marking it delivered.'}
   return {ok:true,reason:''}
 }
