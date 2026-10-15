@@ -39,7 +39,11 @@ const toggleCompare=(slug:string)=>{
 const comparisonLink=computed(()=>({path:'/compare',query:{items:selectedSlugs.value.join(',')}}))
 const suggestions=computed(()=>suggestProducts(catalog.value?.products||[],search.value,5))
 const showSuggestions=computed(()=>suggestionsOpen.value && search.value.trim().length>=2 && suggestions.value.length>0)
-const onSearchBlur=()=>{suggestionsOpen.value=false}
+const onSearchFocusOut=(event:FocusEvent)=>{
+ const wrapper=event.currentTarget as HTMLElement|null
+ const destination=event.relatedTarget as Node|null
+ if(!wrapper||!destination||!wrapper.contains(destination))suggestionsOpen.value=false
+}
 
 const { data: catalog, status } = await useFetch<{ products: Product[]; source: string }>('/api/products')
 
@@ -116,12 +120,12 @@ useSeoMeta({
 
     <section class="norrli-discovery" aria-label="Filtrera kollektionen">
       <div class="norrli-discovery-primary">
-        <div class="norrli-premium-search-wrap">
+        <div class="norrli-premium-search-wrap" @focusout="onSearchFocusOut">
         <form class="norrli-search" role="search" @submit.prevent="applySearch">
           <Search :size="19" aria-hidden="true" />
           <input v-model="search" maxlength="120" type="search" placeholder="Sök på svenska: päls, tassar, resa…"
-            aria-label="Sök produktidéer" autocomplete="off" :aria-expanded="showSuggestions" aria-controls="norrli-search-suggestions"
-            @focus="suggestionsOpen=true" @blur="onSearchBlur" @keydown.esc="suggestionsOpen=false" />
+            aria-label="Sök produktidéer" autocomplete="off" :aria-expanded="showSuggestions" :aria-controls="showSuggestions ? 'norrli-search-suggestions' : undefined"
+            @focus="suggestionsOpen=true" @keydown.esc="suggestionsOpen=false" />
           <button v-if="query || search" type="button" aria-label="Rensa sökning" class="norrli-search-clear"
             @click="clearSearch"><X :size="16" aria-hidden="true" /></button>
           <button type="submit" class="norrli-search-submit">Sök <ArrowRight :size="16" aria-hidden="true" /></button>
