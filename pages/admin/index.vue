@@ -42,6 +42,7 @@ type AdminOrder = {
   amount_total:number
   currency:string
   payment_status:string|null
+  payment_provider:string|null
   fulfillment_status:string
   supplier_status:string
   supplier_order_reference:string|null
