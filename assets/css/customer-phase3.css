@@ -103,3 +103,17 @@
 /* Keep the approved logo unchanged; accommodate the additional account header control. */
 .nordic-header-actions{gap:16px}
 @media(max-width:580px){.nordic-header-actions{gap:6px}.nordic-header-action{min-width:36px}}
+
+
+/* Phase 2.5: customer journey shortcuts and account clarity */
+.norrli-customer-shortcuts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 32px}
+.norrli-customer-shortcuts>a{display:flex;align-items:center;gap:13px;background:#f1f6ed;border:1px solid #dae6d6;border-radius:17px;padding:18px;color:#285e42;min-width:0;transition:background .18s,border-color .18s}
+.norrli-customer-shortcuts>a:hover{background:#e7f0e3;border-color:#a9c8ad}
+.norrli-customer-shortcuts>a>span{display:grid;gap:4px;flex:1;min-width:0}
+.norrli-customer-shortcuts strong{font-size:13px;color:#1b4c35}
+.norrli-customer-shortcuts small{font-size:11px;line-height:1.5;color:#647c68}
+.norrli-customer-shortcuts a:focus-visible,.norrli-order-section button:focus-visible{outline:3px solid #267147;outline-offset:3px}
+.norrli-account-empty button{margin-top:6px}
+@media(max-width:900px){.norrli-customer-shortcuts{grid-template-columns:1fr 1fr}}
+@media(max-width:580px){.norrli-customer-shortcuts{grid-template-columns:1fr;gap:9px;margin-bottom:24px}.norrli-customer-shortcuts>a{padding:14px}.norrli-order-section-title{flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){.norrli-customer-shortcuts>a{transition:none}}
