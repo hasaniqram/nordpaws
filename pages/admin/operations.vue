@@ -153,6 +153,7 @@ useSeoMeta({title:'Operations workspace',robots:'noindex,nofollow'})
         <NuxtLink to="/admin/integrations">Integration lab</NuxtLink>
         <NuxtLink to="/admin/catalog">Stock lab</NuxtLink>
         <NuxtLink to="/admin/verify">Launch verification</NuxtLink>
+        <NuxtLink to="/admin/release-gate">Release Gate</NuxtLink>
         <button type="button" :disabled="loading" @click="load"><RefreshCw :size="16" /> Refresh</button>
       </div>
     </header>
