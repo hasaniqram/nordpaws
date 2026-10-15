@@ -16,7 +16,7 @@ export function validateFulfillmentTransition(order, target, fields = {}) {
   const position=STEP.get(current)
   const next=STEP.get(target)
   if(position===undefined || next===undefined) return {ok:false,reason:'Unsupported fulfillment state.'}
-  if(next<position || next>position+1) return {ok:false,reason:'Follow fulfillment stages in order; reverse transitions are not allowed.'}
+  if(next!==position+1) return {ok:false,reason:'Only the next fulfillment stage may be recorded.'}
   const ref=String(fields.supplierOrderReference||'').trim()
   const carrier=String(fields.carrier||'').trim()
   const tracking=String(fields.trackingNumber||'').trim()
