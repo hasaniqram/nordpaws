@@ -1,4 +1,4 @@
-import { getSupabasePublic } from '~/server/utils/supabase'
+import { getSupabaseAdmin } from '~/server/utils/supabase'
 
 type IncomingLine = { id: string; variantId?: string | null; quantity: number }
 type CheckoutCustomer = {
@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Enter a valid email address.' })
   }
 
-  const supabase = getSupabasePublic()
+  const supabase = getSupabaseAdmin()
   if (!supabase) throw createError({ statusCode: 503, statusMessage: 'Product catalog is temporarily unavailable.' })
 
   const productIds = [...new Set(body.lines.map((line) => line.id))]
