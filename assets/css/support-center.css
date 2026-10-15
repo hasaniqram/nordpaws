@@ -268,3 +268,56 @@
  .norrli-copyright-founder p{font-size:13px}
  .norrli-copyright-founder-role{line-height:1.75}
 }
+
+/* Founder portrait: the exact user-provided photo, optimized for a fast preview. */
+.norrli-copyright-founder-with-portrait{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(150px,220px);
+  align-items:center;
+  column-gap:clamp(18px,3.3vw,44px);
+}
+.norrli-copyright-founder-story{min-width:0}
+.norrli-copyright-founder-portrait{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  position:relative;
+  z-index:1;
+}
+.norrli-copyright-founder-photo{
+  display:block;
+  width:100%;
+  max-width:220px;
+  height:auto;
+  aspect-ratio:1;
+  object-fit:cover;
+  object-position:center;
+  border-radius:21px;
+  border:5px solid #fffdf9;
+  box-shadow:0 16px 36px rgba(20,67,38,.16);
+  background:#e4efe0;
+}
+.norrli-copyright-founder-photo-caption{
+  font-size:11px;
+  line-height:1.4;
+  font-weight:800;
+  color:#4b6d55;
+  text-align:center;
+}
+@media(max-width:690px){
+  .norrli-copyright-founder-with-portrait{
+    grid-template-columns:1fr;
+    gap:24px;
+  }
+  .norrli-copyright-founder-portrait{
+    align-items:flex-start;
+  }
+  .norrli-copyright-founder-photo{
+    width:min(220px,100%);
+  }
+  .norrli-copyright-founder-photo-caption{
+    text-align:left;
+  }
+}
