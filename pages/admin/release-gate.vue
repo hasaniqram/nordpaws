@@ -70,7 +70,7 @@ const exportReport=()=>{
    },
    checks:report.value.items.map(({id,label,state,detail})=>({id,label,state,detail})),
    personalReview:RELEASE_REVIEW_ITEMS.map(({id,title})=>({id,title,checked:!!reviewMarks[id]})),
-   notes:reviewNotes.value.trim().slice(0,1000),
+   // Free-text notes are excluded to prevent accidental personal-data export.
    disclaimers:report.value.warning
  }
  const blob=new Blob([JSON.stringify(sanitized,null,2)],{type:'application/json'})
@@ -171,7 +171,7 @@ useSeoMeta({title:'Launch Gate · Intern kontroll',robots:'noindex,nofollow'})
      </label>
      <div class="release-export">
       <button type="button" :disabled="readStatus!=='ok'" @click="exportReport"><Download :size="17"/> Exportera avidentifierad JSON-rapport</button>
-      <p>Endast sammanräknade värden, kontrollpunkter och dina egna anteckningar ingår. Inga kundnamn, e-postadresser eller meddelandetexter exporteras.</p>
+      <p>Endast sammanräknade värden och fasta kontrollpunkter exporteras. Fritextanteckningar, kundnamn, e-postadresser och meddelandetexter ingår aldrig.</p>
      </div>
     </div>
    </section>
