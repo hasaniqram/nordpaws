@@ -9,14 +9,14 @@ const previewOnly=computed(()=>!config.public.checkoutEnabled)
 const {data:catalog,status}=await useFetch<{products:Product[];source:string}>('/api/products')
 const selection=computed(()=>typeof route.query.items==='string'?route.query.items:'')
 const products=computed<Product[]>(()=>getComparison(catalog.value?.products||[],selection.value,3))
-const label=category=>({
+const label=(category:string)=>({
  'Dogs':'Hund','Cats':'Katt','Travel':'Promenad & resa','Clean Home':'Hem & rengöring'
 }[category]||category)
 const removeProduct=(slug:string)=>{
  const remaining=products.value.filter(p=>p.slug!==slug).map(p=>p.slug)
  return navigateTo({path:'/compare',query:remaining.length?{items:remaining.join(',')}:{}})
 }
-const fields=[
+const fields: {key:string;label:string;value:(p:Product)=>string}[]=[
  {key:'category',label:'Kategori',value:p=>label(p.category)},
  {key:'subtitle',label:'Beskrivning',value:p=>p.subtitle||'Ännu inte angivet'},
  {key:'price',label:'Preliminärt pris',value:p=>formatSEK(p.price)},
