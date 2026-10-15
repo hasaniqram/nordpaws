@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Check, Minus, Plus, ShieldCheck, Truck } from 'lucide-vue-next'
-import { formatSEK, type Product } from '~/data/products'
+import { formatSEK, type Product, type ProductVariant } from '~/data/products'
 
 const route = useRoute()
 const { data: catalog } = await useFetch<{ products: Product[]; source: string }>('/api/products')
@@ -11,8 +11,22 @@ if (!product) throw createError({ statusCode: 404, statusMessage: 'Product not f
 const quantity = ref(1)
 const { add } = useCart()
 const added = ref(false)
+const selectedVariantId = ref(product.variants?.[0]?.id || '')
+const selectedImage = ref(product.primaryImage || product.images?.[0]?.publicUrl || '')
+
+const selectedVariant = computed<ProductVariant | null>(() =>
+  product.variants?.find((variant) => variant.id === selectedVariantId.value) || null
+)
+
+const displayPrice = computed(() => selectedVariant.value?.price ?? product.price)
+const outOfStock = computed(() =>
+  selectedVariant.value?.stockQuantity != null && selectedVariant.value.stockQuantity <= 0
+)
+
 const addToCart = () => {
-  add(product, quantity.value)
+  if (product.variants?.length && !selectedVariant.value) return
+  if (outOfStock.value) return
+  add(product, quantity.value, selectedVariant.value)
   added.value = true
   setTimeout(() => added.value = false, 1200)
 }
@@ -22,14 +36,86 @@ useSeoMeta({ title: product.name, description: product.description })
 
 <template>
   <main class="container product-page">
-    <div class="product-detail-art" :style="{ background: product.gradient }"><span v-if="product.badge" class="badge">{{ product.badge }}</span><span class="detail-emoji">{{ product.emoji }}</span><span class="art-caption">Norrli Pets / {{ product.category.toUpperCase() }}</span></div>
+    <section class="product-gallery">
+      <div class="product-detail-art" :style="{ background: product.gradient }">
+        <span v-if="product.badge" class="badge">{{ product.badge }}</span>
+        <img v-if="selectedImage" class="detail-product-image" :src="selectedImage" :alt="product.name">
+        <span v-else class="detail-emoji">{{ product.emoji }}</span>
+        <span class="art-caption">Norrli Pets / {{ product.category.toUpperCase() }}</span>
+      </div>
+      <div v-if="product.images?.length" class="product-thumbs">
+        <button
+          v-for="image in product.images"
+          :key="image.id"
+          :class="['product-thumb-btn',{active:selectedImage===image.publicUrl}]"
+          @click="selectedImage=image.publicUrl"
+        >
+          <img :src="image.publicUrl" :alt="image.altText || product.name">
+        </button>
+      </div>
+    </section>
+
     <div class="product-detail-copy">
-      <span class="eyebrow">{{ product.category }}</span><h1>{{ product.name }}</h1><p class="subtitle">{{ product.subtitle }}</p>
-      <div class="detail-price"><strong>{{ formatSEK(product.price) }}</strong><del v-if="product.compareAt">{{ formatSEK(product.compareAt) }}</del></div>
+      <span class="eyebrow">{{ product.category }}</span>
+      <h1>{{ product.name }}</h1>
+      <p class="subtitle">{{ product.subtitle }}</p>
+      <div class="detail-price">
+        <strong>{{ formatSEK(displayPrice) }}</strong>
+        <del v-if="product.compareAt && !selectedVariant?.price">{{ formatSEK(product.compareAt) }}</del>
+      </div>
       <p class="description">{{ product.description }}</p>
-      <ul class="feature-list"><li v-for="feature in product.features" :key="feature"><Check :size="17"/>{{ feature }}</li></ul>
-      <div class="buy-row"><div class="quantity"><button @click="quantity=Math.max(1,quantity-1)"><Minus :size="17"/></button><span>{{ quantity }}</span><button @click="quantity=Math.min(10,quantity+1)"><Plus :size="17"/></button></div><button class="btn btn-primary buy-btn" @click="addToCart">{{ added ? 'Added to bag' : 'Add to bag' }}</button></div>
-      <div class="purchase-notes"><div><Truck :size="20"/><span><strong>Sweden delivery</strong>Tracked delivery options at checkout.</span></div><div><ShieldCheck :size="20"/><span><strong>Secure payment</strong>Mollie checkout with Swedish payment methods when enabled.</span></div></div>
+
+      <div v-if="product.variants?.length" class="variant-picker">
+        <label>Choose option</label>
+        <div class="variant-options">
+          <button
+            v-for="variant in product.variants"
+            :key="variant.id"
+            :class="['variant-option',{active:selectedVariantId===variant.id}]"
+            :disabled="variant.stockQuantity === 0"
+            @click="selectedVariantId=variant.id"
+          >
+            <span>{{ variant.name }}</span>
+            <small v-if="variant.price && variant.price !== product.price">{{ formatSEK(variant.price) }}</small>
+            <small v-if="variant.stockQuantity === 0">Sold out</small>
+          </button>
+        </div>
+      </div>
+
+      <ul class="feature-list">
+        <li v-for="feature in product.features" :key="feature"><Check :size="17"/>{{ feature }}</li>
+      </ul>
+
+      <dl v-if="product.material || product.dimensions || product.weightGrams" class="product-specs">
+        <div v-if="product.material"><dt>Material</dt><dd>{{ product.material }}</dd></div>
+        <div v-if="product.dimensions"><dt>Dimensions</dt><dd>{{ product.dimensions }}</dd></div>
+        <div v-if="product.weightGrams"><dt>Weight</dt><dd>{{ product.weightGrams }} g</dd></div>
+      </dl>
+
+      <div class="buy-row">
+        <div class="quantity">
+          <button @click="quantity=Math.max(1,quantity-1)"><Minus :size="17"/></button>
+          <span>{{ quantity }}</span>
+          <button @click="quantity=Math.min(10,quantity+1)"><Plus :size="17"/></button>
+        </div>
+        <button class="btn btn-primary buy-btn" :disabled="outOfStock" @click="addToCart">
+          {{ outOfStock ? 'Sold out' : (added ? 'Added to bag' : 'Add to bag') }}
+        </button>
+      </div>
+
+      <div class="purchase-notes">
+        <div>
+          <Truck :size="20"/>
+          <span>
+            <strong>Sweden delivery</strong>
+            <template v-if="product.deliveryMinDays && product.deliveryMaxDays">
+              Estimated {{ product.deliveryMinDays }}–{{ product.deliveryMaxDays }} business days.
+            </template>
+            <template v-else>Tracked delivery options at checkout.</template>
+          </span>
+        </div>
+        <div><ShieldCheck :size="20"/><span><strong>Secure payment</strong>Mollie checkout with Swedish payment methods when enabled.</span></div>
+      </div>
     </div>
   </main>
 </template>
