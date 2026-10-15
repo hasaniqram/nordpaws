@@ -24,6 +24,7 @@ test('blocks sending unpaid or sandbox orders to suppliers', () => {
 })
 test('fulfillment steps cannot skip forward or reverse, and do not set refunded/cancelled', () => {
   assert.equal(validateFulfillmentTransition(paid,'shipped',refs).ok,false)
+  assert.equal(validateFulfillmentTransition(paid,'unfulfilled',refs).ok,false)
   assert.equal(validateFulfillmentTransition(paid,'refunded',refs).ok,false)
   assert.equal(validateFulfillmentTransition(paid,'cancelled',refs).ok,false)
   assert.equal(validateFulfillmentTransition({...paid,fulfillment_status:'shipped',shipped_at:'2026-10-15'},'processing',refs).ok,false)
