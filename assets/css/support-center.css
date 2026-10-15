@@ -169,3 +169,43 @@
  .norrli-support-delivery .norrli-delivery-bottom{padding:0}
 }
 @media(prefers-reduced-motion:reduce){.norrli-support-topic,.norrli-support-nav a{transition:none}}
+
+/* Customer service administration — privacy-preserving, admin-only client data */
+.norrli-support-admin-stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+.norrli-support-admin-panel{margin-bottom:70px}
+.norrli-support-admin-grid{display:grid;grid-template-columns:minmax(255px,35%) minmax(0,1fr);min-height:380px}
+.norrli-support-admin-list{border-right:1px solid #dde7dc;max-height:680px;overflow-y:auto;padding:13px}
+.norrli-support-admin-list button{display:flex;width:100%;align-items:center;justify-content:space-between;gap:10px;text-align:left;border:1px solid transparent;background:transparent;border-radius:12px;padding:16px 14px;cursor:pointer;color:#305740;margin-bottom:7px}
+.norrli-support-admin-list button:hover,.norrli-support-admin-list button.active{background:#edf5eb;border-color:#d7e6d5}
+.norrli-support-admin-list span{min-width:0;display:grid;gap:5px}
+.norrli-support-admin-list strong{font-size:13px;line-height:1.4}
+.norrli-support-admin-list small{font-size:11px;color:#748675;overflow-wrap:anywhere}
+.norrli-support-admin-list em{font-style:normal;border-radius:99px;flex:none;padding:6px 8px;background:#edf0e8;color:#547257;font-size:10px;font-weight:800}
+.norrli-support-admin-list .case-new{background:#e1edf7;color:#34668e}
+.norrli-support-admin-list .case-open{background:#f8edd6;color:#876a2d}
+.norrli-support-admin-list .case-closed{background:#e1f1e5;color:#32734a}
+.norrli-support-admin-detail{padding:28px;min-width:0}
+.norrli-support-admin-detail h3{font:500 28px Georgia,serif;color:#264d3b;margin:10px 0 23px}
+.norrli-support-admin-detail dl{display:grid;gap:12px;background:#f4f8f1;padding:20px;border:1px solid #e0e9dc;border-radius:14px}
+.norrli-support-admin-detail dl div{display:grid;grid-template-columns:105px minmax(0,1fr);gap:10px;overflow-wrap:anywhere}
+.norrli-support-admin-detail dt{font-size:12px;color:#6c7d6b}.norrli-support-admin-detail dd{margin:0;font-size:12px;color:#2f573f;font-weight:750}
+.norrli-support-admin-message{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.8;color:#3e624e;margin:26px 0}
+.norrli-support-admin-state{display:flex;flex-wrap:wrap;align-items:end;gap:13px;border-top:1px solid #e4eae2;padding-top:20px}
+.norrli-support-admin-state label{font-size:12px;font-weight:800;color:#49644c;display:grid;gap:8px}
+.norrli-support-admin-state select{border:1px solid #ceddce;background:#fff;border-radius:10px;padding:12px;min-width:170px}
+.norrli-support-admin-state button{display:inline-flex;align-items:center;gap:8px;border:0;background:#234f39;border-radius:99px;color:#fff;padding:13px 18px;cursor:pointer;font-size:12px;font-weight:780}
+.norrli-support-admin-state button:disabled{opacity:.45;cursor:default}
+.norrli-support-admin-notice{display:flex;gap:7px;align-items:center;color:#748977;font-size:11px;margin-top:22px}
+.norrli-support-admin-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:15px;color:#79917e;padding:40px 15px;text-align:center}
+.norrli-support-admin-empty p{font-size:12px;max-width:260px}
+@media(max-width:920px){
+ .norrli-support-admin-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .norrli-support-admin-grid{grid-template-columns:1fr}
+ .norrli-support-admin-list{max-height:280px;border-right:0;border-bottom:1px solid #dde7dc}
+}
+@media(max-width:580px){
+ .norrli-support-admin-detail{padding:17px}
+ .norrli-support-admin-detail dl div{grid-template-columns:1fr;gap:3px}
+ .norrli-support-admin-state{align-items:stretch;flex-direction:column}
+ .norrli-support-admin-state select,.norrli-support-admin-state button{width:100%}
+}
