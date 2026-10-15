@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {
   ArrowLeft, RefreshCw, Plus, Save, Trash2, Copy, Scale, TrendingUp,
-  AlertTriangle, FileSpreadsheet, LockKeyhole, CheckCircle2, ExternalLink
+  AlertTriangle, FileSpreadsheet, LockKeyhole, CheckCircle2, ExternalLink, BarChart3
 } from 'lucide-vue-next'
 import {
   blankQuote, calculateQuote, formatSek,
@@ -233,6 +233,7 @@ useSeoMeta({title:'Supplier quotes and profitability',robots:'noindex,nofollow'}
           <p>Compare competing quotes, delivery costs and SEK profitability before deciding which concepts could become real products.</p>
         </div>
         <div class="quotes-heading-actions">
+          <NuxtLink to="/admin/insights" class="btn btn-secondary compact"><BarChart3 :size="17"/>Supplier insights</NuxtLink>
           <button class="btn btn-secondary compact" :disabled="!quotes.length" @click="exportCsv"><FileSpreadsheet :size="17"/>Export CSV</button>
           <button class="btn btn-primary compact" @click="newQuote"><Plus :size="17"/>New quotation</button>
         </div>
