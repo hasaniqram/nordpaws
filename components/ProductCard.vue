@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ShoppingBag, Heart, ArrowRight } from 'lucide-vue-next'
+import { ShoppingBag, Heart, ArrowRight, Eye, Check } from 'lucide-vue-next'
 import { formatSEK, type Product } from '~/data/products'
 
 const props = defineProps<{ product: Product }>()
@@ -8,6 +8,8 @@ const { has, toggle, load } = useNorrliFavorites()
 const config = useRuntimeConfig()
 const previewOnly = computed(() => !config.public.checkoutEnabled)
 const added = ref(false)
+const detailUrl = computed(() => `/products/${props.product.slug}`)
+const productCategory = computed(() => props.product.category === 'Clean Home' ? 'Hem & rengöring' : props.product.category === 'Travel' ? 'Resa & utflykt' : props.product.category === 'Dogs' ? 'Hund' : 'Katt')
 const imageFailed = ref(false)
 const unavailable = computed(() => {
   if (props.product.variants?.length) {
@@ -29,7 +31,7 @@ const quickAdd = () => {
 </script>
 
 <template>
-  <article class="product-card nordic-product-card norrli-product-card">
+  <article class="product-card nordic-product-card norrli-product-card norrli-card-premium">
     <div class="product-art nordic-product-art" :style="{ background: product.gradient }">
       <NuxtLink :to="`/products/${product.slug}`" class="nordic-art-link" :aria-label="`Visa ${product.name}`">
         <img v-if="product.primaryImage && !imageFailed" class="product-card-image"
@@ -42,21 +44,25 @@ const quickAdd = () => {
         <Heart :size="19" :fill="has(product.slug) ? 'currentColor' : 'none'"/>
       </button>
       <span v-if="product.primaryIsConcept" class="nordic-concept-flag">Konceptbild</span>
+      <NuxtLink :to="detailUrl" class="norrli-card-quicklink" :aria-label="`Se detaljer för ${product.name}`"><Eye :size="16" aria-hidden="true"/> Visa detaljer</NuxtLink>
     </div>
     <div class="product-info nordic-product-info">
-      <span class="nordic-product-type">{{ product.category === 'Clean Home' ? 'Hem & rengöring' : product.category === 'Travel' ? 'Resa & utflykt' : product.category === 'Dogs' ? 'Hund' : 'Katt' }}</span>
+      <span class="nordic-product-type">{{ productCategory }}</span>
       <NuxtLink :to="`/products/${product.slug}`"><h3>{{ product.name }}</h3></NuxtLink>
-      <p>{{ product.subtitle }}</p>
+      <p class="norrli-card-subtitle">{{ product.subtitle }}</p>
       <div class="price-row">
         <strong>{{ formatSEK(product.price) }}</strong>
         <del v-if="product.compareAt && !previewOnly">{{ formatSEK(product.compareAt) }}</del>
       </div>
       <span v-if="previewOnly" class="nordic-price-caption">Preliminärt pris · Produktidé</span>
+      <div class="norrli-card-facts" aria-label="Produktinformation"><span>{{ productCategory }}</span><span v-if="product.variants?.length">Flera alternativ</span></div>
       <button type="button" class="btn btn-primary product-add nordic-product-button" :disabled="!previewOnly && unavailable" aria-live="polite" @click="quickAdd">
         <ArrowRight v-if="previewOnly" :size="16"/>
+        <Check v-else-if="added" :size="16"/>
         <ShoppingBag v-else :size="16"/>
         {{ previewOnly ? 'Upptäck produkten' : unavailable ? 'Slut i lager' : product.variants?.length ? 'Välj alternativ' : added ? 'Tillagd' : 'Lägg i varukorg' }}
       </button>
+      <span class="norrli-card-live" role="status">{{ added ? `${product.name} har lagts i varukorgen` : "" }}</span>
     </div>
   </article>
 </template>
