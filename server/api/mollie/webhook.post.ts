@@ -78,13 +78,30 @@ export default defineEventHandler(async (event) => {
 
     const items = Array.isArray(metadata.items) ? metadata.items : []
     if (items.length) {
-      await supabase.from('order_items').insert(items.map((item: any) => ({
-        order_id: orderId,
-        product_id: String(item.id || ''),
-        name: String(item.name || 'Product'),
-        quantity: Math.max(1, Number(item.quantity) || 1),
-        unit_amount: Math.max(0, Number(item.unitAmount) || 0)
-      })))
+      const productIds = [...new Set(items.map((item:any) => String(item.id || '')).filter(Boolean))]
+      const { data: sourceProducts } = productIds.length
+        ? await supabase
+            .from('products')
+            .select('id,supplier_id,supplier_sku,supplier_cost')
+            .in('id', productIds)
+        : { data: [] as any[] }
+
+      const sourceMap = new Map((sourceProducts || []).map((product:any) => [product.id, product]))
+
+      await supabase.from('order_items').insert(items.map((item:any) => {
+        const productId = String(item.id || '')
+        const source = sourceMap.get(productId)
+        return {
+          order_id: orderId,
+          product_id: productId,
+          name: String(item.name || 'Product'),
+          quantity: Math.max(1, Number(item.quantity) || 1),
+          unit_amount: Math.max(0, Number(item.unitAmount) || 0),
+          supplier_id: source?.supplier_id || null,
+          supplier_sku: source?.supplier_sku || null,
+          supplier_cost: source?.supplier_cost ?? null
+        }
+      }))
     }
   }
 
