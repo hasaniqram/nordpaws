@@ -4,10 +4,13 @@ import { formatSEK, type Product } from '~/data/products'
 
 const props = defineProps<{ product: Product }>()
 const { add } = useCart()
+const config = useRuntimeConfig()
+const previewOnly = computed(() => !config.public.checkoutEnabled)
 const added = ref(false)
 const imageFailed = ref(false)
 
 const quickAdd = () => {
+  if (previewOnly.value) return navigateTo(`/products/${props.product.slug}`)
   if (props.product.variants?.length) {
     return navigateTo(`/products/${props.product.slug}`)
   }
@@ -32,11 +35,12 @@ const quickAdd = () => {
       </div>
       <div class="price-row">
         <strong>{{ formatSEK(product.price) }}</strong>
-        <del v-if="product.compareAt">{{ formatSEK(product.compareAt) }}</del>
+        <del v-if="product.compareAt && !previewOnly">{{ formatSEK(product.compareAt) }}</del>
       </div>
+      <span v-if="previewOnly" class="product-preview-caption">Indicative price · concept product</span>
       <button class="btn btn-secondary product-add" @click="quickAdd">
         <ShoppingBag :size="17"/>
-        {{ product.variants?.length ? 'Choose options' : (added ? 'Added' : 'Add to bag') }}
+        {{ previewOnly ? 'View concept details' : (product.variants?.length ? 'Choose options' : (added ? 'Added' : 'Add to bag')) }}
       </button>
     </div>
   </article>
