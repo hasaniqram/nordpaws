@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ArrowRight, TreePine, Leaf, PawPrint, Heart, ShieldCheck, ArrowUpRight, Mail, Sparkles } from 'lucide-vue-next'
+import { ArrowRight, TreePine, Leaf, PawPrint, Heart, ShieldCheck, ArrowUpRight, Mail, Sparkles, Sofa, Compass, Scissors, Soup } from 'lucide-vue-next'
+import { COLLECTION_NEEDS, matchesNeed } from '~/utils/storefrontDiscovery.mjs'
 import type { Product } from '~/data/products'
 
 useSeoMeta({
@@ -11,6 +12,8 @@ const config=useRuntimeConfig()
 const previewOnly=computed(()=>!config.public.checkoutEnabled)
 const { data: catalog } = await useFetch<{ products: Product[]; source: string }>('/api/products')
 const featured=computed(()=> (catalog.value?.products || []).slice(0,6))
+const collectionIcons=[Sofa,Compass,Scissors,Soup]
+const productsByNeed=(needId:string)=>(catalog.value?.products||[]).filter(product=>matchesNeed(product,needId)).length
 const categories=[
   {name:'Hund',to:'/shop?category=Dogs',src:'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=500&q=75',alt:'Golden retriever i mjukt dagsljus'},
   {name:'Katt',to:'/shop?category=Cats',src:'https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=500&q=75',alt:'Katt i naturligt ljus'},
@@ -71,6 +74,38 @@ const joinNewsletter=async()=>{
       <div><Heart :size="29"/><span><strong>Ett mjukare hem</strong><small>Plats för både vila och lek</small></span></div>
     </section>
 
+    <section class="norrli-premium-editorial container" aria-labelledby="norrli-premium-editorial-title">
+      <div class="norrli-premium-editorial-heading">
+        <span class="nordic-overline"><Leaf :size="16" aria-hidden="true"/> FÖR LIVET TILLSAMMANS</span>
+        <h2 id="norrli-premium-editorial-title">Små detaljer. <em>Större stunder.</em></h2>
+        <p>Hitta idéer för promenaden, hemmet, pälsvården och måltiden – med den stillsamma känslan av nordisk design.</p>
+      </div>
+      <div class="norrli-premium-editorial-meta">
+        <span><PawPrint :size="19" aria-hidden="true"/> Skapat med omtanke</span>
+        <NuxtLink to="/about">Läs vår berättelse <ArrowRight :size="16" aria-hidden="true"/></NuxtLink>
+      </div>
+    </section>
+
+    <section class="norrli-premium-home-needs container" aria-labelledby="norrli-home-needs-title">
+      <div class="nordic-section-heading">
+        <div><span class="nordic-overline">UPPTÄCK EFTER BEHOV</span><h2 id="norrli-home-needs-title">För varje liten vardag.</h2></div>
+        <NuxtLink to="/shop" class="nordic-all-link">Hitta din favorit <ArrowRight :size="17" aria-hidden="true"/></NuxtLink>
+      </div>
+      <div class="norrli-premium-home-needs-grid">
+        <NuxtLink v-for="(collection,index) in COLLECTION_NEEDS" :key="collection.id" :to="collection.href"
+          class="norrli-premium-home-need" :class="'need-'+collection.theme">
+          <span class="norrli-premium-home-need-icon"><component :is="collectionIcons[index]" :size="30" :stroke-width="1.6" aria-hidden="true"/></span>
+          <span class="norrli-premium-home-need-title">{{collection.title}}</span>
+          <span class="norrli-premium-home-need-description">{{collection.description}}</span>
+          <span class="norrli-premium-home-need-bottom">
+            <span>{{productsByNeed(collection.id)}} {{productsByNeed(collection.id)===1?'produktidé':'produktidéer'}}</span>
+            <span class="norrli-premium-need-arrow"><ArrowRight :size="19" aria-hidden="true"/></span>
+          </span>
+        </NuxtLink>
+      </div>
+      <p class="norrli-premium-honesty-note">Kollektionen visas som inspiration och produktidéer medan leverantörer och sortiment granskas.</p>
+    </section>
+
     <section class="nordic-section nordic-categories container">
       <div class="nordic-section-heading"><div><span class="nordic-overline">HITTA DIN FAVORIT</span><h2>Handla efter kategori</h2></div>
         <NuxtLink to="/shop" class="nordic-all-link">Visa alla produkter <ArrowRight :size="17"/></NuxtLink>
@@ -92,6 +127,16 @@ const joinNewsletter=async()=>{
         <ProductCard v-for="product in featured" :key="product.id" :product="product"/>
       </div>
       <p v-else class="nordic-empty-products">Vi förbereder våra produktidéer. Utforska gärna butiken igen snart.</p>
+    </section>
+
+    <section class="norrli-premium-founder-note container" aria-labelledby="norrli-founder-note-title">
+      <div class="norrli-premium-founder-emblem"><Heart :size="25" aria-hidden="true"/><span>H</span></div>
+      <div>
+        <span class="nordic-overline">PERSONEN BAKOM IDÉN</span>
+        <h2 id="norrli-founder-note-title">En personlig idé, byggd med hjärta.</h2>
+        <p>Norrli Pets grundades som en idé av <strong>Hasan Iqram</strong>. Läs om visionen och arbetet bakom webbplatsen.</p>
+      </div>
+      <NuxtLink to="/about" class="norrli-premium-founder-link">Möt skaparen <ArrowRight :size="17" aria-hidden="true"/></NuxtLink>
     </section>
 
     <section class="nordic-story-grid container">
