@@ -40,3 +40,15 @@ test('copyright inquiries use validated existing contact-message workflow',()=>{
  assert.equal(data.status,'new')
  assert.equal('ticketId' in data,false)
 })
+
+test('Norrli Pets footer clearly credits Hasan Iqram for the concept and website',()=>{
+ const footer=read('components/SiteFooter.vue')
+ assert.match(footer,/Idé, koncept &amp; webbplatsutveckling:/)
+ assert.match(footer,/<strong>Hasan Iqram<\/strong>/)
+})
+test('creator credit is prominent on the copyright page without assigning third-party rights',()=>{
+ const page=read('pages/legal/copyright.vue')
+ assert.match(page,/Skapad av <strong>Hasan Iqram<\/strong>/)
+ assert.match(page,/Initiativtagare · Konceptskapare · Webbplatsutvecklare/)
+ assert.match(page,/Material från tredje part omfattas av respektive rättighetshavares villkor/)
+})
