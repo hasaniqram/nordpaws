@@ -41,7 +41,7 @@ test('search requires all terms; category labels work in Swedish',()=>{
  assert.equal(matchesSearch(PRODUCTS[0],'päls soffa'),true)
  assert.equal(matchesSearch(PRODUCTS[0],'päls bilbälte'),false)
  assert.equal(matchesSearch(PRODUCTS[5],'katt borste'),true)
- assert.equal(matchesSearch(PRODUCTS[3],'promenad hund'),false)
+ assert.equal(matchesSearch(PRODUCTS[3],'promenad kattleksak'),false)
 })
 test('search suggestions are bounded, ranked and absent for short queries',()=>{
  assert.deepEqual(suggestProducts(PRODUCTS,'p'),[])
