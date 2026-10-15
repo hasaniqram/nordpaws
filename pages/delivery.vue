@@ -14,13 +14,10 @@ useSeoMeta({
 </script>
 
 <template>
-  <main class="norrli-delivery-page">
-    <section class="container norrli-delivery-hero">
-      <span class="eyebrow"><Truck :size="16" aria-hidden="true" /> NORRLI PETS · LEVERANS</span>
-      <h1>Trygga leveranser, tydliga villkor</h1>
-      <p>Vi bygger en genomtänkt leveransupplevelse för våra svenska kunder. Fraktkostnader, leveranstider och transportörer publiceras när de är bekräftade.</p>
-      <span class="norrli-delivery-status"><Info :size="16" aria-hidden="true" /> Förhandsinformation – försäljningen är inte öppen</span>
-    </section>
+  <SupportShell title="Leveransinformation" eyebrow="FRAKT & LEVERANS · KUNDSERVICE"
+    intro="Här hittar du våra leveransförberedelser, vad vi vet idag och vad som behöver bekräftas före försäljningsstart.">
+    <div class="norrli-delivery-page norrli-support-delivery">
+      <div class="norrli-support-notice"><Info :size="19" aria-hidden="true"/><div><strong>Förhandsinformation — inga aktiva leveranser.</strong><p>Fraktkostnader, transportörer och leveranstider publiceras när de är verifierade.</p></div></div>
 
     <section class="container norrli-delivery-grid" aria-label="Leveransinformation">
       <article class="norrli-delivery-card">
@@ -73,5 +70,6 @@ useSeoMeta({
         <NuxtLink to="/contact">Kontakta kundservice <ArrowRight :size="17" aria-hidden="true" /></NuxtLink>
       </div>
     </section>
-  </main>
+    </div>
+  </SupportShell>
 </template>
