@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Menu, ShoppingBag, X, Heart, Search, Leaf, TreePine, ArrowRight, ChevronRight } from 'lucide-vue-next'
+import { Menu, ShoppingBag, X, Heart, Search, Leaf, TreePine, ArrowRight, ChevronRight, UserRound } from 'lucide-vue-next'
 
 const route = useRoute()
 const open = ref(false)
@@ -20,7 +20,8 @@ const categories = [
 const extraLinks = [
   { label: 'Hela kollektionen', href: '/shop' },
   { label: 'Vår berättelse', href: '/about' },
-  { label: 'Kontakt', href: '/contact' }
+  { label: 'Kontakt', href: '/contact' },
+  { label: 'Leveransinformation', href: '/delivery' }
 ]
 
 const onKeydown = (event: KeyboardEvent) => {
@@ -60,6 +61,9 @@ const submitSearch = () => {
         <button type="submit" aria-label="Sök produkter"><ArrowRight :size="19" aria-hidden="true" /></button>
       </form>
       <div class="nordic-header-actions">
+        <NuxtLink to="/account" class="nordic-header-action" aria-label="Mitt konto">
+          <UserRound :size="23" aria-hidden="true" /><span>Mitt konto</span>
+        </NuxtLink>
         <NuxtLink to="/favorites" class="nordic-header-action" aria-label="Mina favoriter">
           <Heart :size="23" aria-hidden="true" /><span>Favoriter</span>
           <small v-if="favorites.length" aria-label="Antal favoriter">{{ favorites.length }}</small>
@@ -102,6 +106,7 @@ const submitSearch = () => {
         <div class="nordic-mobile-links nordic-mobile-links-secondary">
           <NuxtLink v-for="link in extraLinks" :key="link.label" :to="link.href"
             @click="open = false">{{ link.label }} <ChevronRight :size="17" aria-hidden="true" /></NuxtLink>
+          <NuxtLink to="/account" @click="open = false">Mitt konto <UserRound :size="17" aria-hidden="true" /></NuxtLink>
           <NuxtLink to="/favorites" @click="open = false">Mina favoriter <Heart :size="17" aria-hidden="true" /></NuxtLink>
           <NuxtLink v-if="!previewOnly" to="/cart" @click="open = false">Varukorg <ShoppingBag :size="17" aria-hidden="true" /></NuxtLink>
         </div>
