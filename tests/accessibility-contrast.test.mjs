@@ -18,7 +18,8 @@ function contrast(foreground, background) {
 function getColorFor(selector) {
   // Audit declarations in the final override stylesheet, not colors copied
   // into test data. All checked selectors are declared outside media queries.
-  const blocks = [...a11yCss.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+  const withoutComments = a11yCss.replace(/\/\*[\s\S]*?\*\//g, '')
+  const blocks = [...withoutComments.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
   const block=blocks.find(([_,name,body]) => name.trim().split(',').map(x=>x.trim()).includes(selector) && /(?:^|;)\s*color\s*:/.test(body))
   assert.ok(block, 'Missing audited color override: '+selector)
   const match=block[2].match(/(?:^|;)\s*color\s*:\s*(#[a-fA-F0-9]{6})\s*(?:;|$)/)
