@@ -121,7 +121,10 @@ useSeoMeta({
         <span class="eyebrow"><BarChart3 :size="17"/> Norrli Pets / private research</span>
         <div class="insight-heading-row">
           <div><h1>Supplier insights</h1><p>Compare modeled profit, track evidence gaps and stress-test cost assumptions. Your scoring reflects research completeness, not supplier certification.</p></div>
-          <NuxtLink to="/admin/quotes" class="btn btn-primary compact"><Scale :size="16"/>Manage quotations</NuxtLink>
+          <div class="admin-top-actions">
+            <NuxtLink to="/admin/decisions" class="btn btn-secondary compact"><ClipboardCheck :size="16"/>Product Decision Board</NuxtLink>
+            <NuxtLink to="/admin/quotes" class="btn btn-primary compact"><Scale :size="16"/>Manage quotations</NuxtLink>
+          </div>
         </div>
       </section>
       <div class="quote-safety">
