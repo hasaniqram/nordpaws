@@ -7,7 +7,7 @@
     "build": "npm run test:security && nuxt build",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "test:security": "node --test tests/customer-order-access.test.mjs"
+    "test:security": "node --test tests/*.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.57.4",
