@@ -41,6 +41,17 @@ const save=async()=>{
  await load()
  }catch(e:any){feedback.value=e?.message||'Could not save preferences'}finally{saving.value=false}
 }
+const verifyRecipient=async()=>{
+ const c=useSupabaseBrowser();if(!c||!authorized.value||saving.value)return
+ saving.value=true;feedback.value=''
+ try{
+  const {data:{session}}=await c.auth.getSession()
+  if(!session?.access_token)throw new Error('Please sign in again')
+  const result=await $fetch<{verified:boolean}>('/api/admin/verify-reminder-email',{method:'POST',headers:{Authorization:'Bearer '+session.access_token}})
+  await load()
+  feedback.value=result.verified?'Admin login email verified. Sending remains disabled.':'Verification incomplete.'
+ }catch(e:any){feedback.value=e?.data?.statusMessage||e?.message||'Email verification failed'}finally{saving.value=false}
+}
 const preview=async()=>{
  const c=useSupabaseBrowser();if(!c||!authorized.value||saving.value)return
  saving.value=true;feedback.value=''
@@ -65,7 +76,7 @@ useSeoMeta({title:'Review reminders — Norrli Pets',robots:'noindex,nofollow'})
 <p v-if="error" class="admin-feedback error" role="alert">{{error}}</p>
 <p v-if="feedback" class="admin-feedback" role="status">{{feedback}}</p>
 <div class="rr-grid">
-<section class="rr-card"><h2><Mail :size="20"/> Preferences</h2><form @submit.prevent="save"><label>Recipient email<input v-model.trim="pref.email" type="email" maxlength="254" required autocomplete="email"/></label><label>Remind ahead of deadline<select v-model.number="pref.advance_days"><option :value="1">1 day</option><option :value="3">3 days</option><option :value="7">7 days</option><option :value="14">14 days</option><option :value="30">30 days</option></select></label><p>Delivery status: <strong>Disabled — verification required</strong></p><button type="submit" class="btn btn-primary compact" :disabled="saving">{{saving?'Saving…':'Save preferences'}}</button></form></section>
+<section class="rr-card"><h2><Mail :size="20"/> Preferences</h2><form @submit.prevent="save"><label>Recipient email<input v-model.trim="pref.email" type="email" maxlength="254" required autocomplete="email"/></label><label>Remind ahead of deadline<select v-model.number="pref.advance_days"><option :value="1">1 day</option><option :value="3">3 days</option><option :value="7">7 days</option><option :value="14">14 days</option><option :value="30">30 days</option></select></label><p>Recipient ownership: <strong>{{pref.verified?'Confirmed admin email':'Not verified'}}</strong></p><p>Delivery status: <strong>Disabled — sending is not configured</strong></p><button type="submit" class="btn btn-primary compact" :disabled="saving">{{saving?'Saving…':'Save preferences'}}</button><button type="button" class="btn btn-secondary compact" :disabled="saving || pref.verified" @click="verifyRecipient">Verify using confirmed admin email</button><small>This verifies only your existing confirmed sign-in email. To use another address, a separate opt-in verification flow is required.</small></form></section>
 <section class="rr-card"><h2><ClipboardList :size="20"/> Reminder preview</h2><p><strong>{{relevant.length}}</strong> saved reviews are overdue or due within {{pref.advance_days}} days.</p><p>Preview includes only the number of due records. No supplier details are emailed.</p><button type="button" class="btn btn-secondary compact" :disabled="saving" @click="preview">Create safe preview log</button></section>
 <section class="rr-card rr-full"><h2>Recent reminder activity</h2><p v-if="!logs.length">No reminder previews recorded yet.</p><ul v-else><li v-for="item in logs" :key="item.id"><strong>{{item.kind}}</strong><span>{{new Date(item.created_at).toLocaleString('sv-SE')}}</span><small>{{item.details}}</small></li></ul></section>
 </div>
