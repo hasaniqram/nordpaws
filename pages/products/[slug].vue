@@ -2,7 +2,7 @@
 import {
   Check, Minus, Plus, ShoppingBag, Heart, ArrowRight, ArrowLeft,
   Leaf, ShieldCheck, PackageSearch, ChevronRight, Sparkles, PawPrint,
-  Truck, Home, ChevronLeft, ZoomIn, X
+  Truck, Home, ChevronLeft, ZoomIn, X, Ruler, Scale, Layers, Share2
 } from 'lucide-vue-next'
 import { formatSEK, type Product, type ProductVariant } from '~/data/products'
 
@@ -16,6 +16,16 @@ const {add}=useCart()
 const {has,toggle,load}=useNorrliFavorites()
 const quantity=ref(1),added=ref(false),imageFailed=ref(false)
 const zoomOpen=ref(false)
+const shareMessage=ref('')
+const shareProduct=async()=>{
+  if(!import.meta.client)return
+  try{
+    const data={title:product.name,text:'Se produktidén hos Norrli Pets',url:window.location.href}
+    if(navigator.share){await navigator.share(data);shareMessage=''}
+    else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(data.url);shareMessage='Länken har kopierats.'}
+    else shareMessage='Kopiera länken från adressfältet.'
+  }catch(error){if((error as Error)?.name!=='AbortError')shareMessage='Kunde inte dela länken just nu.'}
+}
 const galleryDialog=ref<HTMLDialogElement | null>(null)
 const selectedVariantId=ref(product.variants?.[0]?.id||'')
 const selectedImage=ref(product.primaryImage||product.images?.[0]?.publicUrl||'')
@@ -145,6 +155,8 @@ useSeoMeta({
         <span class="nordic-overline"><PawPrint :size="15"/> {{categoryName}}</span>
         <h1>{{product.name}}</h1>
         <p class="nordic-detail-subtitle">{{localized.intro}}</p>
+        <div class="norrli-detail-tools"><span>Produktidé · {{categoryName}}</span><button type="button" @click="shareProduct"><Share2 :size="16" aria-hidden="true"/> Dela produkten</button></div>
+        <p v-if="shareMessage" class="norrli-detail-share-status" role="status">{{shareMessage}}</p>
         <div class="nordic-detail-price-row">
           <strong>{{formatSEK(displayPrice)}}</strong>
           <span v-if="previewOnly" class="nordic-detail-estimate">Preliminärt pris</span>
@@ -169,6 +181,13 @@ useSeoMeta({
               <small v-if="variant.price&&variant.price!==product.price">{{formatSEK(variant.price)}}</small>
             </button>
           </div>
+        </div>
+
+        <div v-if="product.material || product.dimensions || product.weightGrams" class="norrli-detail-spec-strip" aria-label="Preliminära produktspecifikationer">
+          <div v-if="product.material"><Layers :size="19" aria-hidden="true"/><span><small>Material*</small><strong>{{product.material}}</strong></span></div>
+          <div v-if="product.dimensions"><Ruler :size="19" aria-hidden="true"/><span><small>Mått*</small><strong>{{product.dimensions}}</strong></span></div>
+          <div v-if="product.weightGrams"><Scale :size="19" aria-hidden="true"/><span><small>Vikt*</small><strong>{{product.weightGrams}} g</strong></span></div>
+          <p>*Uppgifter under leverantörsgranskning.</p>
         </div>
 
         <div class="nordic-detail-highlights">
@@ -198,6 +217,8 @@ useSeoMeta({
         </div>
       </div>
     </section>
+
+    <nav class="container norrli-detail-help" aria-label="Hjälp med ditt köp"><div><Truck :size="22" aria-hidden="true"/><span><strong>Leveransinformation</strong><small>Se aktuella villkor och uppdateringar</small></span><NuxtLink to="/delivery">Läs mer <ArrowRight :size="15"/></NuxtLink></div><div><ShieldCheck :size="22" aria-hidden="true"/><span><strong>Returer och ångerrätt</strong><small>Information inför framtida beställningar</small></span><NuxtLink to="/legal/returns">Läs mer <ArrowRight :size="15"/></NuxtLink></div></nav>
 
     <section class="container nordic-detail-information">
       <div class="nordic-detail-information-heading">
