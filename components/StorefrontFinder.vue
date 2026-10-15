@@ -7,8 +7,9 @@ const need = ref('')
 const selected = computed(() => COLLECTION_NEEDS.find((item) => item.id === need.value))
 const destination = computed(() => {
   const params = new URLSearchParams()
-  if (pet.value) params.set('category', pet.value)
+  // Needs span catalog categories; combining a pet category with a need would hide relevant items.
   if (need.value) params.set('need', need.value)
+  else if (pet.value) params.set('category', pet.value)
   return '/shop?' + params.toString()
 })
 const reset = () => { pet.value = ''; need.value = '' }
@@ -19,7 +20,7 @@ const reset = () => { pet.value = ''; need.value = '' }
     <div class="norrli-finder-intro">
       <span class="nordic-overline"><Sparkles :size="16" aria-hidden="true" /> PERSONLIG UPPTÄCKT</span>
       <h2 id="norrli-finder-title">Vad passar er vardag?</h2>
-      <p>Välj din fyrbenta vän och vad du letar efter. Vi visar relevanta produktidéer i kollektionen, utan att påstå att de är individuellt rekommenderade eller kvalitetstestade.</p>
+      <p>Välj din fyrbenta vän och vad du letar efter. Behovet styr produkturvalet över alla kategorier; valet av hund eller katt hjälper bara till att formulera guiden. Produkterna är inte individuellt rekommenderade eller kvalitetstestade.</p>
     </div>
     <div class="norrli-finder-panel">
       <fieldset>
@@ -38,7 +39,7 @@ const reset = () => { pet.value = ''; need.value = '' }
         </div>
       </fieldset>
       <div class="norrli-finder-actions">
-        <p aria-live="polite">{{ !pet ? 'Börja med att välja hund eller katt.' : !selected ? 'Välj ett område för att fortsätta.' : 'Klart! Utforska '+selected.title.toLowerCase()+' för '+(pet==='Dogs'?'hund':'katt')+'.' }}</p>
+        <p aria-live="polite">{{ !pet ? 'Börja med att välja hund eller katt.' : !selected ? 'Välj ett område för att fortsätta.' : 'Klart! Utforska '+selected.title.toLowerCase()+' i hela kollektionen.' }}</p>
         <div>
           <button type="button" class="norrli-finder-reset" @click="reset"><RotateCcw :size="15" aria-hidden="true" /> Börja om</button>
           <NuxtLink v-if="pet && selected" :to="destination" class="nordic-pill-button">Visa produktidéer <ArrowRight :size="17" aria-hidden="true" /></NuxtLink>
