@@ -20,7 +20,8 @@ const quickAdd = () => {
   <article class="product-card">
     <NuxtLink :to="`/products/${product.slug}`" class="product-art" :style="{ background: product.gradient }">
       <span v-if="product.badge" class="badge">{{ product.badge }}</span>
-      <img v-if="product.primaryImage" class="product-card-image" :src="product.primaryImage" :alt="product.name">
+      <img v-if="product.primaryImage" class="product-card-image" :src="product.primaryImage" :alt="product.name" loading="lazy" decoding="async" width="640" height="640">
+      <span v-if="product.primaryImage && product.primaryIsConcept" class="catalog-concept-label">Concept image</span>
       <span v-else class="product-emoji" aria-hidden="true">{{ product.emoji }}</span>
     </NuxtLink>
     <div class="product-info">
