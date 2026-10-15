@@ -36,7 +36,6 @@ const toggleCompare=(slug:string)=>{
  if(selectedSlugs.value.includes(slug))selectedSlugs.value=selectedSlugs.value.filter(x=>x!==slug)
  else if(selectedSlugs.value.length<compareLimit)selectedSlugs.value=[...selectedSlugs.value,slug]
 }
-const compareProducts=computed(()=>(catalog.value?.products||[]).filter(p=>selectedSlugs.value.includes(p.slug)))
 const comparisonLink=computed(()=>({path:'/compare',query:{items:selectedSlugs.value.join(',')}})
 const suggestions=computed(()=>suggestProducts(catalog.value?.products||[],search.value,5))
 const showSuggestions=computed(()=>suggestionsOpen.value && search.value.trim().length>=2 && suggestions.value.length>0)
@@ -129,7 +128,7 @@ useSeoMeta({
         </form>
         <div v-if="showSuggestions" id="norrli-search-suggestions" class="norrli-premium-suggestions" aria-label="Produktförslag">
           <span class="norrli-premium-suggestions-title">PRODUKTFÖRSLAG</span>
-          <NuxtLink v-for="item in suggestions" :key="item.id" :to="'/products/'+item.slug">
+          <NuxtLink v-for="item in suggestions" :key="item.id" :to="'/products/'+item.slug" @mousedown.prevent>
             <span aria-hidden="true">{{item.emoji}}</span><strong>{{item.name}}</strong><ChevronRight :size="16" aria-hidden="true"/>
           </NuxtLink>
         </div>
