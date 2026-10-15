@@ -37,7 +37,8 @@
     </div>
     <div class="container nordic-footer-bottom">
       <div class="nordic-footer-copyright">
-        <span class="nordic-footer-copyright-main">© {{ new Date().getFullYear() }} Norrli Pets <span aria-hidden="true">·</span> Upphovsrätt för eget material</span>
+        <span class="nordic-footer-copyright-main">© {{ new Date().getFullYear() }} Norrli Pets</span>
+        <span class="nordic-footer-creator-credit">Idé, koncept &amp; webbplatsutveckling: <strong>Hasan Iqram</strong></span>
         <small>Material från tredje part omfattas av respektive rättighetshavares villkor.</small>
       </div>
       <nav class="nordic-footer-legal-links" aria-label="Juridisk information">
