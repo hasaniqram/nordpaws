@@ -33,7 +33,7 @@ useSeoMeta({ title: 'Alla produktidéer', description:'Utforska vår nordiskt in
 
 <template>
   <main class="container page-shell">
-    <div class="shop-title"><span class="eyebrow">NORRLI PETS · KOLLEKTION</span><h1>Hitta dina favoriter</h1><p>Skandinavisk inspiration för livet med hund och katt. Här hittar du våra produktidéer.</p></div>
+    <div class="shop-title norrli-shop-intro"><div><span class="eyebrow">NORRLI PETS · KOLLEKTION</span><h1>Hitta dina favoriter</h1><p>Skandinavisk inspiration för livet med hund och katt. Här hittar du våra produktidéer.</p></div><span v-if="status !== 'pending'" class="norrli-shop-count" aria-live="polite">{{ visible.length }} produktidéer</span></div>
 
     <div class="shop-toolbar">
       <label class="search-box"><Search :size="18"/><input v-model="search" type="search" placeholder="Sök produkter" aria-label="Sök produkter"></label>
@@ -44,6 +44,6 @@ useSeoMeta({ title: 'Alla produktidéer', description:'Utforska vår nordiskt in
 
     <div v-if="status === 'pending'" class="catalog-state">Laddar kollektionen…</div>
     <div v-else-if="visible.length" class="product-grid"><ProductCard v-for="product in visible" :key="product.id" :product="product"/></div>
-    <div v-else class="catalog-state">Inga produkter matchar din sökning.</div>
+    <div v-else class="catalog-state norrli-shop-empty"><p>Inga produkter matchar din sökning.</p><NuxtLink to="/shop">Visa alla produkter</NuxtLink></div>
   </main>
 </template>
