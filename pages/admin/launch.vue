@@ -200,6 +200,7 @@ onMounted(load)
           <p>Develop the store, review prospective suppliers, and document what needs checking before opening for sales.</p>
           <NuxtLink to="/admin/quotes" class="btn btn-primary compact" style="margin-top:16px"><Scale :size="16"/> Supplier comparison & profitability</NuxtLink>
           <NuxtLink to="/admin/insights" class="btn btn-secondary compact" style="margin-top:16px;margin-left:8px">Supplier insights & risk analysis</NuxtLink>
+          <NuxtLink to="/admin/catalog" class="btn btn-secondary compact" style="margin-top:16px;margin-left:8px">Catalog & Stock Lab</NuxtLink>
         </div>
         <div class="launch-lock"><LockKeyhole :size="18"/><strong>PRE-LAUNCH</strong><small>No real orders enabled</small></div>
       </div>
