@@ -45,7 +45,7 @@ export default defineEventHandler(async (event) => {
   const [{ data: dbProducts, error: productError }, { data: dbVariants, error: variantError }] = await Promise.all([
     supabase
       .from('products')
-      .select('id,name,price,active,supplier_sku,supplier_cost')
+      .select('id,name,price,active,supplier_id,supplier_sku,supplier_cost')
       .in('id', productIds)
       .eq('active', true),
     variantIds.length
@@ -139,6 +139,7 @@ export default defineEventHandler(async (event) => {
           name: variant ? `${product.name} · ${variant.name}` : product.name,
           quantity,
           unitAmount,
+          supplierId: product.supplier_id || null,
           supplierSku: variant?.supplier_sku || product.supplier_sku || null,
           supplierCost: variant?.supplier_cost ?? product.supplier_cost ?? null
         }))
