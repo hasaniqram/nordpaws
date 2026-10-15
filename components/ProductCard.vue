@@ -5,6 +5,7 @@ import { formatSEK, type Product } from '~/data/products'
 const props = defineProps<{ product: Product }>()
 const { add } = useCart()
 const added = ref(false)
+const imageFailed = ref(false)
 
 const quickAdd = () => {
   if (props.product.variants?.length) {
@@ -20,9 +21,9 @@ const quickAdd = () => {
   <article class="product-card">
     <NuxtLink :to="`/products/${product.slug}`" class="product-art" :style="{ background: product.gradient }">
       <span v-if="product.badge" class="badge">{{ product.badge }}</span>
-      <img v-if="product.primaryImage" class="product-card-image" :src="product.primaryImage" :alt="product.name" loading="lazy" decoding="async" width="640" height="640">
-      <span v-if="product.primaryImage && product.primaryIsConcept" class="catalog-concept-label">Concept image</span>
+      <img v-if="product.primaryImage && !imageFailed" class="product-card-image" :src="product.primaryImage" :alt="product.name" loading="lazy" decoding="async" width="640" height="640" @error="imageFailed = true">
       <span v-else class="product-emoji" aria-hidden="true">{{ product.emoji }}</span>
+      <span v-if="product.primaryImage && product.primaryIsConcept" class="catalog-concept-label">Concept image</span>
     </NuxtLink>
     <div class="product-info">
       <div>
