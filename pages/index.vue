@@ -106,7 +106,7 @@ const joinNewsletter=async()=>{
       <p class="norrli-premium-honesty-note">Kollektionen visas som inspiration och produktidéer medan leverantörer och sortiment granskas.</p>
     </section>
 
-    <section class="nordic-section nordic-categories container">
+    <StorefrontFinder />\n\n    <section class="nordic-section nordic-categories container">
       <div class="nordic-section-heading"><div><span class="nordic-overline">HITTA DIN FAVORIT</span><h2>Handla efter kategori</h2></div>
         <NuxtLink to="/shop" class="nordic-all-link">Visa alla produkter <ArrowRight :size="17"/></NuxtLink>
       </div>
