@@ -18,7 +18,8 @@
       <div class="nordic-footer-column">
         <h3>Kundservice</h3>
         <NuxtLink to="/contact">Kontakta oss</NuxtLink>
-        <NuxtLink to="/legal/shipping">Leveransinformation</NuxtLink>
+        <NuxtLink to="/delivery">Leveransinformation</NuxtLink>
+        <NuxtLink to="/legal/shipping">Leveransvillkor</NuxtLink>
         <NuxtLink to="/legal/returns">Returer och ångerrätt</NuxtLink>
         <NuxtLink to="/legal/privacy">Integritetspolicy</NuxtLink>
         <NuxtLink to="/legal/terms">Köpvillkor</NuxtLink>
@@ -27,6 +28,7 @@
         <h3>Om Norrli Pets</h3>
         <NuxtLink to="/about">Vår berättelse</NuxtLink>
         <NuxtLink to="/favorites">Mina favoriter</NuxtLink>
+        <NuxtLink to="/account">Mitt konto & beställningar</NuxtLink>
         <NuxtLink to="/contact">Frågor och kontakt</NuxtLink>
         <span class="nordic-footer-signoff">Skandinavisk känsla för hund & katt.</span>
       </div>
