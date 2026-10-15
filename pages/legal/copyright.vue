@@ -13,16 +13,22 @@ useSeoMeta({
     updated="15 oktober 2026"
     intro="Vi värnar om kreativt arbete och respekterar både våra egna och andras rättigheter. Här förklarar vi hur innehåll på webbplatsen får användas."
   >
-    <section class="norrli-copyright-founder" aria-label="Skaparen bakom Norrli Pets">
-      <span class="norrli-support-kicker">MÄNNISKAN BAKOM IDÉN</span>
-      <h2>Skapad av <strong>Hasan Iqram</strong></h2>
-      <p>
-        Norrli Pets bygger på Hasan Iqrams egen idé, vision och arbete med att
-        utveckla webbplatsen. Från det första konceptet till den digitala
-        kundupplevelsen är det ett projekt skapat med engagemang, målmedvetenhet
-        och omtanke om djur och deras människor.
-      </p>
-      <span class="norrli-copyright-founder-role">Initiativtagare · Konceptskapare · Webbplatsutvecklare</span>
+    <section class="norrli-copyright-founder norrli-copyright-founder-with-portrait" aria-label="Skaparen bakom Norrli Pets">
+      <div class="norrli-copyright-founder-story">
+        <span class="norrli-support-kicker">MÄNNISKAN BAKOM IDÉN</span>
+        <h2>Skapad av <strong>Hasan Iqram</strong></h2>
+        <p>
+          Norrli Pets bygger på Hasan Iqrams egen idé, vision och arbete med att
+          utveckla webbplatsen. Från det första konceptet till den digitala
+          kundupplevelsen är det ett projekt skapat med engagemang, målmedvetenhet
+          och omtanke om djur och deras människor.
+        </p>
+        <span class="norrli-copyright-founder-role">Initiativtagare · Konceptskapare · Webbplatsutvecklare</span>
+      </div>
+      <div class="norrli-copyright-founder-portrait">
+        <FounderPortrait />
+        <span class="norrli-copyright-founder-photo-caption">Hasan Iqram · Norrli Pets</span>
+      </div>
     </section>
 
     <section class="norrli-copyright-summary" aria-label="Information om upphovsrätt">
