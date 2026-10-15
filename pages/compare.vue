@@ -8,6 +8,7 @@ const config=useRuntimeConfig()
 const previewOnly=computed(()=>!config.public.checkoutEnabled)
 const {data:catalog,status}=await useFetch<{products:Product[];source:string}>('/api/products')
 const selection=computed(()=>typeof route.query.items==='string'?route.query.items:'')
+const failedImages=ref<string[]>([])
 const products=computed<Product[]>(()=>getComparison(catalog.value?.products||[],selection.value,3))
 const label=(category:string)=>({
  'Dogs':'Hund','Cats':'Katt','Travel':'Promenad & resa','Clean Home':'Hem & rengöring'
@@ -51,7 +52,7 @@ useSeoMeta({title:'Jämför produktidéer',description:'Jämför preliminära up
        <th v-for="p in products" :key="p.id" scope="col">
         <div class="norrli-compare-product">
          <NuxtLink :to="'/products/'+p.slug" class="norrli-compare-art" :style="{background:p.gradient}" :aria-label="'Se '+p.name">
-          <img v-if="p.primaryImage" :src="p.primaryImage" :alt="p.name" loading="lazy" width="190" height="190"/>
+          <img v-if="p.primaryImage&&!failedImages.includes(p.slug)" :src="p.primaryImage" :alt="p.name" loading="lazy" width="190" height="190" @error="failedImages.push(p.slug)"/>
           <span v-else aria-hidden="true">{{p.emoji}}</span>
          </NuxtLink>
          <NuxtLink :to="'/products/'+p.slug" class="norrli-compare-product-title">{{p.name}}</NuxtLink>
