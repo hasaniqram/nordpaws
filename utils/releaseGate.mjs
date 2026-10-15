@@ -21,17 +21,22 @@ export function evaluateReleaseGate(input={},now=Date.now()){
   &&Number.isInteger(Number(q.delivery_min_days))&&Number.isInteger(Number(q.delivery_max_days))
   &&q.delivery_min_days!=null&&q.delivery_max_days!=null
   &&Number(q.delivery_min_days)<=Number(q.delivery_max_days))
- const quotesByProduct=new Set(quoted.map(q=>q.product_id).filter(Boolean))
- const verifiedStock=new Set(catalog.filter(c=>c.product_id
+ const quoteKeys=new Set(quoted.map(q=>[q.product_id,q.supplier_lead_id].join('::')))
+ const verifiedStock=catalog.filter(c=>c.product_id
+  &&exists(c.supplier_sku)
   &&['in_stock','low_stock'].includes(c.stock_status)
   &&c.stock_quantity!=null&&Number(c.stock_quantity)>0
   &&exists(c.verified_at)&&Number.isFinite(Date.parse(c.verified_at))
   &&Date.parse(c.verified_at)<=time
   &&time-Date.parse(c.verified_at)<=30*86400000
-  &&contractedIds.has(c.supplier_lead_id)).map(c=>c.product_id))
+  &&contractedIds.has(c.supplier_lead_id))
  const realImages=new Set(images.filter(x=>x.is_concept===false).map(x=>x.product_id))
- const productEligible=p=>exists(p.supplier_sku)&&exists(p.material)&&realImages.has(p.id)
-  &&quotesByProduct.has(p.id)&&verifiedStock.has(p.id)
+ const productEligible=p=>exists(p.supplier_id)&&exists(p.supplier_sku)&&exists(p.material)
+  &&realImages.has(p.id)
+  &&quoteKeys.has([p.id,p.supplier_id].join('::'))
+  &&verifiedStock.some(c=>c.product_id===p.id&&c.supplier_lead_id===p.supplier_id
+    &&String(c.supplier_sku).trim().toLocaleUpperCase('en-US')===
+      String(p.supplier_sku).trim().toLocaleUpperCase('en-US'))
  const readyProducts=active.filter(productEligible)
  const openCases=contacts.filter(c=>c.status==='new'||c.status==='open').length
  const items=[
@@ -46,7 +51,7 @@ export function evaluateReleaseGate(input={},now=Date.now()){
    quoted.length+' offerter med intern status, källa, kostnadsfält och leveransintervall. Kontrollera originaloffert och avgifter manuellt.',
    '/admin/quotes'),
   note('inventory','Kontrollerat lanseringssortiment',active.length>0&&readyProducts.length===active.length,
-   readyProducts.length+' av '+active.length+' aktiva produkter har matchande offert, dokumenterade bilder/material och aktuell positiv lagerbekräftelse. Ingen automatisk lagergaranti.',
+   readyProducts.length+' av '+active.length+' aktiva produkter har matchande avtalad leverantör, SKU, offert, dokumenterade bilder/material och aktuell positiv lagerbekräftelse. Ingen automatisk lagergaranti.',
    '/admin/catalog'),
   note('safety','Dokumenterad produktsäkerhet',completed(tasks,'safety'),
    'Granska varje produkt mot tillämpliga säkerhets- och informationskrav; att markera checklistan räcker inte som extern kontroll.',
