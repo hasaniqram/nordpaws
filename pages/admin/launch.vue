@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {
   ArrowLeft, CheckCircle2, CircleDashed, Clock3, ShieldCheck, Truck,
-  Save, RefreshCw, Plus, ExternalLink, LockKeyhole, PackageSearch
+  Save, RefreshCw, Plus, ExternalLink, LockKeyhole, PackageSearch, Scale
 } from 'lucide-vue-next'
 
 type Status = 'not_started' | 'in_progress' | 'blocked' | 'ready'
