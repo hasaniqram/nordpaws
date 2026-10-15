@@ -4,6 +4,11 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css', '~/assets/css/enhancements.css', '~/assets/css/admin.css', '~/assets/css/nordic.css'],
   app: {
     head: {
+      link: [
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Nunito:wght@800;900;1000&display=swap' }
+      ],
       titleTemplate: '%s · Norrli Pets',
       meta: [
         { name: 'description', content: 'Scandinavian pet essentials for cleaner homes, safer trips and happier pets.' },
