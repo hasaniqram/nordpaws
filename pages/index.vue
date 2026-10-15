@@ -4,6 +4,8 @@ import type { Product } from '~/data/products'
 
 useSeoMeta({ title: 'Scandinavian pet essentials', ogTitle: 'Norrli Pets · Scandinavian pet essentials' })
 
+const config = useRuntimeConfig()
+const previewOnly = computed(() => !config.public.checkoutEnabled)
 const { data: catalog } = await useFetch<{ products: Product[]; source: string }>('/api/products')
 const featured = computed(() => (catalog.value?.products || []).slice(0, 4))
 const heroProduct = computed(() => (catalog.value?.products || []).find(p => p.slug === 'cleanroll') || featured.value[0] || null)
@@ -41,8 +43,8 @@ const joinNewsletter = async () => {
           <span class="eyebrow"><Sparkles :size="15"/> Designed for everyday pet life</span>
           <h1>Less mess.<br><em>More moments.</em></h1>
           <p>Thoughtful pet essentials for cleaner homes, calmer routines and better adventures — selected with Scandinavian simplicity in mind.</p>
-          <div class="hero-actions"><NuxtLink to="/shop" class="btn btn-primary">Shop bestsellers <ArrowRight :size="18"/></NuxtLink><NuxtLink to="/about" class="text-link">Why Norrli Pets?</NuxtLink></div>
-          <div class="hero-proof"><span>★★★★★</span><p>Launching in Sweden · Founding collection</p></div>
+          <div class="hero-actions"><NuxtLink to="/shop" class="btn btn-primary">Explore collection <ArrowRight :size="18"/></NuxtLink><NuxtLink to="/about" class="text-link">Why Norrli Pets?</NuxtLink></div>
+          <div class="hero-proof"><span>★★★★★</span><p>In development · Founding collection preview</p></div>
         </div>
         <div class="hero-visual">
           <div class="hero-orb orb-one">🐕</div><div class="hero-orb orb-two">🐈</div>
@@ -51,10 +53,10 @@ const joinNewsletter = async () => {
       </div>
     </section>
 
-    <section class="trust-strip"><div class="container trust-grid"><div><PackageCheck/>Tracked delivery</div><div><RotateCcw/>30-day returns</div><div><ShieldCheck/>Secure checkout</div><div><Sparkles/>Curated essentials</div></div></section>
+    <section class="trust-strip"><div class="container trust-grid" v-if="previewOnly"><div><PackageCheck/>Supplier research</div><div><RotateCcw/>Returns planning</div><div><ShieldCheck/>Tested payments</div><div><Sparkles/>Concept collection</div></div><div class="container trust-grid" v-else><div><PackageCheck/>Tracked delivery</div><div><RotateCcw/>Returns</div><div><ShieldCheck/>Secure checkout</div><div><Sparkles/>Curated essentials</div></div></section>
 
     <section class="section container">
-      <div class="section-head"><div><span class="eyebrow">The first drop</span><h2>Everyday problems, quietly solved.</h2></div><NuxtLink to="/shop" class="text-link">Shop all <ArrowRight :size="16"/></NuxtLink></div>
+      <div class="section-head"><div><span class="eyebrow">The first drop</span><h2>Everyday problems, quietly solved.</h2></div><NuxtLink to="/shop" class="text-link">Browse concepts <ArrowRight :size="16"/></NuxtLink></div>
       <div class="product-grid"><ProductCard v-for="product in featured" :key="product.id" :product="product"/></div>
     </section>
 
@@ -63,7 +65,7 @@ const joinNewsletter = async () => {
       <div class="editorial-copy"><span class="eyebrow">Built around real routines</span><h2>A pet store that feels less like a pet store.</h2><p>We focus on practical products with a calm aesthetic — things you can leave in your home, take in your car and use every day without clutter.</p><NuxtLink to="/about" class="btn btn-secondary">Read our approach <ArrowRight :size="18"/></NuxtLink></div>
     </section>
 
-    <section class="newsletter">
+    <section v-if="!previewOnly" class="newsletter">
       <div class="container newsletter-inner">
         <div><span class="eyebrow">The Norrli Notes</span><h2>New drops. Better pet routines.</h2><p>Get product launches, practical tips and early offers.</p></div>
         <div>
