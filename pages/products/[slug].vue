@@ -2,7 +2,7 @@
 import {
   Check, Minus, Plus, ShoppingBag, Heart, ArrowRight, ArrowLeft,
   Leaf, ShieldCheck, PackageSearch, ChevronRight, Sparkles, PawPrint,
-  Truck, Home, ChevronLeft
+  Truck, Home, ChevronLeft, ZoomIn, X
 } from 'lucide-vue-next'
 import { formatSEK, type Product, type ProductVariant } from '~/data/products'
 
@@ -14,8 +14,9 @@ const product=(catalog.value?.products||[]).find(p=>p.slug===route.params.slug)
 if(!product)throw createError({statusCode:404,statusMessage:'Produkten hittades inte'})
 const {add}=useCart()
 const {has,toggle,load}=useNorrliFavorites()
-onMounted(load)
 const quantity=ref(1),added=ref(false),imageFailed=ref(false)
+const zoomOpen=ref(false)
+const galleryDialog=ref<HTMLDialogElement | null>(null)
 const selectedVariantId=ref(product.variants?.[0]?.id||'')
 const selectedImage=ref(product.primaryImage||product.images?.[0]?.publicUrl||'')
 watch(selectedImage,()=>{imageFailed.value=false})
@@ -29,6 +30,18 @@ const moveImage = (direction: -1 | 1) => {
   const index = galleryImages.value.indexOf(selectedImage.value)
   selectedImage.value = galleryImages.value[(index + direction + galleryImages.value.length) % galleryImages.value.length]
 }
+const openZoom = async () => {
+  if (!selectedImage.value || imageFailed.value || !import.meta.client) return
+  zoomOpen.value = true
+  await nextTick()
+  galleryDialog.value?.showModal()
+}
+const closeZoom = () => galleryDialog.value?.close()
+const onGalleryKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'ArrowLeft') { event.preventDefault(); moveImage(-1) }
+  if (event.key === 'ArrowRight') { event.preventDefault(); moveImage(1) }
+}
+onMounted(load)
 const selectedImageIsConcept=computed(()=>
   product.images?.find(image=>image.publicUrl===selectedImage.value)?.isConcept
   ??product.primaryIsConcept??false
@@ -104,16 +117,24 @@ useSeoMeta({
             <button type="button" aria-label="Nästa produktbild" @click="moveImage(1)"><ChevronRight :size="20" /></button>
           </div>
           <span v-if="selectedImageIsConcept" class="nordic-detail-concept">Illustrativ konceptbild</span>
-        </div>
-        <div v-if="product.images?.length>1" class="nordic-detail-thumbs" aria-label="Produktbilder">
-          <button v-for="image in product.images" :key="image.id" type="button"
-            :class="{active:selectedImage===image.publicUrl}"
-            :aria-label="'Visa bild: '+(image.altText||product.name)"
-            :aria-pressed="selectedImage===image.publicUrl"
-            @click="selectedImage=image.publicUrl">
-            <img :src="image.publicUrl" :alt="image.altText||product.name" loading="lazy" width="100" height="100"/>
+          <button v-if="selectedImage && !imageFailed" type="button" class="norrli-detail-zoom"
+            aria-label="Förstora produktbilden" @click="openZoom">
+            <ZoomIn :size="17" aria-hidden="true" /> Förstora
           </button>
         </div>
+        <div v-if="galleryImages.length > 1" class="nordic-detail-thumbs" aria-label="Produktbilder">
+          <button v-for="(imageUrl, index) in galleryImages" :key="imageUrl" type="button"
+            :class="{ active: selectedImage === imageUrl }"
+            :aria-label="'Visa produktbild ' + (index + 1) + ' av ' + galleryImages.length"
+            :aria-pressed="selectedImage === imageUrl"
+            @click="selectedImage = imageUrl">
+            <img :src="imageUrl" :alt="product.images?.find(image => image.publicUrl === imageUrl)?.altText || product.name"
+              loading="lazy" width="100" height="100" />
+          </button>
+        </div>
+        <p v-if="galleryImages.length > 1" class="norrli-gallery-position" aria-live="polite">
+          Bild {{ galleryImages.indexOf(selectedImage) + 1 }} av {{ galleryImages.length }}
+        </p>
         <p class="nordic-detail-picture-note">
           <ShieldCheck :size="15"/>
           Produktbilderna är illustrativa tills slutligt sortiment och utseende har bekräftats.
@@ -220,5 +241,25 @@ useSeoMeta({
       </div>
       <NuxtLink to="/shop" class="nordic-detail-back"><ArrowLeft :size="17"/> Tillbaka till kollektionen</NuxtLink>
     </section>
+    <dialog v-if="zoomOpen" ref="galleryDialog" class="norrli-lightbox"
+      aria-label="Förstorad produktbild" @close="zoomOpen = false" @cancel="zoomOpen = false"
+      @click.self="closeZoom" @keydown="onGalleryKeydown">
+      <div class="norrli-lightbox-inner">
+        <div class="norrli-lightbox-toolbar">
+          <span>{{ product.name }} · Bild {{ galleryImages.indexOf(selectedImage) + 1 }} av {{ galleryImages.length }}</span>
+          <button type="button" aria-label="Stäng bildvisning" @click="closeZoom"><X :size="24" /></button>
+        </div>
+        <div class="norrli-lightbox-photo">
+          <button v-if="galleryImages.length > 1" type="button" aria-label="Föregående bild" @click="moveImage(-1)">
+            <ChevronLeft :size="26" aria-hidden="true" />
+          </button>
+          <img :src="selectedImage" :alt="product.name" />
+          <button v-if="galleryImages.length > 1" type="button" aria-label="Nästa bild" @click="moveImage(1)">
+            <ChevronRight :size="26" aria-hidden="true" />
+          </button>
+        </div>
+        <p v-if="selectedImageIsConcept" class="norrli-lightbox-note">Illustrativ konceptbild · Slutligt utseende kan skilja sig.</p>
+      </div>
+    </dialog>
   </main>
 </template>
