@@ -5,7 +5,9 @@ import type { Product } from '~/data/products'
 const route = useRoute()
 const category = computed(() => typeof route.query.category === 'string' ? route.query.category : '')
 const categories = ['All', 'Dogs', 'Cats', 'Travel', 'Clean Home']
-const search = ref('')
+const labelFor = (value: string) => ({ All:'Alla', Dogs:'Hund', Cats:'Katt', Travel:'Promenad & resa', 'Clean Home':'Hemmet' }[value] || value)
+const search = ref(typeof route.query.q === 'string' ? route.query.q : '')
+watch(() => route.query.q, value => { search.value = typeof value === 'string' ? value : '' })
 const sort = ref('featured')
 
 const { data: catalog, status } = await useFetch<{ products: Product[]; source: string }>('/api/products')
@@ -26,22 +28,22 @@ const visible = computed(() => {
 })
 
 const setCategory = (value: string) => navigateTo(value === 'All' ? '/shop' : `/shop?category=${encodeURIComponent(value)}`)
-useSeoMeta({ title: 'Shop' })
+useSeoMeta({ title: 'Alla produktidéer', description:'Utforska vår nordiskt inspirerade kollektion för hund och katt.' })
 </script>
 
 <template>
   <main class="container page-shell">
-    <div class="shop-title"><span class="eyebrow">NORDPAWS collection</span><h1>Shop essentials</h1><p>Useful, considered products for life with dogs and cats.</p></div>
+    <div class="shop-title"><span class="eyebrow">NORRLI PETS · KOLLEKTION</span><h1>Hitta dina favoriter</h1><p>Skandinavisk inspiration för livet med hund och katt. Här hittar du våra produktidéer.</p></div>
 
     <div class="shop-toolbar">
-      <label class="search-box"><Search :size="18"/><input v-model="search" type="search" placeholder="Search products" aria-label="Search products"></label>
-      <label class="sort-box"><SlidersHorizontal :size="17"/><select v-model="sort" aria-label="Sort products"><option value="featured">Featured</option><option value="price-asc">Price: low to high</option><option value="price-desc">Price: high to low</option><option value="name">Name</option></select></label>
+      <label class="search-box"><Search :size="18"/><input v-model="search" type="search" placeholder="Sök produkter" aria-label="Sök produkter"></label>
+      <label class="sort-box"><SlidersHorizontal :size="17"/><select v-model="sort" aria-label="Sortera produkter"><option value="featured">Utvalda</option><option value="price-asc">Pris: lägst först</option><option value="price-desc">Pris: högst först</option><option value="name">Namn</option></select></label>
     </div>
 
-    <div class="filter-row"><button v-for="item in categories" :key="item" :class="['filter-chip', { active: (item === 'All' && !category) || item === category }]" @click="setCategory(item)">{{ item }}</button></div>
+    <div class="filter-row"><button v-for="item in categories" :key="item" :class="['filter-chip', { active: (item === 'All' && !category) || item === category }]" @click="setCategory(item)">{{ labelFor(item) }}</button></div>
 
-    <div v-if="status === 'pending'" class="catalog-state">Loading the collection…</div>
+    <div v-if="status === 'pending'" class="catalog-state">Laddar kollektionen…</div>
     <div v-else-if="visible.length" class="product-grid"><ProductCard v-for="product in visible" :key="product.id" :product="product"/></div>
-    <div v-else class="catalog-state">No products match your search.</div>
+    <div v-else class="catalog-state">Inga produkter matchar din sökning.</div>
   </main>
 </template>
