@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { UserRound, Mail, LogOut, Package, ShieldCheck, Truck, ArrowRight, LockKeyhole } from 'lucide-vue-next'
+import { UserRound, Mail, LogOut, Package, ShieldCheck, Truck, ArrowRight, LockKeyhole, Heart, RefreshCw } from 'lucide-vue-next'
 import type { User } from '@supabase/supabase-js'
 import { formatSEK } from '~/data/products'
 
@@ -173,6 +173,8 @@ useSeoMeta({ title: 'Mitt konto', robots: 'noindex,nofollow', description: 'Hant
       <p>Logga in säkert via e-post för att se dina beställningar. Vi visar endast beställningar kopplade till din verifierade e-postadress.</p>
     </div>
 
+    <nav class="norrli-customer-shortcuts" aria-label="Genvägar för kunder"><NuxtLink to="/favorites"><Heart :size="21" aria-hidden="true"/><span><strong>Mina favoriter</strong><small>Visa dina sparade produktidéer</small></span><ArrowRight :size="17" aria-hidden="true"/></NuxtLink><NuxtLink to="/cart"><Package :size="21" aria-hidden="true"/><span><strong>Min varukorg</strong><small>Granska produkter och preliminära priser</small></span><ArrowRight :size="17" aria-hidden="true"/></NuxtLink><NuxtLink to="/contact"><Mail :size="21" aria-hidden="true"/><span><strong>Kundservice</strong><small>Vi hjälper dig med dina frågor</small></span><ArrowRight :size="17" aria-hidden="true"/></NuxtLink></nav>
+
     <div v-if="!authConfigured" class="norrli-account-panel" role="status">
       <LockKeyhole :size="30" aria-hidden="true" />
       <h2>Kundkonton förbereds</h2>
@@ -212,7 +214,7 @@ useSeoMeta({ title: 'Mitt konto', robots: 'noindex,nofollow', description: 'Hant
       <section class="norrli-order-section" aria-label="Mina beställningar">
         <div class="norrli-order-section-title">
           <div><span class="eyebrow">ORDERHISTORIK</span><h2>Mina beställningar</h2></div>
-          <button type="button" class="norrli-secondary-action" :disabled="ordersLoading" @click="refreshOrders">Uppdatera</button>
+          <button type="button" class="norrli-secondary-action" :disabled="ordersLoading" @click="refreshOrders"><RefreshCw :size="15" aria-hidden="true"/> {{ordersLoading ? "Uppdaterar…" : "Uppdatera"}}</button>
         </div>
         <p v-if="ordersLoading" role="status">Hämtar dina beställningar…</p>
         <div v-else-if="orders.length" class="norrli-order-list">
@@ -245,6 +247,7 @@ useSeoMeta({ title: 'Mitt konto', robots: 'noindex,nofollow', description: 'Hant
             </details>
           </article>
         </div>
+        <div v-else-if="feedbackType === 'error' && feedback" class="norrli-account-empty" role="alert"><Package :size="33" aria-hidden="true"/><h3>Kunde inte visa beställningar</h3><p>Kontrollera anslutningen och försök igen. Dina beställningar har inte ändrats.</p><button type="button" class="norrli-secondary-action" @click="refreshOrders">Försök igen</button></div>
         <div v-else class="norrli-account-empty">
           <Package :size="35" aria-hidden="true" />
           <h3>Inga beställningar hittades</h3>
