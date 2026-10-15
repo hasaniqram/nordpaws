@@ -146,7 +146,7 @@ useSeoMeta({title:'Operations workspace',robots:'noindex,nofollow'})
 <template>
   <main class="phase4-shell">
     <header class="phase4-topbar">
-      <div class="phase4-top-brand"><NorrliLogo /><span>OPERATIONS · PRIVATE</span></div>
+      <div class="phase4-top-brand"><NorrliLogo compact /><span>OPERATIONS · PRIVATE</span></div>
       <div class="phase4-quick-links">
         <NuxtLink to="/admin"><ArrowLeft :size="16" /> Admin dashboard</NuxtLink>
         <NuxtLink to="/admin/quotes">Supplier quotes</NuxtLink>
