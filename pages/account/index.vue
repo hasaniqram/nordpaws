@@ -34,14 +34,17 @@ const authenticated = ref(false)
 const feedback = ref('')
 const feedbackType = ref<'info' | 'error'>('info')
 let unsubscribe: (() => void) | null = null
+// Prevent an old in-flight order response from repopulating data after logout/account change.
+let authRevision = 0
 
 const setError = (message: string) => {
   feedbackType.value = 'error'
   feedback.value = message
 }
-const refreshOrders = async () => {
+const refreshOrders = async (revision = authRevision) => {
   const client = useSupabaseBrowser()
-  if (!client || !signedUser.value?.email_confirmed_at) return
+  const ownerId = signedUser.value?.id
+  if (!client || !signedUser.value?.email_confirmed_at || !ownerId) return
   ordersLoading.value = true
   try {
     const { data: { session } } = await client.auth.getSession()
@@ -49,22 +52,31 @@ const refreshOrders = async () => {
     const result = await $fetch<{ orders: CustomerOrder[] }>('/api/account/orders', {
       headers: { Authorization: 'Bearer ' + session.access_token }
     })
+    if (revision !== authRevision || signedUser.value?.id !== ownerId || !authenticated.value) return
     orders.value = result.orders
   } catch (err: any) {
+    if (revision !== authRevision) return
     orders.value = []
     setError(err?.data?.statusMessage || err?.message || 'Orderhistoriken kunde inte läsas just nu.')
   } finally {
-    ordersLoading.value = false
+    if (revision === authRevision) ordersLoading.value = false
   }
 }
 const refreshUser = async () => {
   const client = useSupabaseBrowser()
   if (!client) return
+  const revision = authRevision
   const { data, error } = await client.auth.getUser()
+  if (revision !== authRevision) return
   signedUser.value = error ? null : data.user
   authenticated.value = !!signedUser.value?.email_confirmed_at && !signedUser.value?.is_anonymous
-  if (authenticated.value) await refreshOrders()
-  else orders.value = []
+  if (authenticated.value) {
+    feedback.value = ''
+    await refreshOrders(revision)
+  } else {
+    orders.value = []
+    ordersLoading.value = false
+  }
 }
 const sendLink = async () => {
   const client = useSupabaseBrowser()
@@ -109,12 +121,17 @@ const verifyCode = async () => {
 }
 const signOut = async () => {
   const client = useSupabaseBrowser()
-  if (client) await client.auth.signOut()
+  authRevision++
   signedUser.value = null
   authenticated.value = false
   orders.value = []
+  ordersLoading.value = false
   sentTo.value = ''
   feedback.value = ''
+  if (client) {
+    const { error } = await client.auth.signOut()
+    if (error) setError('Det gick inte att logga ut. Försök igen.')
+  }
 }
 const displayDate = (date: string | null) => date
   ? new Intl.DateTimeFormat('sv-SE', { dateStyle: 'medium' }).format(new Date(date)) : 'Ej angivet'
@@ -136,6 +153,7 @@ onMounted(async () => {
   if (!client) return
   const { data } = client.auth.onAuthStateChange(event => {
     if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
+      authRevision++
       // Defer API calls outside the Supabase auth event callback.
       window.setTimeout(() => { void refreshUser() }, 0)
     }
@@ -143,7 +161,7 @@ onMounted(async () => {
   unsubscribe = () => data.subscription.unsubscribe()
   await refreshUser()
 })
-onBeforeUnmount(() => { unsubscribe?.() })
+onBeforeUnmount(() => { authRevision++; unsubscribe?.() })
 useSeoMeta({ title: 'Mitt konto', robots: 'noindex,nofollow', description: 'Hantera ditt Norrli Pets-konto och se dina beställningar.' })
 </script>
 
