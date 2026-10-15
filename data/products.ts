@@ -1,3 +1,24 @@
+export type ProductImage = {
+  id: string
+  publicUrl: string
+  altText?: string | null
+  sortOrder: number
+  isPrimary: boolean
+}
+
+export type ProductVariant = {
+  id: string
+  name: string
+  sku?: string | null
+  options: Record<string, string>
+  price?: number | null
+  supplierSku?: string | null
+  supplierCost?: number | null
+  stockQuantity?: number | null
+  active: boolean
+  sortOrder: number
+}
+
 export type Product = {
   id: string
   slug: string
@@ -11,6 +32,16 @@ export type Product = {
   emoji: string
   gradient: string
   features: string[]
+  images?: ProductImage[]
+  primaryImage?: string | null
+  variants?: ProductVariant[]
+  material?: string | null
+  weightGrams?: number | null
+  dimensions?: string | null
+  deliveryMinDays?: number | null
+  deliveryMaxDays?: number | null
+  stockStatus?: string | null
+  stockQuantity?: number | null
 }
 
 export const products: Product[] = [
