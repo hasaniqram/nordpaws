@@ -7,7 +7,7 @@ export default defineEventHandler(async () => {
 
   const { data: productRows, error } = await supabase
     .from('products')
-    .select('*')
+    .select('id,slug,name,subtitle,description,category,price,compare_at,badge,emoji,gradient,features,active,sort_order,material,weight_grams,dimensions,delivery_min_days,delivery_max_days,stock_status,stock_quantity')
     .eq('active', true)
     .order('sort_order')
 
@@ -17,12 +17,12 @@ export default defineEventHandler(async () => {
   const [{ data: imageRows }, { data: variantRows }] = await Promise.all([
     supabase
       .from('product_images')
-      .select('id,product_id,public_url,alt_text,sort_order,is_primary')
+      .select('id,product_id,public_url,alt_text,sort_order,is_primary,is_concept')
       .in('product_id', ids)
       .order('sort_order'),
     supabase
       .from('product_variants')
-      .select('id,product_id,name,sku,options,price,supplier_sku,supplier_cost,stock_quantity,active,sort_order')
+      .select('id,product_id,name,sku,options,price,stock_quantity,active,sort_order')
       .in('product_id', ids)
       .eq('active', true)
       .order('sort_order')
@@ -49,7 +49,8 @@ export default defineEventHandler(async () => {
         publicUrl: image.public_url,
         altText: image.alt_text,
         sortOrder: image.sort_order,
-        isPrimary: image.is_primary
+        isPrimary: image.is_primary,
+        isConcept: image.is_concept
       }))
       const primary = images.find((image) => image.isPrimary) || images[0] || null
       const variants = (variantsByProduct.get(item.id) || []).map((variant) => ({
@@ -58,8 +59,6 @@ export default defineEventHandler(async () => {
         sku: variant.sku,
         options: variant.options || {},
         price: variant.price,
-        supplierSku: variant.supplier_sku,
-        supplierCost: variant.supplier_cost,
         stockQuantity: variant.stock_quantity,
         active: variant.active,
         sortOrder: variant.sort_order
@@ -80,6 +79,7 @@ export default defineEventHandler(async () => {
         features: item.features,
         images,
         primaryImage: primary?.publicUrl || null,
+        primaryIsConcept: !!primary?.isConcept,
         variants,
         material: item.material,
         weightGrams: item.weight_grams,
