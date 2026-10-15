@@ -64,7 +64,7 @@ test('shop exposes accessible search suggestion, filters, comparison and reversi
  const page=read('pages/shop/index.vue')
  assert.match(page,/aria-expanded="showSuggestions"/)
  assert.match(page,/suggestProducts\(catalog\.value\?\.products/)
- assert.match(page,/selectedSlugs\.length<compareLimit/)
+ assert.match(page,/selectedSlugs\.value\.length<compareLimit/)
  assert.match(page,/aria-pressed="selectedSlugs.includes\(product.slug\)"/)
  assert.match(page,/const comparisonLink=computed/)
  assert.match(page,/need:need\.value/)
