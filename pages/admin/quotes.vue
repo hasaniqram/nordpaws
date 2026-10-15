@@ -211,7 +211,7 @@ useSeoMeta({title:'Supplier quotes and profitability',robots:'noindex,nofollow'}
 <template>
   <main class="admin-shell quotes-shell">
     <header class="admin-topbar">
-      <NorrliLogo/>
+      <NorrliLogo compact />
       <div class="admin-top-actions">
         <NuxtLink to="/admin/launch" class="btn btn-secondary compact"><ArrowLeft :size="15"/>Launch workspace</NuxtLink>
         <button class="icon-btn" title="Refresh" aria-label="Refresh quotations" @click="load"><RefreshCw :size="18"/></button>
