@@ -18,6 +18,7 @@ type ProductImageRow = {
   alt_text:string|null
   sort_order:number
   is_primary:boolean
+  is_concept:boolean
 }
 
 type VariantRow = {
@@ -264,7 +265,8 @@ const uploadImages = async (event:Event) => {
         public_url:urlData.publicUrl,
         alt_text:editor.name,
         sort_order:images.value.length,
-        is_primary:isPrimary
+        is_primary:isPrimary,
+        is_concept:false
       })
       if (dbError) {
         await supabase.storage.from('product-images').remove([path])
@@ -294,17 +296,25 @@ const setPrimary = async (image:ProductImageRow) => {
 }
 
 const deleteImage = async (image:ProductImageRow) => {
-  if (!confirm('Delete this product image?')) return
+  if (!confirm('Remove this image from the product gallery?')) return
   const supabase = useSupabaseBrowser()
   if (!supabase) return
-  const { error:storageError } = await supabase.storage.from('product-images').remove([image.storage_path])
-  if (storageError) return setFeedback(storageError.message,'error')
-  const { error } = await supabase.from('product_images').delete().eq('id',image.id)
-  if (error) return setFeedback(error.message,'error')
 
-  images.value = images.value.filter(i=>i.id!==image.id)
+  // Concept images hosted in GitHub are not Supabase Storage objects.
+  const { error } = await supabase.from('product_images').delete().eq('id', image.id)
+  if (error) return setFeedback(error.message, 'error')
+
+  images.value = images.value.filter(i => i.id !== image.id)
   if (image.is_primary && images.value[0]) await setPrimary(images.value[0])
-  setFeedback('Image deleted')
+
+  if (!image.storage_path.startsWith('site-assets/')) {
+    const { error: storageError } = await supabase.storage.from('product-images').remove([image.storage_path])
+    if (storageError) {
+      return setFeedback('Image removed from gallery. File cleanup needs attention.', 'error')
+    }
+  }
+
+  setFeedback('Image removed from gallery')
 }
 
 const createVariant = async () => {
@@ -452,7 +462,8 @@ useSeoMeta({title:'Manage product',robots:'noindex,nofollow'})
           </label>
           <div v-if="images.length" class="pm-image-grid">
             <article v-for="image in images" :key="image.id" :class="['pm-image-card',{primary:image.is_primary}]">
-              <img :src="image.public_url" :alt="image.alt_text || editor.name">
+              <img :src="image.public_url" :alt="image.alt_text || editor.name" loading="lazy">
+              <p v-if="image.is_concept" class="pm-concept-note">AI concept — replace after sourcing</p>
               <div class="pm-image-actions">
                 <button class="btn btn-secondary compact" :disabled="image.is_primary" @click="setPrimary(image)"><Star :size="14"/>{{ image.is_primary ? 'Primary' : 'Set primary' }}</button>
                 <button class="icon-danger" title="Delete image" @click="deleteImage(image)"><Trash2 :size="16"/></button>
