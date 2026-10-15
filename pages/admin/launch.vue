@@ -199,6 +199,7 @@ onMounted(load)
           <h1>Launch workspace</h1>
           <p>Develop the store, review prospective suppliers, and document what needs checking before opening for sales.</p>
           <NuxtLink to="/admin/quotes" class="btn btn-primary compact" style="margin-top:16px"><Scale :size="16"/> Supplier comparison & profitability</NuxtLink>
+          <NuxtLink to="/admin/insights" class="btn btn-secondary compact" style="margin-top:16px;margin-left:8px">Supplier insights & risk analysis</NuxtLink>
         </div>
         <div class="launch-lock"><LockKeyhole :size="18"/><strong>PRE-LAUNCH</strong><small>No real orders enabled</small></div>
       </div>
