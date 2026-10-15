@@ -9,7 +9,7 @@ test('copyright page is a Swedish support page and explains third-party image ri
  assert.match(page,/Upphovsrätt och innehåll/)
  assert.match(page,/tredje part/)
  assert.match(page,/Fotografier och illustrationer/)
- assert.match(page,/ursprungliga upphovsperson/i)
+ assert.match(page,/upphovsperson eller rättighetshavare/)
 })
 test('copyright page avoids falsely claiming registered trademarks or ownership of stock images',()=>{
  const page=read('pages/legal/copyright.vue')
