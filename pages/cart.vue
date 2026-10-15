@@ -4,6 +4,8 @@ import { formatSEK } from '~/data/products'
 
 const { lines, subtotal, setQuantity, remove, hydrate } = useCart()
 const loading = ref(false)
+const config = useRuntimeConfig()
+const stripeTestReady = computed(() => !!config.public.checkoutEnabled)
 const error = ref('')
 const showDetails = ref(false)
 const customer = reactive({
@@ -19,6 +21,10 @@ onMounted(hydrate)
 
 const checkout = async () => {
   error.value = ''
+  if (!stripeTestReady.value) {
+    error.value = 'Stripe sandbox checkout is being connected. Real payments are unavailable.'
+    return
+  }
   if (!showDetails.value) {
     showDetails.value = true
     return
@@ -35,7 +41,7 @@ const checkout = async () => {
     })
 
     if (result.url) await navigateTo(result.url, { external: true })
-    else error.value = 'Checkout is not available yet.'
+    else error.value = 'Stripe test checkout is not available yet.'
   } catch (e: any) {
     error.value = e?.data?.statusMessage || e?.data?.message || 'Checkout is being configured.'
   } finally {
@@ -95,15 +101,16 @@ useSeoMeta({ title: 'Your bag' })
 
       <aside class="order-summary">
         <h2>Order summary</h2>
+        <p class="checkout-country"><strong>Stripe sandbox — test payments only</strong></p>
         <div class="summary-row"><span>Subtotal</span><strong>{{ formatSEK(subtotal) }}</strong></div>
-        <div class="summary-row"><span>Shipping</span><span>Final launch rule pending</span></div>
+        <div class="summary-row"><span>Shipping</span><span>Pending supplier confirmation — test checkout only</span></div>
         <div class="summary-total"><span>Items total</span><strong>{{ formatSEK(subtotal) }}</strong></div>
 
-        <button class="btn btn-primary checkout-btn" :disabled="loading" @click="checkout">
-          {{ loading ? 'Preparing…' : (showDetails ? 'Continue to payment' : 'Checkout') }}
+        <button class="btn btn-primary checkout-btn" :disabled="loading || !stripeTestReady" @click="checkout">
+          {{ loading ? 'Preparing…' : (!stripeTestReady ? 'Test checkout coming soon' : (showDetails ? 'Continue to Stripe test payment' : 'Try test checkout')) }}
         </button>
 
-        <p class="checkout-note">Payment provider: Mollie. Planned methods: Swish, Klarna, cards and Apple Pay. Live charging remains disabled until the Norrli Pets Mollie account and shipping rules are approved.</p>
+        <p class="checkout-note">Payment provider: Stripe sandbox. No real charges or deliveries. Live checkout remains blocked pending Swedish business verification, verified suppliers, VAT and shipping rules.</p>
         <p v-if="error" class="checkout-error">{{ error }}</p>
       </aside>
     </div>
