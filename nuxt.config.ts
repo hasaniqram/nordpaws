@@ -23,6 +23,7 @@ export default defineNuxtConfig({
     stripeSecretKey: '',
     stripeWebhookSecret: '',
     brevoApiKey: '',
+    brevoWebhookToken: '',
     brevoSenderEmail: '',
     brevoSenderName: 'Norrli Pets',
     brevoListId: '',
