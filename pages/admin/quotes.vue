@@ -40,7 +40,7 @@ const nameForProduct = (id:string) => products.value.find(p=>p.id===id)?.name ||
 const supplierOf = (id:string) => suppliers.value.find(s=>s.id===id)
 const priceFor = (id:string) => (products.value.find(p=>p.id===id)?.price || 0)/100
 const resultFor = (quote:SupplierQuote) => calculateQuote(quote,priceFor(quote.product_id),targetMargin.value)
-const filteredQuotes = computed(() => quotes.value.filter(q=> !filterProductId.value || q.product_id===filterProductId.value))
+const filteredQuotes = computed(() => quotes.value.filter(q=> !filterProductId.value || q.product_id===filterProductId.value)
   .sort((a,b) => {
     const x=resultFor(a),y=resultFor(b)
     return (y.complete ? 1 : 0) - (x.complete ? 1 : 0) ||
