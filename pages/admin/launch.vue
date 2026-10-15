@@ -198,6 +198,7 @@ onMounted(load)
           <span class="eyebrow"><ShieldCheck :size="15"/> Private planning area</span>
           <h1>Launch workspace</h1>
           <p>Develop the store, review prospective suppliers, and document what needs checking before opening for sales.</p>
+          <NuxtLink to="/admin/quotes" class="btn btn-primary compact" style="margin-top:16px"><Scale :size="16"/> Supplier comparison & profitability</NuxtLink>
         </div>
         <div class="launch-lock"><LockKeyhole :size="18"/><strong>PRE-LAUNCH</strong><small>No real orders enabled</small></div>
       </div>
@@ -267,7 +268,7 @@ onMounted(load)
 
       <section v-else-if="tab==='suppliers'" class="launch-category">
         <div class="launch-section-head">
-          <div><h2>Supplier research pipeline</h2><p>Tracking enquiries is not an approved supplier relationship. Mark terms confirmed only when independently documented.</p></div>
+          <div><h2>Supplier research pipeline</h2><p>Tracking enquiries is not an approved supplier relationship. Mark terms confirmed only when independently documented.</p><NuxtLink to="/admin/quotes" class="text-link" style="margin-top:10px">Compare quotations and margins <ExternalLink :size="14"/></NuxtLink></div>
           <button class="btn btn-secondary compact" @click="showNewLead=!showNewLead"><Plus :size="15"/> Add prospect</button>
         </div>
         <form v-if="showNewLead" class="launch-lead-create" @submit.prevent="addLead">
