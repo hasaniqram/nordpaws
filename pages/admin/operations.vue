@@ -75,6 +75,14 @@ const quoteShipping=(q:SupplierQuote)=>{
   return formatSek(Number(q.shipping_per_order)*Number(q.fx_to_sek))
 }
 const quoteForSupplier=(id:string)=>quotes.value.filter(q=>q.supplier_lead_id===id)
+const deliveryQuoteLabel=(quote:SupplierQuote)=>{
+  const min=quote.delivery_min_days, max=quote.delivery_max_days
+  return min!=null && max!=null ? String(min)+'–'+String(max)+' days (unverified)' : 'Not documented'
+}
+const marginQuoteLabel=(quote:SupplierQuote)=>{
+  const margin=quoteMargin(quote)
+  return margin==null ? 'Incomplete quote' : String(margin)+'% (illustration)'
+}
 const load=async()=>{
   const client=useSupabaseBrowser()
   if(!client){error.value='Supabase browser access is not configured.';loading.value=false;return}
@@ -262,8 +270,8 @@ useSeoMeta({title:'Operations workspace',robots:'noindex,nofollow'})
                 <td>{{ suppliers.find(s=>s.id===quote.supplier_lead_id)?.name||'Unknown' }}</td>
                 <td>{{ quote.status==='supplier_confirmed'?'Confirmed (admin entry)':quote.status }}</td>
                 <td>{{ quoteShipping(quote) }}<small>SEK estimate from recorded FX</small></td>
-                <td>{{ quote.delivery_min_days!=null&&quote.delivery_max_days!=null ? quote.delivery_min_days+'–'+quote.delivery_max_days+' days (unverified)' : 'Not documented' }}</td>
-                <td>{{ quoteMargin(quote)==null?'Incomplete quote':quoteMargin(quote)+'% (illustration)' }}</td>
+                <td>{{ deliveryQuoteLabel(quote) }}</td>
+                <td>{{ marginQuoteLabel(quote) }}</td>
               </tr>
               <tr v-if="!quotes.length"><td colspan="6">No saved quotations. Create a sourcing scenario first.</td></tr>
             </tbody>
