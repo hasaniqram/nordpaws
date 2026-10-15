@@ -88,14 +88,14 @@ const save=async(productId:string)=>{
   if(d.preferred_quote_id&&!quotesFor(productId).some(q=>q.id===d.preferred_quote_id)){
     feedback.value='The selected quotation belongs to a different product.';return
   }
-  if(d.shortlist_rank!=null&&(!Number.isInteger(Number(d.shortlist_rank))||Number(d.shortlist_rank)<1||Number(d.shortlist_rank)>10)){
+  if(d.shortlist_rank!=null && String(d.shortlist_rank).trim()!=='' && (!Number.isInteger(Number(d.shortlist_rank))||Number(d.shortlist_rank)<1||Number(d.shortlist_rank)>10)){
     feedback.value='Priority rank must be between 1 and 10.';return
   }
   saving.value=productId;feedback.value=''
   try{
     const {error:dbError}=await client.from('product_sourcing_decisions').upsert({
       product_id:productId,stage:d.stage,preferred_quote_id:d.preferred_quote_id||null,
-      shortlist_rank:d.shortlist_rank===null?null:Number(d.shortlist_rank),
+      shortlist_rank:d.shortlist_rank==null || String(d.shortlist_rank).trim()==='' ? null : Number(d.shortlist_rank),
       decision_notes:d.decision_notes.trim(),open_questions:d.open_questions.trim(),
       updated_at:new Date().toISOString()
     },{onConflict:'product_id'})
