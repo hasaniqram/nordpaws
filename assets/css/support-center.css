@@ -253,3 +253,18 @@
  .norrli-copyright-contact{flex-direction:column}
  .norrli-copyright-action{width:100%;text-align:center}
 }
+
+/* Founder attribution — intentionally prominent while preserving third-party rights. */
+.nordic-footer-creator-credit{font-size:12px;line-height:1.6;color:#dcefe0;display:block}
+.nordic-footer-creator-credit strong{font-weight:900;color:#fff;letter-spacing:.01em}
+.norrli-copyright-founder{position:relative;overflow:hidden;border:1px solid #c9dfc9;border-radius:19px;background:linear-gradient(125deg,#eaf3e7,#f5f8f1 72%);padding:clamp(24px,3.5vw,37px);margin:0 0 19px}
+.norrli-copyright-founder:after{content:"";width:130px;height:130px;border-radius:50%;border:1px solid #caddc6;position:absolute;right:-55px;top:-55px;opacity:.8;pointer-events:none}
+.norrli-copyright-founder h2{font:500 clamp(30px,3.4vw,45px)/1.14 Georgia,'Times New Roman',serif;letter-spacing:-.045em;color:#244b35;margin:15px 0 14px}
+.norrli-copyright-founder h2 strong{font-weight:700;color:#1b5336}
+.norrli-copyright-founder p{max-width:675px;font-size:14px;line-height:1.8;color:#54725d;margin:0 0 17px}
+.norrli-copyright-founder-role{display:inline-block;font-weight:850;font-size:11px;letter-spacing:.04em;color:#30634b}
+@media(max-width:670px){
+ .nordic-footer-creator-credit{font-size:11px}
+ .norrli-copyright-founder p{font-size:13px}
+ .norrli-copyright-founder-role{line-height:1.75}
+}
