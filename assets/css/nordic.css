@@ -367,3 +367,47 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{ou
 @media(prefers-reduced-motion:reduce){
 .nordic-detail-main-action,.nordic-detail-heart{transition:none}
 }
+
+/* Approved Norrli Pets composite logo: keep emblem and exact wordmark in one image */
+.nordic-header-main {
+  min-height: 188px;
+  grid-template-columns: minmax(230px, 1fr) minmax(290px, 1.45fr) minmax(165px, .95fr);
+}
+.nordic-header-main .nordic-brand {
+  width: 210px;
+  max-width: 100%;
+}
+.nordic-header-main .nordic-approved-logo-image {
+  width: 100%;
+  height: auto;
+}
+.nordic-footer-about .nordic-brand {
+  width: 184px;
+  padding: 7px;
+  background: #fffdf9;
+  border-radius: 18px;
+}
+.admin-topbar .nordic-brand {
+  width: 95px;
+}
+@media (max-width: 1180px) {
+  .nordic-header-main {
+    min-height: 171px;
+    grid-template-columns: minmax(190px, .8fr) minmax(220px, 1.45fr) minmax(130px, .8fr);
+  }
+  .nordic-header-main .nordic-brand { width: 186px; }
+}
+@media (max-width: 850px) {
+  .nordic-header-main {
+    min-height: 143px;
+    grid-template-columns: 1fr auto;
+  }
+  .nordic-header-main .nordic-brand { width: 166px; }
+}
+@media (max-width: 580px) {
+  .nordic-header-main { min-height: 133px; }
+  .nordic-header-main .nordic-brand { width: 147px; }
+  .nordic-header-actions { gap: 9px; }
+  .nordic-header-action { min-width: 30px; }
+  .nordic-footer-about .nordic-brand { width: 176px; }
+}
