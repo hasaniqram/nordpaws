@@ -24,6 +24,7 @@
         <NuxtLink to="/legal/returns">Returer och ångerrätt</NuxtLink>
         <NuxtLink to="/legal/privacy">Integritetspolicy</NuxtLink>
         <NuxtLink to="/legal/terms">Köpvillkor</NuxtLink>
+        <NuxtLink to="/legal/copyright">Upphovsrätt och innehåll</NuxtLink>
       </div>
       <div class="nordic-footer-column">
         <h3>Om Norrli Pets</h3>
@@ -35,8 +36,16 @@
       </div>
     </div>
     <div class="container nordic-footer-bottom">
-      <span>© {{new Date().getFullYear()}} Norrli Pets</span>
-      <span>Skapad med omtanke i Sverige</span>
+      <div class="nordic-footer-copyright">
+        <span class="nordic-footer-copyright-main">© {{ new Date().getFullYear() }} Norrli Pets <span aria-hidden="true">·</span> Upphovsrätt för eget material</span>
+        <small>Material från tredje part omfattas av respektive rättighetshavares villkor.</small>
+      </div>
+      <nav class="nordic-footer-legal-links" aria-label="Juridisk information">
+        <NuxtLink to="/legal/copyright">Upphovsrätt</NuxtLink>
+        <NuxtLink to="/legal/privacy">Integritet</NuxtLink>
+        <NuxtLink to="/legal/terms">Villkor</NuxtLink>
+      </nav>
+      <span class="nordic-footer-signature">Skapad med omtanke i Sverige</span>
     </div>
   </footer>
 </template>
