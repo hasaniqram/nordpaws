@@ -139,6 +139,7 @@ useSeoMeta({title:'Product sourcing decision board',robots:'noindex,nofollow'})
       <NorrliLogo/>
       <div class="admin-top-actions">
         <NuxtLink to="/admin/insights" class="btn btn-secondary compact"><ArrowLeft :size="15"/>Insights</NuxtLink>
+        <NuxtLink to="/admin/catalog" class="btn btn-primary compact"><PackageSearch :size="15"/>Catalog & Stock Lab</NuxtLink>
         <button class="icon-btn" title="Refresh decisions" aria-label="Refresh decisions" @click="load"><RefreshCw :size="18"/></button>
       </div>
     </header>
