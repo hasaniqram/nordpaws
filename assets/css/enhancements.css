@@ -16,3 +16,6 @@
 .product-card-image{object-fit:cover}
 @media(max-width:900px){.hero-product.has-photo{height:400px}}
 @media(max-width:620px){.hero-product.has-photo{height:330px;width:75%;padding-bottom:24px;border-radius:27px}.hero-product.has-photo h3{font-size:22px}.hero-product.has-photo .mini-label{top:14px;font-size:9px}.catalog-concept-label{font-size:9px;padding:4px 7px}.editorial-product-image{object-position:center}}
+
+/* Collection preview status */
+.product-preview-caption{display:block;font-size:11px;color:#6e6a60;letter-spacing:.01em;margin:-3px 0 9px}
