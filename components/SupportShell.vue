@@ -14,7 +14,8 @@ const entries=[
   {to:'/legal/shipping',label:'Leveransvillkor'},
   {to:'/legal/returns',label:'Returer och ångerrätt'},
   {to:'/legal/privacy',label:'Integritetspolicy'},
-  {to:'/legal/terms',label:'Köpvillkor'}
+  {to:'/legal/terms',label:'Köpvillkor'},
+  {to:'/legal/copyright',label:'Upphovsrätt'}
 ]
 </script>
 <template>
