@@ -14,9 +14,9 @@ const input={
   unit_cost:12,shipping_per_order:8,fx_to_sek:1,payment_fee_pct:2,payment_fixed_sek:2,
   returns_reserve_pct:1,delivery_min_days:2,delivery_max_days:7
  }],
- products:[{id:'p1',active:true,material:'Cotton',supplier_sku:'P1'}],
+ products:[{id:'p1',active:true,material:'Cotton',supplier_id:'s1',supplier_sku:'P1'}],
  images:[{product_id:'p1',is_concept:false}],
- catalog:[{product_id:'p1',supplier_lead_id:'s1',stock_status:'in_stock',stock_quantity:24,verified_at:'2026-10-14T00:00:00Z'}],
+ catalog:[{product_id:'p1',supplier_lead_id:'s1',supplier_sku:'P1',stock_status:'in_stock',stock_quantity:24,verified_at:'2026-10-14T00:00:00Z'}],
  contacts:[{status:'closed'}]
 }
 const at=Date.parse('2026-10-15T12:00:00Z')
@@ -104,4 +104,19 @@ test('private UI uses verified role and limited projections, not checkout write 
  assert.doesNotMatch(source,/contact_messages'\)\.select\('\*'|\.insert\(|\.update\(|\.delete\(|\/api\/checkout|syncBrevoContact/)
  assert.match(source,/paymentsEnabled:false/)
  assert.match(source,/launchApproved:false/)
+})
+
+test('different supplier quote or incorrect supplier SKU cannot complete catalog readiness',()=>{
+ const a=copy(input);a.catalog[0].supplier_sku='OTHER-SKU'
+ assert.equal(get(evaluateReleaseGate(a,at),'inventory').state,'review')
+ const b=copy(input);b.products[0].supplier_id='other'
+ assert.equal(get(evaluateReleaseGate(b,at),'inventory').state,'review')
+ const c=copy(input);c.quotes[0].supplier_lead_id='other'
+ assert.equal(get(evaluateReleaseGate(c,at),'inventory').state,'review')
+})
+test('review export intentionally excludes free-text notes and PII fields',()=>{
+ const page=readFileSync(new URL('../pages/admin/release-gate.vue',import.meta.url),'utf8')
+ const exportBlock=page.split('const sanitized=')[1].split('const blob=')[0]
+ assert.doesNotMatch(exportBlock,/notes:reviewNotes|contacts:|messages:|email:|name:/)
+ assert.match(exportBlock,/launchApproved:false,paymentsEnabled:false/)
 })
