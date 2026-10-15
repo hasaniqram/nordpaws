@@ -1,11 +1,15 @@
 <script setup lang="ts">
-withDefaults(defineProps<{ tone?: 'dark' | 'light'; showWordmark?: boolean }>(), {
-  tone: 'dark', showWordmark: true
+withDefaults(defineProps<{
+  tone?: 'dark' | 'light'
+  showWordmark?: boolean
+  layout?: 'horizontal' | 'stacked'
+}>(), {
+  tone: 'dark', showWordmark: true, layout: 'horizontal'
 })
 </script>
 
 <template>
-  <NuxtLink to="/" :class="['nordic-brand','tone-'+tone]" aria-label="Norrli Pets – till startsidan">
+  <NuxtLink to="/" :class="['nordic-brand','tone-'+tone, {'is-stacked': layout === 'stacked'}]" aria-label="Norrli Pets – till startsidan">
     <span class="nordic-logo-art" aria-hidden="true">
       <img class="nordic-logo-image" src="/branding/norrli-emblem.png" alt="" width="191" height="116"
         decoding="async"/>
@@ -32,8 +36,21 @@ withDefaults(defineProps<{ tone?: 'dark' | 'light'; showWordmark?: boolean }>(),
 .nordic-logo-spark-a{right:9%;top:0}
 .nordic-logo-spark-b{left:24%;top:3%;font-size:10px;animation-delay:.85s}
 .nordic-brand-copy{display:flex;flex-direction:column;line-height:1;gap:6px}
-.nordic-brand-name{font:700 clamp(24px,2.3vw,35px)/.95 Georgia,serif;letter-spacing:-.065em;white-space:nowrap}
-.nordic-brand-name span{color:#6c8975;margin-left:4px}
+.nordic-brand-name{
+  font-family:'Nunito','Nunito Sans','Arial Rounded MT Bold','Arial Black',system-ui,sans-serif;
+  font-size:clamp(25px,2.5vw,36px);
+  font-weight:1000;
+  line-height:.94;
+  letter-spacing:-.072em;
+  font-variation-settings:'wght' 1000;
+  white-space:nowrap;
+}
+.nordic-brand-name span{color:#78937b;margin-left:5px}
+.nordic-brand.is-stacked{flex-direction:column;align-items:center;justify-content:center;gap:0}
+.nordic-brand.is-stacked .nordic-logo-art{width:111px;height:68px}
+.nordic-brand.is-stacked .nordic-brand-copy{align-items:center;gap:3px}
+.nordic-brand.is-stacked .nordic-brand-name{font-size:30px;letter-spacing:-.075em}
+.nordic-brand.is-stacked .nordic-brand-subtitle{display:none}
 .tone-light .nordic-brand-name span{color:#c8d9c6}
 .nordic-brand-subtitle{font-size:7px;letter-spacing:.22em;font-weight:800;white-space:nowrap}
 .nordic-brand:hover .nordic-logo-tail{animation-duration:.9s}
@@ -57,6 +74,8 @@ withDefaults(defineProps<{ tone?: 'dark' | 'light'; showWordmark?: boolean }>(),
 @media(max-width:650px){
   .nordic-logo-art{width:72px;height:51px}
   .nordic-brand-name{font-size:24px}
+  .nordic-brand.is-stacked .nordic-logo-art{width:81px;height:49px}
+  .nordic-brand.is-stacked .nordic-brand-name{font-size:23px}
   .nordic-brand-subtitle{font-size:5.5px;letter-spacing:.1em}
 }
 @media(prefers-reduced-motion:reduce){
