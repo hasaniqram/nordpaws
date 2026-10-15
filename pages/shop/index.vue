@@ -36,7 +36,7 @@ const toggleCompare=(slug:string)=>{
  if(selectedSlugs.value.includes(slug))selectedSlugs.value=selectedSlugs.value.filter(x=>x!==slug)
  else if(selectedSlugs.value.length<compareLimit)selectedSlugs.value=[...selectedSlugs.value,slug]
 }
-const comparisonLink=computed(()=>({path:'/compare',query:{items:selectedSlugs.value.join(',')}})
+const comparisonLink=computed(()=>({path:'/compare',query:{items:selectedSlugs.value.join(',')}}))
 const suggestions=computed(()=>suggestProducts(catalog.value?.products||[],search.value,5))
 const showSuggestions=computed(()=>suggestionsOpen.value && search.value.trim().length>=2 && suggestions.value.length>0)
 const onSearchBlur=()=>{suggestionsOpen.value=false}
