@@ -265,7 +265,7 @@ useSeoMeta({
 <template>
   <main class="admin-shell catalog-shell">
     <header class="admin-topbar">
-      <NorrliLogo/>
+      <NorrliLogo compact />
       <div class="admin-top-actions">
         <NuxtLink to="/admin/decisions" class="btn btn-secondary compact"><ArrowLeft :size="15"/>Decision Board</NuxtLink>
         <button class="icon-btn" title="Refresh research catalog" aria-label="Refresh research catalog" @click="load"><RefreshCw :size="18"/></button>

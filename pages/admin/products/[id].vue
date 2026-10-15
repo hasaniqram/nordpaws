@@ -391,7 +391,7 @@ useSeoMeta({title:'Manage product',robots:'noindex,nofollow'})
 <template>
   <main class="admin-shell product-manager-shell">
     <header class="admin-topbar">
-      <NorrliLogo />
+      <NorrliLogo compact />
       <NuxtLink to="/admin" class="btn btn-secondary compact"><ArrowLeft :size="16"/>Admin</NuxtLink>
     </header>
 

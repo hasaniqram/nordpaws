@@ -104,7 +104,7 @@ useSeoMeta({
 <template>
   <main class="admin-shell insight-shell">
     <header class="admin-topbar">
-      <NorrliLogo/>
+      <NorrliLogo compact />
       <div class="admin-top-actions">
         <NuxtLink to="/admin/quotes" class="btn btn-secondary compact"><ArrowLeft :size="16"/>Quote planner</NuxtLink>
         <button class="icon-btn" title="Refresh insights" aria-label="Refresh insights" @click="load"><RefreshCw :size="18"/></button>

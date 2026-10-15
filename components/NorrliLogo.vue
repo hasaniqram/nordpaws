@@ -3,17 +3,19 @@ withDefaults(defineProps<{
   tone?: 'dark' | 'light'
   showWordmark?: boolean
   layout?: 'horizontal' | 'stacked'
+  compact?: boolean
 }>(), {
   tone: 'dark',
   showWordmark: true,
-  layout: 'stacked'
+  layout: 'stacked',
+  compact: false
 })
 </script>
 
 <template>
   <NuxtLink
     to="/"
-    :class="['nordic-brand', 'tone-' + tone, { 'nordic-brand-emblem-only': !showWordmark }]"
+    :class="['nordic-brand', 'tone-' + tone, { 'nordic-brand-emblem-only': !showWordmark, 'nordic-brand-compact': compact }]"
     aria-label="Norrli Pets – till startsidan"
   >
     <img
@@ -47,6 +49,19 @@ withDefaults(defineProps<{
   transform-origin: center;
   animation: norrli-approved-float 5s ease-in-out infinite;
   transition: filter .25s ease, transform .25s ease;
+}
+.nordic-brand-compact {
+  width: 100px;
+  height: 70px;
+  max-height: 70px;
+}
+.nordic-brand-compact .nordic-approved-logo-image {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: 100%;
+  max-height: 70px;
+  object-fit: contain;
 }
 .nordic-brand:hover .nordic-approved-logo-image {
   animation-play-state: paused;

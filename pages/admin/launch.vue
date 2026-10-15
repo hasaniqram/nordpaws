@@ -177,7 +177,7 @@ onMounted(load)
 <template>
   <main class="admin-shell launch-shell">
     <header class="admin-topbar">
-      <NorrliLogo />
+      <NorrliLogo compact />
       <div class="admin-top-actions">
         <NuxtLink to="/admin" class="btn btn-secondary compact"><ArrowLeft :size="15"/> Admin</NuxtLink>
         <button type="button" class="icon-btn" title="Refresh" aria-label="Refresh workspace" @click="load"><RefreshCw :size="18"/></button>

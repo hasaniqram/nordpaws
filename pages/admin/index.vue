@@ -76,6 +76,24 @@ const feedback = ref('')
 const feedbackType = ref<'success'|'error'>('success')
 const showNewProduct = ref(false)
 const showNewSupplier = ref(false)
+const orderOriginalStatus = reactive<Record<string,string>>({})
+const orderSaving = ref('')
+const orderEligible = (order:AdminOrder) => order.payment_status==='paid' && order.payment_provider==='mollie' && !order.order_number.startsWith('NR-TEST-') && !['cancelled','refunded'].includes(orderOriginalStatus[order.id] || order.fulfillment_status)
+const canAdvanceOption = (order:AdminOrder, candidate:string) => {
+  const stages=['unfulfilled','supplier_ordered','processing','shipped','delivered']
+  const index=stages.indexOf(orderOriginalStatus[order.id]||'unfulfilled')
+  return index>=0 && candidate===stages[index+1]
+}
+const canAdvanceOrder = (order:AdminOrder) => {
+  if(!orderEligible(order))return false
+  const stages=['unfulfilled','supplier_ordered','processing','shipped','delivered']
+  const old=orderOriginalStatus[order.id]||'unfulfilled'
+  const index=stages.indexOf(old)
+  if(index<0 || index===stages.length-1 || order.fulfillment_status!==stages[index+1])return false
+  if(!order.supplier_order_reference?.trim())return false
+  if(index>=2 && (!order.carrier?.trim()||!order.tracking_number?.trim()))return false
+  return true
+}
 
 const newProduct = reactive({
   name:'',
@@ -174,6 +192,7 @@ const load = async () => {
   }))
   suppliers.value = supplierResult.data || []
   orders.value = orderResult.data || []
+  for (const order of orders.value) orderOriginalStatus[order.id] = order.fulfillment_status || 'unfulfilled'
   orderItems.value = itemResult.data || []
   contacts.value = contactResult.data || []
   newsletter.value = newsletterResult.data || []
@@ -278,41 +297,23 @@ const createSupplier = async () => {
 }
 
 const saveOrder = async (order:AdminOrder) => {
-  const supabase = useSupabaseBrowser()
-  if (!supabase) return
-
-  const now = new Date().toISOString()
-  const patch:any = {
-    fulfillment_status:order.fulfillment_status,
-    supplier_order_reference:order.supplier_order_reference?.trim() || null,
-    tracking_number:order.tracking_number?.trim() || null,
-    carrier:order.carrier?.trim() || null,
-    updated_at:now
-  }
-
-  if (order.fulfillment_status === 'supplier_ordered') {
-    patch.supplier_status = 'ordered'
-    patch.supplier_ordered_at = order.supplier_ordered_at || now
-  }
-  if (order.fulfillment_status === 'processing') {
-    patch.supplier_status = 'accepted'
-    patch.supplier_ordered_at = order.supplier_ordered_at || now
-    patch.processing_at = order.processing_at || now
-  }
-  if (order.fulfillment_status === 'shipped') {
-    patch.supplier_status = 'shipped'
-    patch.shipped_at = order.shipped_at || now
-  }
-  if (order.fulfillment_status === 'delivered') {
-    patch.supplier_status = 'delivered'
-    patch.delivered_at = order.delivered_at || now
-  }
-  if (order.fulfillment_status === 'cancelled') patch.supplier_status = 'cancelled'
-
-  const { error } = await supabase.from('orders').update(patch).eq('id',order.id)
-  if (error) return setFeedback(error.message,'error')
-  Object.assign(order,patch)
-  setFeedback(`${order.order_number} updated`)
+  if(!canAdvanceOrder(order))return setFeedback('Only the next stage of a paid, non-test order can be recorded. Add required real supplier/carrier references.','error')
+  if(!window.confirm('Confirm this stage really happened for ' + order.order_number + '? This does not place an order or email the customer.'))return
+  const client=useSupabaseBrowser()
+  if(!client)return
+  orderSaving.value=order.id
+  try{
+    const {data:{session}}=await client.auth.getSession()
+    if(!session?.access_token)throw new Error('Admin session expired. Sign in again.')
+    await $fetch('/api/admin/fulfillment',{method:'POST',headers:{Authorization:'Bearer '+session.access_token},
+      body:{orderId:order.id,expectedStatus:orderOriginalStatus[order.id]||'unfulfilled',
+        targetStatus:order.fulfillment_status,supplierOrderReference:order.supplier_order_reference||'',
+        carrier:order.carrier||'',trackingNumber:order.tracking_number||''}
+    })
+    await load()
+    setFeedback('Fulfillment updated; no payment, dispatch or email action was triggered.')
+  }catch(e:any){setFeedback(e?.data?.statusMessage||e?.message||'Unable to save fulfillment.','error')}
+  finally{orderSaving.value=''}
 }
 
 const signOut = async () => {
@@ -329,9 +330,10 @@ useSeoMeta({title:'Admin dashboard',robots:'noindex,nofollow'})
 <template>
   <main class="admin-shell">
     <header class="admin-topbar">
-      <NorrliLogo />
+      <NorrliLogo compact />
       <div class="admin-top-actions">
-        <NuxtLink to="/admin/launch" class="btn btn-primary compact"><ClipboardCheck :size="16"/> Launch workspace</NuxtLink>
+        <NuxtLink to="/admin/operations" class="btn btn-primary compact"><Truck :size="16"/> Operations center</NuxtLink>
+        <NuxtLink to="/admin/launch" class="btn btn-secondary compact"><ClipboardCheck :size="16"/> Launch workspace</NuxtLink>
         <NuxtLink to="/admin/quotes" class="btn btn-secondary compact">Compare supplier quotes</NuxtLink>
         <NuxtLink to="/admin/decisions" class="btn btn-secondary compact">Product Decision Board</NuxtLink>
         <NuxtLink to="/admin/catalog" class="btn btn-secondary compact">Catalog & Stock Lab</NuxtLink>
@@ -481,7 +483,7 @@ useSeoMeta({title:'Admin dashboard',robots:'noindex,nofollow'})
 
       <section v-if="tab==='orders'" class="admin-panel">
         <div class="admin-panel-head">
-          <div><h2>Order fulfillment</h2><p>Paid → Supplier Ordered → Processing → Shipped → Delivered</p></div>
+          <div><h2>Order fulfillment</h2><p>Supplier Ordered → Processing → Shipped → Delivered. Only paid Mollie orders; this records progress without placing an order or sending email.</p><NuxtLink to="/admin/operations" class="text-link">Open operations center →</NuxtLink></div>
         </div>
         <div v-if="!orders.length" class="admin-empty">No orders yet. Paid Mollie orders will appear here automatically.</div>
         <div v-else class="orders-grid">
@@ -492,26 +494,27 @@ useSeoMeta({title:'Admin dashboard',robots:'noindex,nofollow'})
             </div>
             <div class="order-fields">
               <label>Fulfillment
-                <select v-model="order.fulfillment_status">
-                  <option value="unfulfilled">Paid / Unfulfilled</option>
-                  <option value="supplier_ordered">Supplier Ordered</option>
-                  <option value="processing">Processing</option>
-                  <option value="shipped">Shipped</option>
-                  <option value="delivered">Delivered</option>
-                  <option value="cancelled">Cancelled</option>
-                  <option value="refunded">Refunded</option>
+                <select v-model="order.fulfillment_status" :disabled="!orderEligible(order)">
+                  <option value="unfulfilled" :disabled="orderOriginalStatus[order.id] !== 'unfulfilled'">Unfulfilled</option>
+                  <option value="supplier_ordered" :disabled="orderOriginalStatus[order.id] !== 'supplier_ordered' && !canAdvanceOption(order,'supplier_ordered')">Supplier Ordered</option>
+                  <option value="processing" :disabled="orderOriginalStatus[order.id] !== 'processing' && !canAdvanceOption(order,'processing')">Processing</option>
+                  <option value="shipped" :disabled="orderOriginalStatus[order.id] !== 'shipped' && !canAdvanceOption(order,'shipped')">Shipped</option>
+                  <option value="delivered" :disabled="orderOriginalStatus[order.id] !== 'delivered' && !canAdvanceOption(order,'delivered')">Delivered</option>
+                  <option value="cancelled" disabled>Cancelled (read only)</option>
+                  <option value="refunded" disabled>Refunded (payment provider only)</option>
                 </select>
               </label>
-              <label>Supplier order ref<input v-model="order.supplier_order_reference" placeholder="Supplier order #"></label>
-              <label>Carrier<input v-model="order.carrier" placeholder="PostNord / DHL"></label>
-              <label>Tracking<input v-model="order.tracking_number" placeholder="Tracking number"></label>
+              <label>Supplier order ref<input v-model="order.supplier_order_reference" :disabled="!orderEligible(order)" placeholder="Verified supplier reference"></label>
+              <label>Carrier<input v-model="order.carrier" :disabled="!orderEligible(order)" placeholder="Confirmed carrier"></label>
+              <label>Tracking<input v-model="order.tracking_number" :disabled="!orderEligible(order)" placeholder="Confirmed tracking"></label>
             </div>
             <div class="order-foot">
               <div>
                 <span>Supplier: {{ order.supplier_status || 'pending' }}</span>
                 <span v-if="orderMargin(order.id)!=null">Gross margin: <strong>{{ formatSEK(orderMargin(order.id)) }}</strong></span>
               </div>
-              <button class="btn btn-primary compact" @click="saveOrder(order)"><Save :size="15"/>Update order</button>
+              <button class="btn btn-primary compact" :disabled="!canAdvanceOrder(order)||!!orderSaving" @click="saveOrder(order)">
+                <Save :size="15"/>{{ orderSaving===order.id ? 'Saving…' : 'Record next stage' }}</button>
             </div>
           </article>
         </div>
