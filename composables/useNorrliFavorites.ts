@@ -16,5 +16,11 @@ export const useNorrliFavorites = () => {
     favorites.value = has(slug) ? favorites.value.filter(x => x !== slug) : [...favorites.value, slug]
     try { localStorage.setItem('norrli-favorites-v1', JSON.stringify(favorites.value)) } catch {}
   }
-  return { favorites, loaded, load, has, toggle }
+  const clear = () => {
+    if (!import.meta.client) return
+    load()
+    favorites.value = []
+    try { localStorage.setItem('norrli-favorites-v1', '[]') } catch {}
+  }
+  return { favorites, loaded, load, has, toggle, clear }
 }

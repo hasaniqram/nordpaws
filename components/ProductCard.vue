@@ -9,9 +9,16 @@ const config = useRuntimeConfig()
 const previewOnly = computed(() => !config.public.checkoutEnabled)
 const added = ref(false)
 const imageFailed = ref(false)
+const unavailable = computed(() => {
+  if (props.product.variants?.length) {
+    return props.product.variants.every(v => v.stockQuantity != null && v.stockQuantity <= 0)
+  }
+  return props.product.stockQuantity != null && props.product.stockQuantity <= 0
+})
 onMounted(load)
 
 const quickAdd = () => {
+  if (!previewOnly.value && unavailable.value) return
   if (previewOnly.value || props.product.variants?.length) {
     return navigateTo(`/products/${props.product.slug}`)
   }
@@ -22,7 +29,7 @@ const quickAdd = () => {
 </script>
 
 <template>
-  <article class="product-card nordic-product-card">
+  <article class="product-card nordic-product-card norrli-product-card">
     <div class="product-art nordic-product-art" :style="{ background: product.gradient }">
       <NuxtLink :to="`/products/${product.slug}`" class="nordic-art-link" :aria-label="`Visa ${product.name}`">
         <img v-if="product.primaryImage && !imageFailed" class="product-card-image"
@@ -45,10 +52,10 @@ const quickAdd = () => {
         <del v-if="product.compareAt && !previewOnly">{{ formatSEK(product.compareAt) }}</del>
       </div>
       <span v-if="previewOnly" class="nordic-price-caption">Preliminärt pris · Produktidé</span>
-      <button class="btn btn-primary product-add nordic-product-button" @click="quickAdd">
+      <button type="button" class="btn btn-primary product-add nordic-product-button" :disabled="!previewOnly && unavailable" aria-live="polite" @click="quickAdd">
         <ArrowRight v-if="previewOnly" :size="16"/>
         <ShoppingBag v-else :size="16"/>
-        {{ previewOnly ? 'Upptäck produkten' : product.variants?.length ? 'Välj alternativ' : added ? 'Tillagd' : 'Lägg i varukorg' }}
+        {{ previewOnly ? 'Upptäck produkten' : unavailable ? 'Slut i lager' : product.variants?.length ? 'Välj alternativ' : added ? 'Tillagd' : 'Lägg i varukorg' }}
       </button>
     </div>
   </article>

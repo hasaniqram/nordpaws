@@ -1,0 +1,94 @@
+/* Phase 2 — product discovery and accessible galleries; brand artwork unchanged. */
+.norrli-collection,.norrli-favorites{width:min(1360px,calc(100% - 44px));max-width:1360px}
+.norrli-discovery{background:#f7f8f3;border:1px solid #e3e9df;border-radius:20px;padding:20px;margin:28px 0 24px;box-shadow:0 5px 22px rgba(24,58,44,.035)}
+.norrli-discovery-primary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center}
+.norrli-search{display:flex;align-items:center;gap:11px;min-height:53px;padding:5px 5px 5px 17px;border:1px solid #d5e0d4;border-radius:99px;background:#fff;color:#456e5c;min-width:0}
+.norrli-search:focus-within,.norrli-select:focus-within{border-color:#518265;box-shadow:0 0 0 3px rgba(62,119,83,.1)}
+.norrli-search input{min-width:0;flex:1;width:100%;outline:0;border:0;background:transparent;font-size:14px;color:#173b30}
+.norrli-search input::placeholder{color:#8c9d91}
+.norrli-search button{border:0;cursor:pointer}
+.norrli-search-clear{display:grid;place-items:center;width:33px;height:33px;background:transparent;color:#6e8075;border-radius:50%}
+.norrli-search-submit{display:inline-flex;align-items:center;gap:7px;border-radius:99px;background:#194b3d;color:#fff;font-weight:750;font-size:13px;min-height:42px;padding:0 20px}
+.norrli-search-submit:hover,.norrli-clear-all:hover{background:#103b2e}
+.norrli-selects{display:flex;align-items:center;gap:10px;min-width:0}
+.norrli-select{display:flex;align-items:center;gap:8px;min-height:52px;border:1px solid #d5e0d4;border-radius:99px;background:#fff;padding:0 12px 0 17px;color:#406a53;white-space:nowrap}
+.norrli-select span{font-size:12px;font-weight:800}
+.norrli-select select{font-size:12px;color:#214b39;border:0;background:transparent;cursor:pointer;max-width:190px;min-width:0;outline:0}
+.norrli-discovery-secondary{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:18px}
+.norrli-filter-chips{display:flex;gap:8px;flex-wrap:wrap;min-width:0}
+.norrli-filter-chips .filter-chip{margin:0;padding:10px 15px;font-size:12px;font-weight:750;border-color:#dae4d8;background:#fff;color:#305542}
+.norrli-filter-chips .filter-chip.active{color:#fff;background:#194b3d;border-color:#194b3d}
+.norrli-filter-actions{display:flex;align-items:center;gap:14px;flex:none}
+.norrli-favorites-filter,.norrli-reset{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;background:none;color:#335944;cursor:pointer;font-size:12px;font-weight:750;min-height:40px;padding:5px}
+.norrli-favorites-filter[aria-pressed="true"]{background:#e3eee2;border-radius:99px;padding:8px 14px;color:#1b5c3b}
+.norrli-reset{color:#7e5b4c}
+.norrli-favorites-filter:hover,.norrli-reset:hover{text-decoration:underline}
+.norrli-collection-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.norrli-collection-grid .norrli-product-card{min-width:0}
+.norrli-product-card .nordic-product-info{min-height:190px}
+.norrli-product-card .nordic-product-button:disabled{opacity:.62;cursor:not-allowed}
+.norrli-product-card .nordic-favorite-button{width:40px;height:40px}
+.norrli-product-card .nordic-art-link:focus-visible{outline:3px solid #31674e;outline-offset:-4px}
+.norrli-product-card .nordic-product-button{min-height:42px;white-space:normal;line-height:1.25}
+.norrli-collection-note{font-size:12px;color:#748679;margin:18px 4px 0}
+.norrli-shop-empty h2{font:500 28px Georgia,serif;color:#1f4737;margin:0}
+.norrli-clear-all{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:99px;background:#194b3d;color:#fff;padding:12px 18px;font-size:13px;font-weight:750;cursor:pointer}
+.norrli-favorites-heading{display:flex;align-items:end;justify-content:space-between;gap:25px;margin-bottom:20px}
+.norrli-favorites-heading h1{margin:14px 0 8px}
+.norrli-favorites-heading p{margin:0;max-width:620px;line-height:1.6}
+.norrli-favorites-heading-actions{display:flex;align-items:center;gap:17px;padding-bottom:6px;white-space:nowrap}
+.norrli-saved-count{font-size:12px;font-weight:750;color:#4b745b}
+.norrli-remove-all{border:1px solid #dfdfd4;border-radius:99px;background:#fff;color:#7a4940;padding:11px 15px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;font-weight:750}
+.norrli-keep-exploring{display:inline-flex;gap:9px;align-items:center;margin-top:26px;font-weight:750;font-size:13px;color:#285d44}
+.norrli-gallery-position{font-size:11px;text-align:right;color:#778e7e;margin:7px 3px 0}
+.norrli-detail-zoom{position:absolute;z-index:3;bottom:14px;right:14px;display:flex;align-items:center;gap:7px;border:1px solid #dfe9de;color:#204b3a;background:rgba(255,255,255,.95);border-radius:99px;padding:10px 14px;font-weight:750;font-size:12px;cursor:pointer}
+.norrli-detail-zoom:hover{background:#e7eee6}
+.norrli-lightbox{width:min(1100px,96vw);max-width:96vw;max-height:95dvh;overflow:auto;position:fixed;margin:auto;padding:0;border:0;border-radius:20px;background:#fafbf8;color:#153b30;box-shadow:0 28px 90px rgba(0,0,0,.3)}
+.norrli-lightbox::backdrop{background:rgba(10,28,21,.83)}
+.norrli-lightbox-inner{padding:17px 20px 20px}
+.norrli-lightbox-toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;font-size:13px;font-weight:750;margin-bottom:11px}
+.norrli-lightbox-toolbar button{width:42px;height:42px;display:grid;place-items:center;border:0;border-radius:50%;cursor:pointer;background:#e8eee7;color:#234e3b}
+.norrli-lightbox-photo{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:11px}
+.norrli-lightbox-photo>img{width:100%;max-height:calc(95dvh - 160px);object-fit:contain;border-radius:12px;min-height:140px}
+.norrli-lightbox-photo>button{display:grid;place-items:center;background:#e4ebe3;color:#214d3a;border:0;border-radius:50%;width:44px;height:44px;cursor:pointer}
+.norrli-lightbox-photo>img:first-child{grid-column:2}
+.norrli-lightbox-note{font-size:12px;color:#6c7d71;text-align:center;margin:12px 0 0}
+@media(max-width:1140px){
+ .norrli-discovery-primary{grid-template-columns:1fr}
+ .norrli-selects{justify-content:flex-start}
+ .norrli-collection-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:850px){
+ .norrli-collection,.norrli-favorites{width:min(100% - 28px,1360px)}
+ .norrli-discovery{padding:15px;margin-top:25px}
+ .norrli-discovery-secondary{align-items:flex-start;flex-direction:column}
+ .norrli-filter-actions{width:100%;justify-content:space-between}
+ .norrli-collection-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+ .norrli-favorites-heading{align-items:flex-start;flex-direction:column}
+}
+@media(max-width:580px){
+ .norrli-discovery{border-radius:16px;padding:12px}
+ .norrli-search{min-height:49px;padding-left:12px}
+ .norrli-search input{font-size:12px}
+ .norrli-search-submit{font-size:11px;padding:0 12px;min-height:37px}
+ .norrli-selects{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+ .norrli-select{padding:10px 10px;min-height:56px;align-items:flex-start;flex-direction:column;gap:3px;border-radius:11px}
+ .norrli-select select{max-width:100%;width:100%}
+ .norrli-select svg{display:none}
+ .norrli-filter-chips{flex-wrap:nowrap;overflow:auto;max-width:100%;width:100%;padding:2px 1px 10px;scrollbar-width:thin}
+ .norrli-filter-chips .filter-chip{white-space:nowrap;flex:none;padding:10px 12px}
+ .norrli-collection-grid{gap:10px}
+ .norrli-product-card .nordic-product-info{min-height:190px;padding:12px}
+ .norrli-product-card .nordic-product-info h3{font-size:15px}
+ .norrli-product-card .nordic-product-info p{font-size:11px}
+ .norrli-product-card .nordic-favorite-button{width:38px;height:38px}
+ .norrli-product-card .nordic-product-button{min-height:43px;font-size:11px;padding:8px 7px}
+ .norrli-favorites-heading-actions{flex-wrap:wrap}
+ .norrli-lightbox{max-width:98vw;width:98vw}
+ .norrli-lightbox-inner{padding:10px}
+ .norrli-lightbox-photo{grid-template-columns:34px minmax(0,1fr) 34px;gap:4px}
+ .norrli-lightbox-photo>button{width:34px;height:34px}
+ .norrli-lightbox-photo>img{max-height:calc(95dvh - 130px)}
+ .norrli-detail-zoom{font-size:11px;padding:9px}
+}
+@media(prefers-reduced-motion:reduce){.norrli-product-card .nordic-art-link img{transition:none}}

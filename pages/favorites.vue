@@ -1,26 +1,46 @@
 <script setup lang="ts">
-import { Heart, ArrowLeft } from 'lucide-vue-next'
+import { Heart, ArrowLeft, ArrowRight, Trash2 } from 'lucide-vue-next'
 import type { Product } from '~/data/products'
-const {favorites,load}=useNorrliFavorites()
-const {data:catalog,status}=await useFetch<{products:Product[];source:string}>('/api/products')
-const saved=computed(()=>(catalog.value?.products||[]).filter(p=>favorites.value.includes(p.slug)))
+const { favorites, load, clear } = useNorrliFavorites()
+const { data: catalog, status } = await useFetch<{ products: Product[]; source: string }>('/api/products')
+const saved = computed(() => (catalog.value?.products || [])
+  .filter(p => favorites.value.includes(p.slug))
+  .sort((a,b) => favorites.value.indexOf(b.slug) - favorites.value.indexOf(a.slug)))
 onMounted(load)
-useSeoMeta({title:'Mina favoriter',description:'Sparade produktidéer hos Norrli Pets.'})
+const confirmClear = () => {
+  if (import.meta.client && window.confirm('Vill du verkligen ta bort alla dina sparade favoriter?')) clear()
+}
+useSeoMeta({ title: 'Mina favoriter', description: 'Dina sparade produktidéer hos Norrli Pets.' })
 </script>
+
 <template>
-  <main class="container page-shell nordic-favorites-page">
-    <span class="eyebrow"><Heart :size="16"/> MIN NORRLI-LISTA</span>
-    <h1>Mina favoriter</h1>
-    <p>Spara de produktidéer du gillar och hitta dem enkelt igen på den här enheten.</p>
-    <div v-if="status==='pending'" class="catalog-state">Laddar favoriter…</div>
-    <div v-else-if="saved.length" class="nordic-featured-grid">
-      <ProductCard v-for="product in saved" :key="product.id" :product="product"/>
+  <main class="container page-shell nordic-favorites-page norrli-favorites">
+    <span class="eyebrow"><Heart :size="16" aria-hidden="true" /> MIN NORRLI-LISTA</span>
+    <div class="norrli-favorites-heading">
+      <div>
+        <h1>Mina favoriter</h1>
+        <p>Spara dina favoriter och kom tillbaka när du vill. Listan lagras endast i den här webbläsaren.</p>
+      </div>
+      <div v-if="saved.length" class="norrli-favorites-heading-actions">
+        <span class="norrli-saved-count">{{ saved.length }} sparade</span>
+        <button type="button" class="norrli-remove-all" @click="confirmClear">
+          <Trash2 :size="16" aria-hidden="true" /> Rensa listan
+        </button>
+      </div>
     </div>
+    <div v-if="status === 'pending'" class="catalog-state" role="status">Laddar favoriter…</div>
+    <div v-else-if="status === 'error'" class="catalog-state" role="alert">Favoriterna kunde inte laddas just nu.</div>
+    <template v-else-if="saved.length">
+      <div class="nordic-featured-grid norrli-saved-grid">
+        <ProductCard v-for="product in saved" :key="product.id" :product="product" />
+      </div>
+      <NuxtLink to="/shop" class="norrli-keep-exploring">Utforska fler produktidéer <ArrowRight :size="17" aria-hidden="true" /></NuxtLink>
+    </template>
     <div v-else class="nordic-favorites-empty">
-      <Heart :size="38"/>
+      <Heart :size="38" aria-hidden="true" />
       <h2>Din favoritlista är tom</h2>
       <p>Tryck på hjärtat vid en produkt för att spara den här.</p>
-      <NuxtLink to="/shop" class="nordic-pill-button"><ArrowLeft :size="16"/> Utforska kollektionen</NuxtLink>
+      <NuxtLink to="/shop" class="nordic-pill-button"><ArrowLeft :size="16" aria-hidden="true" /> Utforska kollektionen</NuxtLink>
     </div>
   </main>
 </template>
