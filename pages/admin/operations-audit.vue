@@ -7,7 +7,7 @@ type Stock={product_id:string|null;stock_status:string;verified_at:string|null}
 const loading=ref(true),authorized=ref(false),error=ref('')
 const products=ref<Product[]>([]),reviews=ref<Review[]>([]),stock=ref<Stock[]>([])
 const report=computed(()=>products.value.map(p=>({product:p,...checkOperationalReadiness(p,reviews.value.find(r=>r.product_id===p.id),stock.value.filter(s=>s.product_id===p.id))})))
- .sort((a,b)=>Number(b.publiclyActiveWithGaps)-Number(a.publiclyActiveWithGaps)||b.blockers.length-a.blockers.length))
+ .sort((a,b)=>Number(b.publiclyActiveWithGaps)-Number(a.publiclyActiveWithGaps)||b.blockers.length-a.blockers.length)
 const risk=computed(()=>report.value.filter(r=>r.publiclyActiveWithGaps).length)
 const load=async()=>{
  loading.value=true;error.value=''
