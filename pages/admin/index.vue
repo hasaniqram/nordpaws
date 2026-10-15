@@ -330,7 +330,7 @@ useSeoMeta({title:'Admin dashboard',robots:'noindex,nofollow'})
 <template>
   <main class="admin-shell">
     <header class="admin-topbar">
-      <NorrliLogo />
+      <NorrliLogo compact />
       <div class="admin-top-actions">
         <NuxtLink to="/admin/operations" class="btn btn-primary compact"><Truck :size="16"/> Operations center</NuxtLink>
         <NuxtLink to="/admin/launch" class="btn btn-secondary compact"><ClipboardCheck :size="16"/> Launch workspace</NuxtLink>
