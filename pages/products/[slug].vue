@@ -2,7 +2,7 @@
 import {
   Check, Minus, Plus, ShoppingBag, Heart, ArrowRight, ArrowLeft,
   Leaf, ShieldCheck, PackageSearch, ChevronRight, Sparkles, PawPrint,
-  Truck, Home
+  Truck, Home, ChevronLeft
 } from 'lucide-vue-next'
 import { formatSEK, type Product, type ProductVariant } from '~/data/products'
 
@@ -19,6 +19,16 @@ const quantity=ref(1),added=ref(false),imageFailed=ref(false)
 const selectedVariantId=ref(product.variants?.[0]?.id||'')
 const selectedImage=ref(product.primaryImage||product.images?.[0]?.publicUrl||'')
 watch(selectedImage,()=>{imageFailed.value=false})
+const galleryImages = computed(() => {
+  const all = [product.primaryImage, ...(product.images || []).map(image => image.publicUrl)]
+    .filter((url): url is string => Boolean(url))
+  return [...new Set(all)]
+})
+const moveImage = (direction: -1 | 1) => {
+  if (galleryImages.value.length < 2) return
+  const index = galleryImages.value.indexOf(selectedImage.value)
+  selectedImage.value = galleryImages.value[(index + direction + galleryImages.value.length) % galleryImages.value.length]
+}
 const selectedImageIsConcept=computed(()=>
   product.images?.find(image=>image.publicUrl===selectedImage.value)?.isConcept
   ??product.primaryIsConcept??false
@@ -89,6 +99,10 @@ useSeoMeta({
             :aria-pressed="has(product.slug)" @click="toggle(product.slug)">
             <Heart :size="22" :fill="has(product.slug)?'currentColor':'none'"/>
           </button>
+          <div v-if="galleryImages.length > 1" class="norrli-gallery-controls" aria-label="Bläddra bland produktbilder">
+            <button type="button" aria-label="Föregående produktbild" @click="moveImage(-1)"><ChevronLeft :size="20" /></button>
+            <button type="button" aria-label="Nästa produktbild" @click="moveImage(1)"><ChevronRight :size="20" /></button>
+          </div>
           <span v-if="selectedImageIsConcept" class="nordic-detail-concept">Illustrativ konceptbild</span>
         </div>
         <div v-if="product.images?.length>1" class="nordic-detail-thumbs" aria-label="Produktbilder">
