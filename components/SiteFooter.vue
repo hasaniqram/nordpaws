@@ -3,7 +3,7 @@
     <div class="nordic-footer-forest" aria-hidden="true"></div>
     <div class="container nordic-footer-grid">
       <div class="nordic-footer-about">
-        <NorrliLogo tone="light"/>
+        <NorrliLogo tone="light" layout="stacked"/>
         <p>Nära naturen, nära varandra. För vardagen, äventyret och livet tillsammans med våra fyrbenta vänner.</p>
         <span class="nordic-footer-preview">Norrli Pets · Kollektion under utveckling</span>
       </div>
