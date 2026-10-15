@@ -9,7 +9,8 @@ const routes=[
  ['pages/legal/shipping.vue','Leveransvillkor'],
  ['pages/legal/returns.vue','Returer och ångerrätt'],
  ['pages/legal/privacy.vue','Integritetspolicy'],
- ['pages/legal/terms.vue','Köpvillkor']
+ ['pages/legal/terms.vue','Köpvillkor'],
+ ['pages/legal/copyright.vue','Upphovsrätt och innehåll']
 ]
 test('all Kundservice pages share accessible design and real Swedish headings',()=>{
  for(const [p,title] of routes){
@@ -21,7 +22,7 @@ test('all Kundservice pages share accessible design and real Swedish headings',(
 })
 test('public support navigation includes every customer page',()=>{
  const shell=read('components/SupportShell.vue')
- for(const path of ['/support','/contact','/delivery','/legal/shipping','/legal/returns','/legal/privacy','/legal/terms'])
+ for(const path of ['/support','/contact','/delivery','/legal/shipping','/legal/returns','/legal/privacy','/legal/terms','/legal/copyright'])
   assert.ok(shell.includes("'"+path+"'"),'Missing route '+path)
 })
 test('contact flow has no support-email dispatch, ticket identifiers or false SLA promise',()=>{
