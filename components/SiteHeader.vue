@@ -35,7 +35,7 @@ const submitSearch = () => {
       </div>
     </div>
     <div class="nordic-header-main container">
-      <NorrliLogo />
+      <NorrliLogo layout="stacked" />
       <form class="nordic-header-search" role="search" @submit.prevent="submitSearch">
         <Search :size="20" aria-hidden="true" />
         <input v-model="search" aria-label="Sök produkter" type="search" placeholder="Sök produkter, inspiration eller tillbehör…" autocomplete="off" />
