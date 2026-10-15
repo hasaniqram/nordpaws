@@ -135,3 +135,32 @@
 .norrli-detail-tools button:focus-visible,.norrli-detail-help a:focus-visible{outline:3px solid #2c714a;outline-offset:3px}
 @media(max-width:900px){.norrli-detail-help{grid-template-columns:1fr}.norrli-detail-spec-strip{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:580px){.norrli-detail-spec-strip{grid-template-columns:1fr 1fr}.norrli-detail-help>div{padding:16px 13px;gap:10px;flex-wrap:wrap}.norrli-detail-help a{margin-left:auto}.norrli-detail-tools{margin-top:18px}}
+
+
+/* Phase 2.4: Cart clarity, preview-safe pricing and mobile refinements */
+.norrli-cart-page h1{display:flex;align-items:baseline;flex-wrap:wrap;gap:16px}
+.norrli-cart-head-count{font:750 12px/1.3 system-ui,sans-serif;letter-spacing:0;background:#e3ede0;color:#27573f;border-radius:99px;padding:9px 12px}
+.norrli-cart-lines-header{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:15px;color:#294f3a}
+.norrli-cart-lines-header h2{font:500 clamp(22px,3vw,29px)/1.2 Georgia,serif;margin:0}
+.norrli-cart-lines-header>span,.norrli-cart-summary-count{font-size:12px;color:#57735f;font-weight:750}
+.norrli-cart-summary-count{display:flex;gap:8px;align-items:center;margin:0 0 14px}
+.norrli-cart-page .cart-line{border-bottom:1px solid #dce7d9}
+.norrli-cart-page .cart-meta h3{font-size:16px;line-height:1.3}
+.norrli-cart-page .cart-meta a:hover{text-decoration:underline;text-underline-offset:4px}
+.norrli-cart-page .quantity.small button{min-width:36px;min-height:36px}
+.norrli-cart-page .quantity.small button:disabled{opacity:.38;cursor:not-allowed}
+.norrli-cart-page .trash{min-height:38px;min-width:38px;display:grid;place-items:center;border-radius:50%}
+.norrli-cart-page .trash:hover{background:#f5e9e6;color:#8c3a36}
+.norrli-cart-line-total{white-space:nowrap;color:#1a4935}
+.norrli-order-summary .summary-row:last-of-type{color:#58705c}
+.norrli-order-summary .summary-total{border-top:1px solid #dfe8da}
+.norrli-cart-empty{min-height:430px;background:linear-gradient(145deg,#edf4e9,#f8f6ef);border:1px solid #dbe8d7;border-radius:25px;padding:40px 22px}
+.norrli-cart-empty-icon{width:88px;height:88px;display:grid;place-items:center;background:#dceadb;color:#245b3e;border-radius:50%;margin-bottom:12px}
+.norrli-cart-empty h2{font:500 clamp(26px,4vw,37px)/1.15 Georgia,serif;color:#204a35;margin:10px 0}
+.norrli-cart-empty .norrli-cart-saved-link{display:inline-flex;align-items:center;gap:8px;color:#285b40;font-size:13px;font-weight:750;text-decoration:underline;text-underline-offset:4px;margin:12px 0}
+.norrli-cart-empty-categories{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin-top:20px}
+.norrli-cart-empty-categories a{display:inline-flex;gap:8px;align-items:center;border:1px solid #cbdcca;border-radius:99px;background:#fff;padding:10px 14px;color:#2b5a42;font-size:12px;font-weight:750}
+.norrli-cart-empty-categories a:hover{background:#e5f0e1}
+.norrli-cart-page button:focus-visible,.norrli-cart-page a:focus-visible{outline:3px solid #2a7351;outline-offset:3px}
+@media(max-width:850px){.norrli-cart-page .cart-grid{grid-template-columns:minmax(0,1fr);gap:23px}.norrli-cart-page .order-summary{position:static}}
+@media(max-width:580px){.norrli-cart-page .cart-line{grid-template-columns:66px minmax(0,1fr) auto;gap:11px;padding:16px 0}.norrli-cart-page .cart-thumb{width:66px;height:66px}.norrli-cart-page .cart-meta{min-width:0}.norrli-cart-page .cart-meta h3{font-size:14px}.norrli-cart-line-total{grid-column:3;grid-row:1;align-self:start;font-size:12px}.norrli-cart-page .trash{grid-column:3;grid-row:2;justify-self:end}.norrli-cart-page .cart-meta{grid-column:2;grid-row:1 / span 2}.norrli-cart-page .order-summary{padding:19px}.norrli-cart-empty{padding:28px 14px}.norrli-cart-empty-categories a{font-size:11px}}
