@@ -339,6 +339,7 @@ useSeoMeta({title:'Admin dashboard',robots:'noindex,nofollow'})
         <NuxtLink to="/admin/launch" class="btn btn-secondary compact"><ClipboardCheck :size="16"/> Launch workspace</NuxtLink>
         <NuxtLink to="/admin/quotes" class="btn btn-secondary compact">Compare supplier quotes</NuxtLink>
         <NuxtLink to="/admin/profit-stress" class="btn btn-secondary compact">Profit stress test</NuxtLink>
+        <NuxtLink to="/admin/readiness" class="btn btn-secondary compact">Supplier readiness</NuxtLink>
         <NuxtLink to="/admin/decisions" class="btn btn-secondary compact">Product Decision Board</NuxtLink>
         <NuxtLink to="/admin/catalog" class="btn btn-secondary compact">Catalog & Stock Lab</NuxtLink>
         <button class="icon-btn" title="Refresh" @click="load"><RefreshCw :size="18"/></button>
