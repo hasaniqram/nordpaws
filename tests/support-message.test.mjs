@@ -17,7 +17,7 @@ test('existing plain contact requests remain compatible',()=>{
  assert.equal(out.message.includes('Orderreferens:'),false)
 })
 test('all displayed topics have supported server allowlist entries',()=>{
- assert.equal(SUPPORT_TOPICS.length,6)
+ assert.equal(SUPPORT_TOPICS.length,7)
  for(const [key] of SUPPORT_TOPICS){
   assert.equal(prepareSupportMessage({...request,topic:key}).topic,key)
  }
