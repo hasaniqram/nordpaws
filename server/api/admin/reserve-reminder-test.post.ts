@@ -31,5 +31,5 @@ export default defineEventHandler(async event => {
   if(insertError.code==='23505')return {reserved:false,duplicate:true,sent:false,message:'A test reservation already exists for this review.'}
   throw createError({statusCode:503,statusMessage:'Could not reserve delivery test'})
  }
- return {reserved:true,duplicate:false,sent:false,message:'Test reservation recorded. No email sent.'}
+ return {reserved:true,duplicate:false,sent:false,deliveryKey:key,message:'Test reservation recorded. No email sent.'}
 })
