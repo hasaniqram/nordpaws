@@ -6,6 +6,8 @@ useSeoMeta({ title: 'Scandinavian pet essentials', ogTitle: 'Norrli Pets · Scan
 
 const { data: catalog } = await useFetch<{ products: Product[]; source: string }>('/api/products')
 const featured = computed(() => (catalog.value?.products || []).slice(0, 4))
+const heroProduct = computed(() => (catalog.value?.products || []).find(p => p.slug === 'cleanroll') || featured.value[0] || null)
+const editorialProduct = computed(() => (catalog.value?.products || []).find(p => p.slug === 'car-seat-cover') || null)
 
 const email = ref('')
 const newsletterState = ref<'idle' | 'loading' | 'success' | 'error'>('idle')
@@ -42,7 +44,7 @@ const joinNewsletter = async () => {
         </div>
         <div class="hero-visual">
           <div class="hero-orb orb-one">🐕</div><div class="hero-orb orb-two">🐈</div>
-          <div class="hero-product"><div class="mini-label">Norrli Pets / 01</div><div class="hero-emoji">🛋️</div><h3>CleanRoll™</h3><p>Pet hair, handled.</p></div>
+          <div class="hero-product" :class="{ 'has-photo': !!heroProduct?.primaryImage }"><div class="mini-label">Norrli Pets / 01</div><img v-if="heroProduct?.primaryImage" :src="heroProduct.primaryImage" class="hero-product-image" :alt="heroProduct.name" fetchpriority="high" width="640" height="640"><div v-else class="hero-emoji">🛋️</div><h3>{{ heroProduct?.name || 'CleanRoll™' }}</h3><p>{{ heroProduct?.subtitle || 'Pet hair, handled.' }}</p></div>
         </div>
       </div>
     </section>
@@ -55,7 +57,7 @@ const joinNewsletter = async () => {
     </section>
 
     <section class="editorial container">
-      <div class="editorial-visual"><span class="editorial-emoji">🐾</span><div class="editorial-tag">NORRLI PETS EDIT / 2026</div></div>
+      <div class="editorial-visual"><img v-if="editorialProduct?.primaryImage" :src="editorialProduct.primaryImage" class="editorial-product-image" :alt="editorialProduct.name" loading="lazy" width="640" height="640"><span v-else class="editorial-emoji">🐾</span><div class="editorial-tag">NORRLI PETS EDIT / 2026</div></div>
       <div class="editorial-copy"><span class="eyebrow">Built around real routines</span><h2>A pet store that feels less like a pet store.</h2><p>We focus on practical products with a calm aesthetic — things you can leave in your home, take in your car and use every day without clutter.</p><NuxtLink to="/about" class="btn btn-secondary">Read our approach <ArrowRight :size="18"/></NuxtLink></div>
     </section>
 
