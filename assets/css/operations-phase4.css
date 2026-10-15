@@ -1,0 +1,81 @@
+/* Norrli Pets Phase 4 — private operations workspace; no storefront changes. */
+.phase4-shell{min-height:100vh;background:#f4f6f0;color:#203a2e;padding-bottom:90px;font-family:inherit}
+.phase4-topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;background:#fffdfa;border-bottom:1px solid #dce5d9;padding:12px clamp(18px,3vw,45px)}
+.phase4-top-brand{display:flex;align-items:center;gap:16px}
+.phase4-top-brand .nordic-brand{width:96px}
+.phase4-top-brand>span{font-size:10px;letter-spacing:.16em;font-weight:850;color:#59735e}
+.phase4-quick-links{display:flex;align-items:center;flex-wrap:wrap;gap:12px}
+.phase4-quick-links a,.phase4-quick-links button{display:inline-flex;align-items:center;gap:7px;padding:9px 13px;border-radius:99px;border:1px solid #dae4d7;color:#2c5940;font-weight:750;font-size:12px;text-decoration:none;cursor:pointer;background:#fff}
+.phase4-heading{display:flex;justify-content:space-between;align-items:end;gap:24px;padding:40px clamp(18px,3vw,45px) 22px}
+.phase4-heading h1{font:500 clamp(34px,4vw,54px)/1.1 Georgia,serif;letter-spacing:-.05em;margin:12px 0;color:#173d2f}
+.phase4-heading p{margin:0;color:#647765;font-size:13px;line-height:1.6}
+.phase4-prelaunch{display:flex;align-items:start;gap:12px;background:#e8efe5;color:#2c5839;border:1px solid #d5e3d0;padding:16px 20px;border-radius:17px;max-width:320px}
+.phase4-prelaunch strong{display:block;font-size:13px}
+.phase4-prelaunch small{display:block;margin-top:5px;line-height:1.45}
+.phase4-kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:0 clamp(18px,3vw,45px) 24px}
+.phase4-kpis>div{background:white;border:1px solid #dae4d7;border-radius:17px;padding:21px 19px;min-width:0}
+.phase4-kpis span{font-size:11px;font-weight:800;color:#647568;display:block}
+.phase4-kpis strong{display:block;font:600 35px Georgia,serif;letter-spacing:-.04em;margin:12px 0;color:#194a36}
+.phase4-kpis small{font-size:10px;color:#778779;line-height:1.5;display:block}
+.phase4-tabs{display:flex;gap:9px;margin:0 clamp(18px,3vw,45px) 15px;flex-wrap:wrap}
+.phase4-tabs button{display:flex;align-items:center;gap:9px;border:1px solid #d8e3d6;border-radius:99px;padding:12px 17px;background:#fff;color:#335d45;cursor:pointer;font-size:13px;font-weight:800}
+.phase4-tabs button.active{background:#184535;color:#fff;border-color:#184535}
+.phase4-panel{margin:0 clamp(18px,3vw,45px);border:1px solid #dbe5d7;background:#fff;border-radius:22px;overflow:hidden}
+.phase4-section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;border-bottom:1px solid #e8eee5;padding:26px 27px}
+.phase4-section-head h2{font:500 30px Georgia,serif;letter-spacing:-.04em;margin:0 0 5px;color:#1e4937}
+.phase4-section-head p{font-size:12px;color:#69786d;margin:0;line-height:1.6;max-width:640px}
+.phase4-filters{display:flex;align-items:center;gap:9px}
+.phase4-filters label{display:flex;align-items:center;gap:8px;border:1px solid #d8e4d5;padding:8px 11px;border-radius:11px;color:#57745d;background:#fcfdfa}
+.phase4-filters input{border:0;outline:0;background:none;max-width:185px;font-size:12px}
+.phase4-filters select{border:1px solid #d8e4d5;border-radius:11px;padding:10px;background:#fcfdfa;max-width:180px;font-size:12px}
+.phase4-order-list{display:grid;gap:13px;padding:20px}
+.phase4-order{padding:18px 21px;border:1px solid #e1e9df;border-radius:17px;background:#fbfcf9}
+.phase4-order-heading,.phase4-order-bottom{display:flex;justify-content:space-between;align-items:center;gap:18px}
+.phase4-order-heading>div:first-child{display:grid;gap:5px}
+.phase4-order-heading strong{font-size:16px;color:#254b39}
+.phase4-order-heading small{font-size:12px;color:#657a66}
+.phase4-tags{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.phase4-tags span,.phase4-supplier-head span{padding:8px 12px;border-radius:99px;background:#e7ede6;color:#3d684b;font-size:10px;font-weight:750;white-space:nowrap}
+.phase4-tags .blocked,.phase4-supplier-head .blocked{background:#f5e9e4;color:#935145}
+.phase4-tags .eligible,.phase4-supplier-head .eligible{background:#ddedde;color:#225b3a}
+.phase4-inline-warning{display:flex;align-items:center;gap:8px;margin:14px 0 0;background:#f8eee8;padding:11px;border-radius:10px;color:#8d513f;font-size:12px;line-height:1.6}
+.phase4-order-edit{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}
+.phase4-order-edit label{display:grid;gap:6px;font-size:11px;font-weight:800;color:#54715d}
+.phase4-order-edit input{width:100%;min-width:0;padding:12px;border-radius:10px;border:1px solid #d4e1d0;background:#fff;color:#193e2d;font-size:12px}
+.phase4-order-edit input[readonly]{background:#ebf1e8}
+.phase4-order-bottom{border-top:1px solid #e1e9df;padding-top:12px}
+.phase4-order-bottom p{max-width:700px;margin:0;font-size:11px;line-height:1.6;color:#6d806e}
+.phase4-order-bottom button{display:flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:99px;background:#184c37;color:#fff;padding:12px 16px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap}
+.phase4-order-bottom button:disabled{opacity:.38;cursor:not-allowed}
+.phase4-done{display:flex;align-items:center;gap:9px;margin:15px 0 0;font-size:12px;color:#2c7545}
+.phase4-readiness-stats{padding:20px 27px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.phase4-readiness-stats>div{border:1px solid #dce7da;border-radius:14px;background:#f4f7f0;padding:16px}
+.phase4-readiness-stats strong{display:block;font-size:25px;color:#275540}
+.phase4-readiness-stats span{font-size:11px;color:#667c68}
+.phase4-supplier-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;padding:0 27px 27px}
+.phase4-supplier{border:1px solid #e1e8dd;border-radius:16px;padding:21px}
+.phase4-supplier-head{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.phase4-supplier h3{font-size:17px;margin:0;color:#254c39}
+.phase4-supplier p{font-size:12px;color:#657665}
+.phase4-supplier a,.phase4-primary-link,.phase4-action-links a,.phase4-warnings a{display:inline-flex;align-items:center;gap:7px;color:#2d6144;font-weight:800;font-size:12px;text-decoration:none}
+.phase4-warnings{border-top:1px solid #e3e8e1;padding:23px 27px}
+.phase4-warnings h3{display:flex;align-items:center;gap:10px;font-size:16px}
+.phase4-warnings p{font-size:12px;color:#637363;margin:7px 0}
+.phase4-shipping-note{display:flex;gap:13px;margin:22px 27px;background:#e9f1e7;border:1px solid #d5e6d2;border-radius:16px;padding:20px;color:#31664c}
+.phase4-shipping-note strong{font-size:14px}
+.phase4-shipping-note p{font-size:12px;line-height:1.55;margin:5px 0 0}
+.phase4-table-wrap{overflow:auto;margin:0 27px 25px;border:1px solid #e5ebe1;border-radius:15px}
+.phase4-table{width:100%;border-collapse:collapse;min-width:970px}
+.phase4-table th,.phase4-table td{text-align:left;padding:15px 14px;border-bottom:1px solid #e9efe6;vertical-align:top;font-size:12px}
+.phase4-table th{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#587361;background:#f4f7f1}
+.phase4-table td strong,.phase4-table td small{display:block}
+.phase4-table td small{color:#7b8b7c;font-size:10px;margin-top:5px}
+.phase4-action-links{padding:0 27px 27px;display:flex;flex-wrap:wrap;gap:20px}
+.phase4-empty{padding:50px 24px;color:#708070;text-align:center;font-size:13px}
+.phase4-state{padding:90px 20px;text-align:center;color:#2c5740}
+.phase4-state h1{font:500 35px Georgia,serif}
+.phase4-alert{margin:0 clamp(18px,3vw,45px) 16px;padding:15px 20px;border-radius:14px;font-size:13px}
+.phase4-alert.error{background:#f9eae6;color:#86483e}
+.phase4-alert.success{background:#e5f2e6;color:#27623d}
+@media(max-width:1150px){.phase4-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.phase4-section-head{align-items:start;flex-direction:column}.phase4-order-edit{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.phase4-topbar,.phase4-heading{align-items:start;flex-direction:column}.phase4-top-brand{width:100%;justify-content:space-between}.phase4-quick-links{width:100%}.phase4-quick-links a,.phase4-quick-links button{font-size:11px}.phase4-kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.phase4-kpis>div{padding:15px}.phase4-kpis strong{font-size:29px}.phase4-tabs{gap:6px}.phase4-tabs button{font-size:11px;padding:9px 10px}.phase4-section-head{padding:20px}.phase4-filters{width:100%;flex-wrap:wrap}.phase4-filters label{flex:1}.phase4-filters input{width:100%;max-width:none}.phase4-order-list{padding:11px}.phase4-order{padding:15px}.phase4-order-heading,.phase4-order-bottom{align-items:start;flex-direction:column}.phase4-order-edit{grid-template-columns:1fr}.phase4-order-bottom button{width:100%}.phase4-readiness-stats{grid-template-columns:repeat(2,minmax(0,1fr));padding:16px}.phase4-supplier-grid{grid-template-columns:1fr;padding:0 16px 16px}.phase4-supplier-head{align-items:start;flex-direction:column}.phase4-shipping-note{margin:15px}.phase4-table-wrap{margin:0 15px 20px}.phase4-action-links{padding:0 15px 20px}}
