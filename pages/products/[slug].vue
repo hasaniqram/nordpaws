@@ -3,6 +3,8 @@ import { Check, Minus, Plus, ShieldCheck, Truck } from 'lucide-vue-next'
 import { formatSEK, type Product, type ProductVariant } from '~/data/products'
 
 const route = useRoute()
+const config = useRuntimeConfig()
+const previewOnly = computed(() => !config.public.checkoutEnabled)
 const { data: catalog } = await useFetch<{ products: Product[]; source: string }>('/api/products')
 const product = (catalog.value?.products || []).find((p) => p.slug === route.params.slug)
 
@@ -27,6 +29,7 @@ const outOfStock = computed(() =>
 )
 
 const addToCart = () => {
+  if (previewOnly.value) return
   if (product.variants?.length && !selectedVariant.value) return
   if (outOfStock.value) return
   add(product, quantity.value, selectedVariant.value)
@@ -65,8 +68,9 @@ useSeoMeta({ title: product.name, description: product.description })
       <p class="subtitle">{{ product.subtitle }}</p>
       <div class="detail-price">
         <strong>{{ formatSEK(displayPrice) }}</strong>
-        <del v-if="product.compareAt && !selectedVariant?.price">{{ formatSEK(product.compareAt) }}</del>
+        <del v-if="product.compareAt && !selectedVariant?.price && !previewOnly">{{ formatSEK(product.compareAt) }}</del>
       </div>
+      <p v-if="previewOnly" class="product-concept-note">Preview only. Indicative price and product details are subject to confirmation with an actual supplier. Orders are not being accepted.</p>
       <p class="description">{{ product.description }}</p>
 
       <div v-if="product.variants?.length" class="variant-picker">
@@ -96,7 +100,7 @@ useSeoMeta({ title: product.name, description: product.description })
         <div v-if="product.weightGrams"><dt>Weight</dt><dd>{{ product.weightGrams }} g</dd></div>
       </dl>
 
-      <div class="buy-row">
+      <div v-if="!previewOnly" class="buy-row">
         <div class="quantity">
           <button @click="quantity=Math.max(1,quantity-1)"><Minus :size="17"/></button>
           <span>{{ quantity }}</span>
@@ -107,7 +111,7 @@ useSeoMeta({ title: product.name, description: product.description })
         </button>
       </div>
 
-      <div class="purchase-notes">
+      <div v-if="!previewOnly" class="purchase-notes">
         <div>
           <Truck :size="20"/>
           <span>
@@ -118,7 +122,7 @@ useSeoMeta({ title: product.name, description: product.description })
             <template v-else>Tracked delivery options at checkout.</template>
           </span>
         </div>
-        <div><ShieldCheck :size="20"/><span><strong>Secure payment</strong>Mollie checkout with Swedish payment methods when enabled.</span></div>
+        <div><ShieldCheck :size="20"/><span><strong>Secure payment</strong>Stripe checkout when the store is legally and operationally ready.</span></div>
       </div>
     </div>
   </main>
