@@ -1,0 +1,109 @@
+/*
+ * Norrli Pets — accessibility contrast remediation
+ *
+ * Swedish storefront, WCAG 2.2 AA target for normal-sized text: >= 4.5:1.
+ * Palette retains the approved Scandinavian cream/sage/forest-green design.
+ * This file is last in Nuxt's global css array so the resolved colors are
+ * not quietly overridden by the older phase-specific stylesheets.
+ *
+ * The original logo, typography, markup, payment and inventory flows are not
+ * modified here. Image-based sections use an opaque-enough reading surface
+ * so contrast does not depend on unpredictable photo pixels.
+ */
+:root {
+  --norrli-a11y-muted: #495f50;
+  --norrli-a11y-accent: #335845;
+  --norrli-a11y-interactive: #24583e;
+}
+
+/* Product cards appear repeatedly on the scanned homepage. Their existing
+   small captions (~9–13px) are normal text and require the 4.5:1 threshold. */
+.nordic-product-type {
+  color: #42634f;
+}
+.nordic-product-info p {
+  color: #495f50;
+}
+.nordic-price-caption {
+  color: #506654;
+}
+.nordic-photo-note {
+  color: #4b6153;
+}
+
+/* Supporting text on the value strip and newsletter light backgrounds. */
+.nordic-benefits small {
+  color: #4b6152;
+}
+.nordic-newsletter p {
+  color: #42604e;
+}
+.nordic-newsletter-consent,
+.nordic-newsletter-consent a {
+  color: #425d4b;
+}
+.nordic-newsletter-input input::placeholder {
+  color: #526458;
+  opacity: 1;
+}
+
+/* Interactive header elements and states remain readable on cream/white. */
+.nordic-header-search input::placeholder,
+.nordic-mobile-search input::placeholder {
+  color: #526458;
+  opacity: 1;
+}
+.nordic-header-action:hover,
+.nordic-header-action:focus-visible {
+  color: #24583e;
+}
+.nordic-category-links a:hover,
+.nordic-category-links a.router-link-active,
+.nordic-category-links a:focus-visible {
+  color: #24583e;
+}
+.nordic-mobile-nav-heading,
+.nordic-mobile-footnote {
+  color: #42604e;
+}
+
+/* Guarantee legible editorial copy regardless of the remote image underneath.
+   The near-opaque pale surfaces keep the approved visual aesthetic. */
+.nordic-hero-copy {
+  background: linear-gradient(
+    90deg,
+    rgba(247,250,245,.98) 0%,
+    rgba(247,250,245,.96) 60%,
+    rgba(247,250,245,.94) 100%
+  );
+  border-radius: 16px;
+}
+.nordic-story-content {
+  background: rgba(249,250,246,.96);
+  border-radius: 0 16px 16px 0;
+}
+
+/* Clear keyboard focus across search, product, footer and navigation controls.
+   Use a strong visible outline rather than a subtle low-opacity box-shadow. */
+.nordic-home a:focus-visible,
+.nordic-home button:focus-visible,
+.nordic-site-header a:focus-visible,
+.nordic-site-header button:focus-visible,
+.nordic-site-header input:focus-visible,
+.nordic-footer a:focus-visible {
+  outline: 3px solid #24583e;
+  outline-offset: 3px;
+}
+.nordic-footer a:focus-visible {
+  outline-color: #e2f0e3;
+}
+
+/* Keep narrow/mobile story reading panels contained within image cards. */
+@media (max-width: 580px) {
+  .nordic-hero-copy {
+    border-radius: 12px;
+  }
+  .nordic-story-content {
+    border-radius: 0 12px 12px 0;
+  }
+}
