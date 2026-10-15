@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {
   LogOut, Package, ShoppingBag, Mail, UsersRound, RefreshCw,
-  Truck, Plus, Save, ExternalLink
+  Truck, Plus, Save, ExternalLink, ClipboardCheck
 } from 'lucide-vue-next'
 
 type Supplier = {
@@ -331,6 +331,7 @@ useSeoMeta({title:'Admin dashboard',robots:'noindex,nofollow'})
     <header class="admin-topbar">
       <NorrliLogo />
       <div class="admin-top-actions">
+        <NuxtLink to="/admin/launch" class="btn btn-primary compact"><ClipboardCheck :size="16"/> Launch workspace</NuxtLink>
         <button class="icon-btn" title="Refresh" @click="load"><RefreshCw :size="18"/></button>
         <button class="btn btn-secondary" @click="signOut"><LogOut :size="16"/>Sign out</button>
       </div>
@@ -351,7 +352,7 @@ useSeoMeta({title:'Admin dashboard',robots:'noindex,nofollow'})
         <div>
           <span class="eyebrow">Dropshipping operations</span>
           <h1>Norrli Pets Admin</h1>
-          <p>Products, suppliers, margins, fulfillment and customer communication.</p>
+          <p>Products, suppliers, margins, fulfillment and customer communication. Preview only — no real sales are enabled.</p>
         </div>
         <div class="admin-stats admin-stats-five">
           <div><strong>{{ products.length }}</strong><span>Products</span></div>
