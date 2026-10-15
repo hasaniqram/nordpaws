@@ -31,16 +31,11 @@ const NEED_CATEGORIES=Object.freeze({
  'grooming':['Cats'],
  'feeding':['Dogs']
 })
-const NEED_SEARCH=Object.freeze({
- 'clean-home':'päls tass rengöring hem',
- 'outdoors':'resa utflykt bil promenad vatten',
- 'grooming':'borste päls grooming groom',
- 'feeding':'skål mat matning vatten feeding feeder'
-})
 const needMatches=(p,need)=>{
  if(!Object.hasOwn(NEED_CATEGORIES,need))return true
- if(need==='grooming')return /groom|brush|borst|pälsvård|grooming/.test(indexFor(p))
- if(need==='feeding')return /bowl|feed|skål|matning|matskål/.test(indexFor(p))
+ const specific=normalizeSearch([p.name,p.subtitle,p.description,p.slug,(p.features||[]).join(' '),SLUG_TERMS[p.slug]||''].join(' '))
+ if(need==='grooming')return /groom|brush|borst|pälsvård|\bkam\b/.test(specific)
+ if(need==='feeding')return /bowl|feed|skål|matning|matskål/.test(specific)
  return NEED_CATEGORIES[need].includes(p.category)
 }
 export const matchesNeed=(p,need)=>needMatches(p,need)
