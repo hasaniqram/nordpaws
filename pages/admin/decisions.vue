@@ -136,7 +136,7 @@ useSeoMeta({title:'Product sourcing decision board',robots:'noindex,nofollow'})
 <template>
   <main class="admin-shell decision-shell">
     <header class="admin-topbar">
-      <NorrliLogo/>
+      <NorrliLogo compact />
       <div class="admin-top-actions">
         <NuxtLink to="/admin/insights" class="btn btn-secondary compact"><ArrowLeft :size="15"/>Insights</NuxtLink>
         <NuxtLink to="/admin/catalog" class="btn btn-primary compact"><PackageSearch :size="15"/>Catalog & Stock Lab</NuxtLink>
