@@ -10,7 +10,8 @@ const topics=[
  {value:'delivery',label:'Leverans och frakt'},
  {value:'returns',label:'Returer och reklamation'},
  {value:'account',label:'Mitt konto'},
- {value:'privacy',label:'Personuppgifter och integritet'}
+ {value:'privacy',label:'Personuppgifter och integritet'},
+ {value:'copyright',label:'Upphovsrätt och innehåll'}
 ]
 const submit=async()=>{
   if(state.value==='loading')return
@@ -29,7 +30,7 @@ const submit=async()=>{
 useSeoMeta({title:'Kontakta kundservice',description:'Kontakta Norrli Pets kundservice via vårt formulär. Hjälp med produkter, leverans, retur och integritetsfrågor.'})
 </script>
 <template>
- <SupportShell title="Kontakta oss" eyebrow="PERSONLIG HJÄLP · KUNDSERVICE" intro="Frågor om sortiment, leverans, returer eller personuppgifter? Skicka din fråga direkt via formuläret.">
+ <SupportShell title="Kontakta oss" eyebrow="PERSONLIG HJÄLP · KUNDSERVICE" intro="Frågor om sortiment, leverans, returer, personuppgifter eller upphovsrätt? Skicka din fråga direkt via formuläret.">
   <section class="norrli-support-section">
    <div class="norrli-support-section-head"><div><span class="norrli-support-kicker">SKRIV TILL OSS</span><h2>Hur kan vi hjälpa dig?</h2></div><span><MessageCircle :size="17" aria-hidden="true"/> Kontaktformulär</span></div>
    <p class="norrli-support-muted">Fyll i dina kontaktuppgifter och beskriv ditt ärende. Vi tar ännu inte emot betalda beställningar och kan därför inte ge information om verkliga leveranser eller orderstatus.</p>

@@ -6,7 +6,8 @@ export const SUPPORT_TOPICS = Object.freeze([
   ['delivery','Leverans och frakt'],
   ['returns','Returer och reklamation'],
   ['account','Mitt konto'],
-  ['privacy','Personuppgifter och integritet']
+  ['privacy','Personuppgifter och integritet'],
+  ['copyright','Upphovsrätt och innehåll']
 ])
 const allowed = new Map(SUPPORT_TOPICS)
 export function prepareSupportMessage(body = {}) {
