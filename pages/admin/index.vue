@@ -426,7 +426,7 @@ useSeoMeta({title:'Admin dashboard',robots:'noindex,nofollow'})
                 </td>
                 <td><input v-model.number="product.lead_time_days" type="number" min="0" class="admin-input tiny-input"> days</td>
                 <td><input v-model="product.active" type="checkbox"></td>
-                <td><button class="btn btn-secondary compact" @click="saveProduct(product)"><Save :size="15"/>Save</button></td>
+                <td><div class="product-row-actions"><NuxtLink :to="`/admin/products/${product.id}`" class="btn btn-primary compact">Manage</NuxtLink><button class="btn btn-secondary compact" @click="saveProduct(product)"><Save :size="15"/>Save</button></div></td>
               </tr>
             </tbody>
           </table>
