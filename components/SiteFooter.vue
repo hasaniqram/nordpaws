@@ -17,6 +17,7 @@
       </div>
       <div class="nordic-footer-column">
         <h3>Kundservice</h3>
+        <NuxtLink to="/support">Hjälpcenter & vanliga frågor</NuxtLink>
         <NuxtLink to="/contact">Kontakta oss</NuxtLink>
         <NuxtLink to="/delivery">Leveransinformation</NuxtLink>
         <NuxtLink to="/legal/shipping">Leveransvillkor</NuxtLink>
