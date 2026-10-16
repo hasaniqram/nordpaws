@@ -5,6 +5,7 @@ import {
   Truck, Home, ChevronLeft, ZoomIn, X, Ruler, Scale, Layers, Share2
 } from 'lucide-vue-next'
 import { formatSEK, type Product, type ProductVariant } from '~/data/products'
+import { HISTORY_KEY, addRecent, cleanRecent } from '~/utils/recentlyViewed.mjs'
 
 const route=useRoute()
 const config=useRuntimeConfig()
@@ -51,7 +52,7 @@ const onGalleryKeydown = (event: KeyboardEvent) => {
   if (event.key === 'ArrowLeft') { event.preventDefault(); moveImage(-1) }
   if (event.key === 'ArrowRight') { event.preventDefault(); moveImage(1) }
 }
-onMounted(load)
+onMounted(()=>{load();try{const allowed=(catalog.value?.products||[]).map(p=>p.slug);const existing=cleanRecent(JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]'),allowed);localStorage.setItem(HISTORY_KEY,JSON.stringify(addRecent(existing,product.slug,allowed)))}catch{/* Storage may be unavailable */}})
 const selectedImageIsConcept=computed(()=>
   product.images?.find(image=>image.publicUrl===selectedImage.value)?.isConcept
   ??product.primaryIsConcept??false
