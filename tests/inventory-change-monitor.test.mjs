@@ -7,7 +7,7 @@ const product={stock_status:'in_stock',stock_quantity:10,price:20000}
 const quote={currency:'SEK',unit_cost:50,fx_to_sek:1}
 test('identifies supplier cost changes and cost pressure',()=>{
  const v=detectInventoryChange(item,product,quote,now)
- assert.equal(v.changePct,10)
+ assert.ok(Math.abs(v.changePct-10)<0.000001)
  assert.equal(v.requiresReview,true)
 })
 test('flags stale stock and mismatched quantities',()=>{
