@@ -60,7 +60,7 @@ useSeoMeta({ title: 'Varukorg', robots: 'noindex,nofollow' })
 </script>
 
 <template>
-  <main class="container page-shell cart-page norrli-cart-page">
+  <main class="container page-shell cart-page norrli-cart-page norrli-phase52-cart">
     <NuxtLink to="/shop" class="text-link"><ArrowLeft :size="16" aria-hidden="true" /> Tillbaka till kollektionen</NuxtLink>
     <span class="eyebrow">NORRLI PETS · DIN VARUKORG</span>
     <h1>Din varukorg <span v-if="count" class="norrli-cart-head-count">{{count}} {{count===1 ? "artikel" : "artiklar"}}</span></h1>
@@ -75,7 +75,7 @@ useSeoMeta({ title: 'Varukorg', robots: 'noindex,nofollow' })
       <div class="norrli-cart-empty-categories"><NuxtLink to="/shop?category=Dogs">För hund <ArrowRight :size="14"/></NuxtLink><NuxtLink to="/shop?category=Cats">För katt <ArrowRight :size="14"/></NuxtLink><NuxtLink to="/shop?category=Travel">Promenad & resa <ArrowRight :size="14"/></NuxtLink></div>
     </div>
 
-    <div v-else class="cart-grid">
+    <div v-else class="cart-grid" aria-label="Varukorgens innehåll">
       <section>
         <div class="norrli-cart-lines-header"><h2>Produkter i varukorgen</h2><span>{{count}} {{count===1 ? "artikel" : "artiklar"}}</span></div>
         <div class="cart-lines">
@@ -90,7 +90,7 @@ useSeoMeta({ title: 'Varukorg', robots: 'noindex,nofollow' })
               <p>{{ formatSEK(line.price) }} / st</p>
               <div class="quantity small">
                 <button type="button" :aria-label="`Minska antal ${line.name}`" @click="setQuantity(line.key, line.quantity - 1)"><Minus :size="15" /></button>
-                <span :aria-label="`Antal: ${line.quantity}`">{{ line.quantity }}</span>
+                <output :aria-label="`Antal: ${line.quantity}`" aria-live="polite">{{ line.quantity }}</output>
                 <button type="button" :aria-label="`Öka antal ${line.name}`" :disabled="line.quantity >= 10" @click="setQuantity(line.key, line.quantity + 1)"><Plus :size="15" /></button>
               </div>
             </div>
