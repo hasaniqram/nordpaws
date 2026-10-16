@@ -1,4 +1,19 @@
 <script setup lang="ts">
+const authorized=ref(false)
+const accessChecked=ref(false)
+onMounted(async()=>{
+ try{
+  const client=useSupabaseBrowser()
+  if(!client)return
+  const {data:{session}}=await client.auth.getSession()
+  if(!session?.access_token){await navigateTo('/admin/login');return}
+  const {data:{user}}=await client.auth.getUser()
+  if(!user){await navigateTo('/admin/login');return}
+  const {data:admin,error}=await client.from('admins').select('user_id').eq('user_id',user.id).maybeSingle()
+  if(!error&&admin)authorized.value=true
+ }finally{accessChecked.value=true}
+})
+
 import {ArrowLeft,Search,ShieldCheck,Gauge,ExternalLink} from 'lucide-vue-next'
 const checks=[
  {name:'Search Console ownership',status:'manual',description:'Verify ownership of norrlipets.se directly in Google Search Console. Domain verification is not performed by this page.',url:'https://search.google.com/search-console'},
@@ -12,6 +27,6 @@ const checks=[
 ]
 useSeoMeta({title:'SEO & marketing readiness',robots:'noindex,nofollow'})
 </script>
-<template><main class="admin-shell"><header class="admin-topbar"><NorrliLogo compact/><NuxtLink to="/admin" class="btn btn-secondary compact"><ArrowLeft :size="16"/> Admin</NuxtLink></header><section class="seo-wrap"><span class="eyebrow"><Search :size="16"/> PHASE 7.2 · PRE-LAUNCH</span><h1>SEO & marketing readiness</h1><p>Evidence-based preparation for organic discovery. Implemented software checks are distinct from external verification and actual performance results.</p><div class="seo-notice"><ShieldCheck :size="20"/> No analytics events, email campaigns, Merchant Center feeds or live payment flows are activated.</div>
-<div class="seo-grid"><article v-for="check in checks" :key="check.name"><div class="seo-card-head"><h2>{{check.name}}</h2><span>{{check.status}}</span></div><p>{{check.description}}</p><a v-if="check.url" :href="check.url" target="_blank" rel="noopener noreferrer">Open verification resource <ExternalLink :size="14" aria-hidden="true"/></a></article></div><div class="seo-next"><Gauge :size="20"/><div><strong>Next validation</strong><p>Run Search Console verification, PageSpeed Insights and mobile browser checks against the deployed domain. Record actual measurements and findings before declaring launch readiness.</p></div></div></section></main></template>
+<template><main v-if="authorized" class="admin-shell"><header class="admin-topbar"><NorrliLogo compact/><NuxtLink to="/admin" class="btn btn-secondary compact"><ArrowLeft :size="16"/> Admin</NuxtLink></header><section class="seo-wrap"><span class="eyebrow"><Search :size="16"/> PHASE 7.2 · PRE-LAUNCH</span><h1>SEO & marketing readiness</h1><p>Evidence-based preparation for organic discovery. Implemented software checks are distinct from external verification and actual performance results.</p><div class="seo-notice"><ShieldCheck :size="20"/> No analytics events, email campaigns, Merchant Center feeds or live payment flows are activated.</div>
+<div class="seo-grid"><article v-for="check in checks" :key="check.name"><div class="seo-card-head"><h2>{{check.name}}</h2><span>{{check.status}}</span></div><p>{{check.description}}</p><a v-if="check.url" :href="check.url" target="_blank" rel="noopener noreferrer">Open verification resource <ExternalLink :size="14" aria-hidden="true"/></a></article></div><div class="seo-next"><Gauge :size="20"/><div><strong>Next validation</strong><p>Run Search Console verification, PageSpeed Insights and mobile browser checks against the deployed domain. Record actual measurements and findings before declaring launch readiness.</p></div></div></section></main><section v-else class="admin-center" role="status">{{accessChecked ? "Administrator access required" : "Verifying administrator access…"}}</section></template>
 <style scoped>.seo-wrap{max-width:1080px;padding:36px 22px 60px;margin:auto}.seo-wrap h1{font:500 clamp(32px,4vw,49px)/1.1 Georgia,serif;color:#224b35}.seo-wrap>p{color:#627866;line-height:1.7}.seo-notice,.seo-next{display:flex;gap:12px;border:1px solid #cfdfca;background:#edf4e9;border-radius:14px;padding:17px;color:#2b583d;margin:20px 0}.seo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.seo-grid article{border:1px solid #dce8d7;background:#fff;border-radius:16px;padding:23px}.seo-card-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}.seo-card-head h2{font:500 23px Georgia,serif;color:#214a34;margin:0}.seo-card-head span{font-size:11px;text-transform:uppercase;letter-spacing:.05em;background:#edf3ea;color:#396246;padding:6px 9px;border-radius:20px}.seo-grid p,.seo-next p{font-size:13px;line-height:1.7;color:#627664}.seo-grid a{display:inline-flex;align-items:center;gap:5px;color:#2c6642;font-size:13px;text-decoration:underline;min-height:44px}.seo-grid a:focus-visible{outline:3px solid #387d52;outline-offset:3px}@media(max-width:680px){.seo-grid{grid-template-columns:1fr}.seo-wrap{padding:20px 15px}}</style>
