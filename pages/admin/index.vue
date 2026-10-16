@@ -347,6 +347,7 @@ useSeoMeta({title:'Admin dashboard',robots:'noindex,nofollow'})
         <NuxtLink to="/admin/launch-gate" class="btn btn-secondary compact">Launch gate</NuxtLink>
         <NuxtLink to="/admin/launch-qa" class="btn btn-secondary compact">Launch QA & alerts</NuxtLink>
         <NuxtLink to="/admin/commerce-acceptance" class="btn btn-secondary compact">Commerce acceptance</NuxtLink>
+        <NuxtLink to="/admin/shipping-sandbox" class="btn btn-secondary compact">Shipping sandbox</NuxtLink>
         <NuxtLink to="/admin/review-calendar" class="btn btn-secondary compact">Review deadlines</NuxtLink>
         <NuxtLink to="/admin/reminders" class="btn btn-secondary compact">Reminder settings</NuxtLink>
         <NuxtLink to="/admin/decisions" class="btn btn-secondary compact">Product Decision Board</NuxtLink>
