@@ -1,7 +1,7 @@
 export default defineNuxtConfig({
   compatibilityDate: '2026-10-01',
   devtools: { enabled: false },
-  css: ['~/assets/css/main.css', '~/assets/css/enhancements.css', '~/assets/css/admin.css', '~/assets/css/nordic.css', '~/assets/css/storefront-v2.css', '~/assets/css/shopping-v2.css', '~/assets/css/customer-phase3.css', '~/assets/css/operations-phase4.css', '~/assets/css/integration-phase6.css', '~/assets/css/support-center.css', '~/assets/css/about-story.css', '~/assets/css/release-gate.css', '~/assets/css/premium-discovery.css', '~/assets/css/storefront-phase51.css', '~/assets/css/accessibility.css'],
+  css: ['~/assets/css/main.css', '~/assets/css/enhancements.css', '~/assets/css/admin.css', '~/assets/css/nordic.css', '~/assets/css/storefront-v2.css', '~/assets/css/shopping-v2.css', '~/assets/css/customer-phase3.css', '~/assets/css/operations-phase4.css', '~/assets/css/integration-phase6.css', '~/assets/css/support-center.css', '~/assets/css/about-story.css', '~/assets/css/release-gate.css', '~/assets/css/storefront-phase51.css', '~/assets/css/premium-discovery.css', '~/assets/css/accessibility.css'],
   app: {
     head: {
       htmlAttrs: { lang: 'sv' },
