@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { Heart, ArrowLeft, ArrowRight, Trash2 } from 'lucide-vue-next'
 import type { Product } from '~/data/products'
+import { recommendFromFavorites } from '~/utils/privacyRecommendations.mjs'
 const { favorites, load, clear } = useNorrliFavorites()
 const { data: catalog, status } = await useFetch<{ products: Product[]; source: string }>('/api/products')
 const saved = computed(() => (catalog.value?.products || [])
   .filter(p => favorites.value.includes(p.slug))
   .sort((a,b) => favorites.value.indexOf(b.slug) - favorites.value.indexOf(a.slug)))
+const recommended = computed(() => recommendFromFavorites(catalog.value?.products||[], favorites.value,4))
 onMounted(load)
 const confirmClear = () => {
   if (import.meta.client && window.confirm('Vill du verkligen ta bort alla dina sparade favoriter?')) clear()
@@ -34,6 +36,7 @@ useSeoMeta({ title: 'Mina favoriter', description: 'Dina sparade produktidéer h
       <div class="nordic-featured-grid norrli-saved-grid">
         <ProductCard v-for="product in saved" :key="product.id" :product="product" />
       </div>
+      <section v-if="recommended.length" class="norrli-private-recommendations" aria-labelledby="norrli-for-you"><span class="eyebrow">UTVALT EFTER DINA FAVORITER</span><h2 id="norrli-for-you">Fler idéer att upptäcka</h2><p>Förslagen baseras bara på favoriter som sparats i din webbläsare. Ingen personlig spårning används.</p><div class="nordic-featured-grid norrli-saved-grid"><ProductCard v-for="product in recommended" :key="product.id" :product="product"/></div></section>
       <NuxtLink to="/shop" class="norrli-keep-exploring">Utforska fler produktidéer <ArrowRight :size="17" aria-hidden="true" /></NuxtLink>
     </template>
     <div v-else class="nordic-favorites-empty">
