@@ -342,6 +342,7 @@ useSeoMeta({title:'Admin dashboard',robots:'noindex,nofollow'})
         <NuxtLink to="/admin/readiness" class="btn btn-secondary compact">Supplier readiness</NuxtLink>
         <NuxtLink to="/admin/operations-audit" class="btn btn-secondary compact">Operations audit</NuxtLink>
         <NuxtLink to="/admin/supplier-compliance" class="btn btn-secondary compact">Supplier compliance</NuxtLink>
+        <NuxtLink to="/admin/product-safety" class="btn btn-secondary compact">Product safety</NuxtLink>
         <NuxtLink to="/admin/review-calendar" class="btn btn-secondary compact">Review deadlines</NuxtLink>
         <NuxtLink to="/admin/reminders" class="btn btn-secondary compact">Reminder settings</NuxtLink>
         <NuxtLink to="/admin/decisions" class="btn btn-secondary compact">Product Decision Board</NuxtLink>
