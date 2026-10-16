@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ArrowRight, TreePine, Leaf, PawPrint, Heart, ShieldCheck, ArrowUpRight, Mail, Sparkles, Sofa, Compass, Scissors, Soup } from 'lucide-vue-next'
 import { COLLECTION_NEEDS, matchesNeed } from '~/utils/storefrontDiscovery.mjs'
+import { organizationSchema, websiteSchema } from '~/utils/editorialSeo.mjs'
 import type { Product } from '~/data/products'
 
 useSeoMeta({
@@ -8,6 +9,7 @@ useSeoMeta({
   description: 'Norrli Pets – en nordiskt inspirerad kollektion av produktidéer för ett enklare och gladare liv med hund och katt.',
   ogTitle: 'Norrli Pets · Nära naturen, nära varandra'
 })
+useHead({script:[{type:'application/ld+json',innerHTML:JSON.stringify(organizationSchema())},{type:'application/ld+json',innerHTML:JSON.stringify(websiteSchema())}]})
 const config=useRuntimeConfig()
 const previewOnly=computed(()=>!config.public.checkoutEnabled)
 const { data: catalog } = await useFetch<{ products: Product[]; source: string }>('/api/products')
