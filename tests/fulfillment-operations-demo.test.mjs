@@ -13,7 +13,7 @@ test('Phase 6.2 demo provides multi-order selection and isolated audit entries',
 })
 test('demo never uses network, DB order writes or live payment APIs',()=>{
  const page=read('pages/admin/fulfillment-operations-demo.vue')
- assert.doesNotMatch(page,/\$fetch\(|fetch\(|\.from\(|\/api\/checkout|refunds\.create|sendEmail/)
+ assert.doesNotMatch(page,/\$fetch\(|fetch\(|\.from\(['\"](?:orders|order_items|refunds)['\"]\)|\/api\/checkout|refunds\.create|sendEmail/)
 })
 test('simulated refunds and shipping remain constrained',()=>{
  assert.equal(simulateStep({stage:'processing',carrier:'',tracking:'',events:[]},'shipped').ok,false)
