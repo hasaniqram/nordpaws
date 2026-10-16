@@ -1,0 +1,26 @@
+<script setup lang="ts">
+import {ArrowLeft,ClipboardCheck,ShieldAlert} from 'lucide-vue-next'
+const authorized=ref(false),checked=ref(false)
+onMounted(async()=>{try{const c=useSupabaseBrowser();if(!c)return;const {data:{user}}=await c.auth.getUser();if(!user){await navigateTo('/admin/login');return}const {data:admin,error}=await c.from('admins').select('user_id').eq('user_id',user.id).maybeSingle();authorized.value=!error&&!!admin}finally{checked.value=true}})
+const checks=[
+ {priority:'P0',area:'Security',title:'Anonymous direct-link access',steps:'Open protected admin URLs in private browsing, confirm no privileged data appears and no API writes occur.'},
+ {priority:'P0',area:'Security',title:'Non-admin and RLS access',steps:'Test separate non-admin account against orders, supplier records and admin APIs; record denied responses.'},
+ {priority:'P0',area:'Checkout',title:'Test-only transaction boundary',steps:'Confirm production checkout stays disabled, live Stripe keys are rejected and no real payment is initiated.'},
+ {priority:'P0',area:'Compliance',title:'Product and supplier evidence',steps:'Review actual documents, supplier traceability, GPSR obligations, inventory dates and legal claims for each item.'},
+ {priority:'P1',area:'Customer',title:'Search, favorites and cart',steps:'Test Swedish search, sorting, variants, responsive cart and recently-viewed deletion across desktop and mobile.'},
+ {priority:'P1',area:'Accessibility',title:'Keyboard and assistive technology',steps:'Check focus order, dialog escape, aria announcements, reduced motion and 320px layout.'},
+ {priority:'P1',area:'Performance',title:'LCP, CLS and INP',steps:'Measure production pages with PageSpeed Insights or Lighthouse, recording real device and date.'},
+ {priority:'P1',area:'Operations',title:'Delivery and returns',steps:'Walk through fictional fulfillment and refund scenarios; separately verify actual carrier and refund capabilities before launch.'}
+]
+const state=reactive<Record<string,string>>({})
+const notes=reactive<Record<string,string>>({})
+const exportEvidence=()=>{
+ const report={project:'Norrli Pets',releaseGate:'NOT APPROVED',generatedAt:new Date().toISOString(),checks:checks.map(x=>({...x,result:state[x.title]||'not_run',notes:notes[x.title]||''}))}
+ const blob=new Blob([JSON.stringify(report,null,2)],{type:'application/json'})
+ const url=URL.createObjectURL(blob)
+ const a=document.createElement('a');a.href=url;a.download='norrli-release-qa-evidence.json';a.click();URL.revokeObjectURL(url)
+}
+useSeoMeta({title:'Release QA evidence',robots:'noindex,nofollow'})
+</script>
+<template><main v-if="authorized" class="admin-shell"><header class="admin-topbar"><NorrliLogo compact/><NuxtLink to="/admin/production-audit" class="btn btn-secondary compact"><ArrowLeft :size="16"/> Audit</NuxtLink></header><section class="qa-wrap"><span class="eyebrow"><ClipboardCheck :size="16"/> PHASE 8.4 · MANUAL QA</span><h1>Browser QA & release evidence</h1><p>Document observations from real tests. Entries are local to this page and are not independent proof of testing. Export your notes before leaving.</p><div class="qa-warning"><ShieldAlert :size="20"/> Commercial release: NOT APPROVED. This page cannot enable checkout or marketing.</div><article v-for="item in checks" :key="item.title" class="qa-case"><div><small>{{item.priority}} · {{item.area}}</small><h2>{{item.title}}</h2><p>{{item.steps}}</p></div><label>Result<select v-model="state[item.title]"><option value="not_run">Not run</option><option value="pass">Pass — evidence recorded</option><option value="fail">Fail / blocker</option><option value="blocked">Blocked / unavailable</option></select></label><label>Evidence / tester notes<textarea v-model="notes[item.title]" maxlength="2000" rows="3" placeholder="Device, date, observations, evidence location and remaining issues"/></label></article><button class="btn btn-secondary" type="button" @click="exportEvidence">Export local QA report (JSON)</button><p>Use the evidence file in your internal review. No automatic release approval is granted.</p></section></main><section v-else role="status" class="qa-wrap">{{checked?'Administrator access required':'Verifying administrator access…'}}</section></template>
+<style scoped>.qa-wrap{max-width:930px;margin:36px auto;padding:0 20px 60px}.qa-wrap h1{font:500 clamp(32px,4vw,48px) Georgia,serif;color:#244d37}.qa-wrap>p,.qa-case p{line-height:1.7;color:#607464}.qa-warning{display:flex;gap:10px;background:#f6eee7;border:1px solid #ead1b6;border-radius:13px;padding:16px;margin:20px 0;color:#7b5139}.qa-case{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:12px;padding:21px;background:#fff;border:1px solid #dae7d8;border-radius:16px;margin:14px 0}.qa-case h2{font:500 23px Georgia,serif;color:#244d37;margin:6px 0}.qa-case small{color:#8b634b;font-weight:800}.qa-case label{display:grid;gap:7px;color:#385b43;font-size:12px}.qa-case label:last-child{grid-column:1/-1}.qa-case select,.qa-case textarea{width:100%;padding:11px;border:1px solid #bdd1c1;border-radius:10px}.qa-case :is(select,textarea):focus-visible{outline:3px solid #3b8556;outline-offset:2px}@media(max-width:680px){.qa-case{grid-template-columns:1fr}.qa-case label:last-child{grid-column:auto}}</style>
