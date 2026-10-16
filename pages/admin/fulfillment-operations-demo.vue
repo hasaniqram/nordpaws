@@ -1,4 +1,19 @@
 <script setup lang="ts">
+const authorized=ref(false)
+const accessChecked=ref(false)
+onMounted(async()=>{
+ try{
+  const client=useSupabaseBrowser()
+  if(!client)return
+  const {data:{session}}=await client.auth.getSession()
+  if(!session?.access_token){await navigateTo('/admin/login');return}
+  const {data:{user}}=await client.auth.getUser()
+  if(!user){await navigateTo('/admin/login');return}
+  const {data:admin,error}=await client.from('admins').select('user_id').eq('user_id',user.id).maybeSingle()
+  if(!error&&admin)authorized.value=true
+ }finally{accessChecked.value=true}
+})
+
 import { ArrowLeft, ClipboardList, ShieldCheck, RotateCcw } from 'lucide-vue-next'
 import { SIMULATION_STEPS,simulateStep,classifyDeliveryIssue,evaluateRefundRequest } from '~/utils/shippingSimulation.mjs'
 type DemoOrder={id:string;stage:string;carrier:string;tracking:string;events:{status:string;at:string}[];issue:string;refundReason:string;refundAmount:number}
@@ -14,7 +29,7 @@ const refund=()=>{const outcome=evaluateRefundRequest({reason:current.value.refu
 const reset=()=>{orders.value=initial();selectedId.value='NP-DEMO-001';message='All fictional orders reset.'}
 useSeoMeta({title:'Fulfillment operations demo',robots:'noindex,nofollow'})
 </script>
-<template><main class="admin-shell"><header class="admin-topbar"><NorrliLogo compact/><NuxtLink to="/admin" class="btn btn-secondary compact"><ArrowLeft :size="16"/> Dashboard</NuxtLink></header>
+<template><main v-if="authorized" class="admin-shell"><header class="admin-topbar"><NorrliLogo compact/><NuxtLink to="/admin" class="btn btn-secondary compact"><ArrowLeft :size="16"/> Dashboard</NuxtLink></header>
 <section class="fo-wrap"><span class="eyebrow"><ClipboardList :size="16"/> PHASE 6.2 · OFFLINE SIMULATION</span><h1>Fulfillment operations workspace</h1><p>Three fictional orders let you rehearse operational handoffs and exception handling. No customer data is loaded and nothing is saved to your production database.</p><div class="fo-note"><ShieldCheck :size="20"/> Demonstration only: no order updates, shipping labels, customer messages or refunds.</div>
 <div class="fo-layout"><aside class="fo-list" aria-label="Fictional orders"><button v-for="item in orders" :key="item.id" type="button" :class="{selected:selectedId===item.id}" :aria-pressed="selectedId===item.id" @click="selectedId=item.id"><strong>{{item.id}}</strong><small>{{item.stage}}</small></button><button class="fo-reset" type="button" @click="reset"><RotateCcw :size="15"/> Reset demo</button></aside>
 <div class="fo-panel"><h2>{{current.id}}</h2><p>Current milestone: <strong>{{current.stage}}</strong></p><div class="fo-progress"><span v-for="step in SIMULATION_STEPS" :key="step" :class="{active:SIMULATION_STEPS.indexOf(current.stage)>=SIMULATION_STEPS.indexOf(step)}">{{step}}</span></div>
@@ -22,5 +37,5 @@ useSeoMeta({title:'Fulfillment operations demo',robots:'noindex,nofollow'})
 <h3>Delivery exception</h3><div class="fo-grid"><label>Scenario<select v-model="current.issue"><option value="">Choose an exception</option><option value="delay">Delayed</option><option value="lost">Missing</option><option value="damaged">Damaged</option><option value="return">Return requested</option></select></label><button class="btn btn-secondary compact" type="button" :disabled="!current.issue" @click="markIssue">Add test exception</button></div>
 <h3>Return & refund request</h3><div class="fo-grid"><label>Reason<select v-model="current.refundReason"><option value="return">Return</option><option value="damaged">Damaged</option><option value="lost">Missing</option><option value="other">Other</option></select></label><label>Example amount SEK<input v-model.number="current.refundAmount" type="number" min="0" max="499"/></label></div><button class="btn btn-secondary compact" type="button" @click="refund">Validate & log simulated request</button>
 <h3>Local audit timeline</h3><ol class="fo-events"><li v-for="(event,i) in [...current.events].reverse()" :key="i"><strong>{{event.status}}</strong><span>{{new Date(event.at).toLocaleString('sv-SE')}}</span></li></ol><p v-if="message" class="fo-message" role="status">{{message}}</p></div></div>
-</section></main></template>
+</section></main><section v-else class="admin-center" role="status">{{accessChecked ? "Administrator access required" : "Verifying administrator access…"}}</section></template>
 <style scoped>.fo-wrap{max-width:1160px;margin:36px auto;padding:0 22px 55px}.fo-wrap h1{font:500 clamp(32px,4vw,48px) Georgia,serif;color:#224b35}.fo-wrap>p{line-height:1.7;color:#617866}.fo-note{display:flex;gap:12px;background:#edf4e9;padding:16px;border:1px solid #d2e0cd;border-radius:14px;margin:20px 0}.fo-layout{display:grid;grid-template-columns:245px minmax(0,1fr);gap:18px}.fo-list,.fo-panel{background:white;border:1px solid #dbe7d8;border-radius:18px;padding:20px}.fo-list{align-self:start;display:grid;gap:8px}.fo-list button{display:grid;gap:5px;text-align:left;padding:14px;border:1px solid #dce7d8;border-radius:12px;background:#f8faf5;cursor:pointer;min-height:44px}.fo-list button.selected{background:#e8f1e6;border-color:#57966c}.fo-list small{color:#697f6b}.fo-panel h2{font:500 28px Georgia,serif;color:#204c36}.fo-panel h3{margin:26px 0 12px;font:500 22px Georgia,serif;color:#204c36}.fo-progress{display:flex;flex-wrap:wrap;gap:7px;margin:20px 0}.fo-progress span{padding:8px;border-radius:8px;font-size:11px;background:#eef0ec;color:#738273}.fo-progress span.active{background:#dbeddb;color:#20563b;font-weight:800}.fo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0}.fo-grid label{display:grid;gap:6px;font-size:13px}.fo-grid input,.fo-grid select{width:100%;padding:11px;border:1px solid #cbdaca;border-radius:10px}.fo-grid button{align-self:end;min-height:44px}.fo-events{padding-left:20px}.fo-events li{padding:9px 0;border-bottom:1px solid #e8ece6;font-size:13px}.fo-events span{display:block;color:#718372;font-size:11px}.fo-message{padding:12px;background:#edf4e9;border-radius:10px}.fo-list button:focus-visible,.fo-panel button:focus-visible{outline:3px solid #25734b;outline-offset:3px}@media(max-width:740px){.fo-layout,.fo-grid{grid-template-columns:1fr}.fo-list{display:flex;flex-wrap:wrap}.fo-list button{flex:1 1 135px}}</style>
