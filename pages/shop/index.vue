@@ -89,7 +89,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <main class="container page-shell norrli-collection">
+  <main class="container page-shell norrli-collection norrli-phase51">\n    <a class="norrli-skip-results" href="#norrli-products">Hoppa till produkterna</a>
     <div class="shop-title norrli-shop-intro">
       <div>
         <span class="eyebrow">NORRLI PETS · KOLLEKTION</span>
@@ -184,7 +184,7 @@ useSeoMeta({
       </div>
     </section>
 
-    <div v-if="status === 'pending'" class="catalog-state" role="status">Laddar kollektionen…</div>
+    <div id="norrli-products" tabindex="-1" class="norrli-result-announcement" role="status" aria-live="polite">{{ status === 'pending' ? 'Söker produkter…' : `${visible.length} produktidéer visas` }}</div>\n    <div v-if="status === 'pending'" class="catalog-state" role="status">Laddar kollektionen…</div>
     <div v-else-if="status === 'error'" class="catalog-state" role="alert">
       Sortimentet kunde inte laddas just nu. Försök igen senare.
     </div>
