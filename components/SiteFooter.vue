@@ -23,6 +23,7 @@
         <NuxtLink to="/legal/shipping">Leveransvillkor</NuxtLink>
         <NuxtLink to="/legal/returns">Returer och ångerrätt</NuxtLink>
         <NuxtLink to="/legal/privacy">Integritetspolicy</NuxtLink>
+        <AnalyticsPreferences />
         <NuxtLink to="/legal/terms">Köpvillkor</NuxtLink>
         <NuxtLink to="/legal/copyright">Upphovsrätt och innehåll</NuxtLink>
       </div>
