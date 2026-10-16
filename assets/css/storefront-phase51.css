@@ -1,0 +1,23 @@
+/* Phase 5.1: accessible Scandinavian collection and mobile shopping refinements. */
+.norrli-phase51 .norrli-skip-results{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}
+.norrli-phase51 .norrli-skip-results:focus{position:relative;left:auto;top:auto;display:inline-flex;width:auto;height:auto;overflow:visible;padding:12px 18px;margin:8px 0;border-radius:12px;background:#214b36;color:#fff;z-index:20}
+.norrli-phase51 .norrli-result-announcement{font-size:13px;font-weight:800;letter-spacing:.015em;color:#315c42;margin:20px 0 14px;scroll-margin-top:110px}
+.norrli-phase51 :is(button,a,input,select):focus-visible,.norrli-cart-page :is(button,a,input,select):focus-visible{outline:3px solid #377e57;outline-offset:4px}
+.norrli-phase51 .norrli-collection-grid{align-items:stretch}
+.norrli-phase51 .norrli-premium-product-cell{display:flex;flex-direction:column;min-width:0}
+.norrli-phase51 .norrli-premium-product-cell > :first-child{flex:1}
+@media(max-width:760px){
+ .norrli-phase51 .norrli-discovery{padding:18px 14px;border-radius:20px;background:#f3f5ee}
+ .norrli-phase51 .norrli-discovery-primary{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+ .norrli-phase51 .norrli-selects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .norrli-phase51 .norrli-select{min-width:0}
+ .norrli-phase51 .norrli-select select{min-width:0;width:100%;font-size:14px}
+ .norrli-phase51 .norrli-filter-chips{display:flex;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;padding:4px 0 10px}
+ .norrli-phase51 .filter-chip{flex:none;scroll-snap-align:start;min-height:44px}
+ .norrli-phase51 .norrli-collection-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .norrli-phase51 .norrli-premium-compare-toggle{min-height:44px;font-size:12px}
+ .norrli-phase51 .norrli-premium-compare-bar{left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));width:auto;max-width:unset;flex-wrap:wrap;gap:10px;box-shadow:0 12px 36px rgba(27,61,44,.2)}
+ .norrli-phase51 .norrli-premium-compare-bar > div{display:flex;flex-wrap:wrap;gap:8px}
+}
+@media(max-width:385px){.norrli-phase51 .norrli-collection-grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.norrli-phase51 *, .norrli-phase51 *::before,.norrli-phase51 *::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
