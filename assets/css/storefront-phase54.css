@@ -1,0 +1,8 @@
+/* Phase 5.4 privacy-first discovery */
+.norrli-favorites .norrli-private-recommendations{margin-top:48px;padding:28px;border:1px solid #dae5d5;border-radius:22px;background:#f5f7f0}
+.norrli-favorites .norrli-private-recommendations h2{font:500 clamp(24px,3vw,36px)/1.2 Georgia,serif;color:#234b37;margin:6px 0}
+.norrli-favorites .norrli-private-recommendations p{color:#607662;line-height:1.65;font-size:13px}
+.norrli-favorites .norrli-recent-heading{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.norrli-favorites .norrli-recent-heading button{min-height:44px;background:#fff;border:1px solid #cadccb;border-radius:14px;padding:10px 16px;color:#275a3f;font-weight:750;cursor:pointer}
+.norrli-favorites .norrli-recent-heading button:focus-visible{outline:3px solid #377e57;outline-offset:3px}
+@media(max-width:600px){.norrli-favorites .norrli-private-recommendations{padding:16px;margin-top:30px}}
