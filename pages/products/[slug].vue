@@ -99,7 +99,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <main class="nordic-detail-main">
+  <main class="nordic-detail-main norrli-phase52-detail">
     <div class="container nordic-crumbs" aria-label="Brödsmulenavigering">
       <NuxtLink to="/"><Home :size="14"/> Start</NuxtLink>
       <ChevronRight :size="13"/>
@@ -115,7 +115,7 @@ useSeoMeta({
         <div class="nordic-detail-photo" :style="{background:product.gradient}">
           <span class="nordic-detail-photo-tag"><Leaf :size="14"/> NORRLI PETS COLLECTION</span>
           <img v-if="selectedImage&&!imageFailed" :src="selectedImage" :alt="product.name"
-            width="850" height="850" decoding="async" fetchpriority="high" @error="imageFailed=true"/>
+            width="850" height="850" decoding="async" fetchpriority="high" loading="eager" @error="imageFailed=true"/>
           <span v-else class="nordic-detail-emoji">{{product.emoji}}</span>
           <button class="nordic-detail-heart" type="button"
             :aria-label="has(product.slug)?'Ta bort favorit':'Lägg till favorit'"
@@ -139,7 +139,7 @@ useSeoMeta({
             :aria-pressed="selectedImage === imageUrl"
             @click="selectedImage = imageUrl">
             <img :src="imageUrl" :alt="product.images?.find(image => image.publicUrl === imageUrl)?.altText || product.name"
-              loading="lazy" width="100" height="100" />
+              loading="lazy" decoding="async" width="100" height="100" />
           </button>
         </div>
         <p v-if="galleryImages.length > 1" class="norrli-gallery-position" aria-live="polite">
@@ -174,7 +174,7 @@ useSeoMeta({
           <strong>Välj alternativ</strong>
           <div class="nordic-detail-option-row">
             <button v-for="variant in product.variants" :key="variant.id" type="button"
-              :class="{active:selectedVariantId===variant.id}"
+              :class="{active:selectedVariantId===variant.id}" :aria-pressed="selectedVariantId===variant.id"
               :disabled="!previewOnly&&variant.stockQuantity===0"
               @click="selectedVariantId=variant.id">
               <span>{{variant.name}}</span>
