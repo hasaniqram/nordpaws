@@ -2,13 +2,17 @@
 import { Heart, ArrowLeft, ArrowRight, Trash2 } from 'lucide-vue-next'
 import type { Product } from '~/data/products'
 import { recommendFromFavorites } from '~/utils/privacyRecommendations.mjs'
+import { HISTORY_KEY, cleanRecent } from '~/utils/recentlyViewed.mjs'
 const { favorites, load, clear } = useNorrliFavorites()
 const { data: catalog, status } = await useFetch<{ products: Product[]; source: string }>('/api/products')
 const saved = computed(() => (catalog.value?.products || [])
   .filter(p => favorites.value.includes(p.slug))
   .sort((a,b) => favorites.value.indexOf(b.slug) - favorites.value.indexOf(a.slug)))
 const recommended = computed(() => recommendFromFavorites(catalog.value?.products||[], favorites.value,4))
-onMounted(load)
+const recentlyViewed=ref<string[]>([])
+const recentProducts=computed(()=>(catalog.value?.products||[]).filter(p=>recentlyViewed.value.includes(p.slug)).sort((a,b)=>recentlyViewed.value.indexOf(a.slug)-recentlyViewed.value.indexOf(b.slug)))
+const clearRecent=()=>{recentlyViewed.value=[];try{localStorage.removeItem(HISTORY_KEY)}catch{/* no storage */}}
+onMounted(()=>{load();try{recentlyViewed.value=cleanRecent(JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]'),(catalog.value?.products||[]).map(p=>p.slug))}catch{/* no storage */}})
 const confirmClear = () => {
   if (import.meta.client && window.confirm('Vill du verkligen ta bort alla dina sparade favoriter?')) clear()
 }
@@ -45,5 +49,6 @@ useSeoMeta({ title: 'Mina favoriter', description: 'Dina sparade produktidéer h
       <p>Tryck på hjärtat vid en produkt för att spara den här.</p>
       <NuxtLink to="/shop" class="nordic-pill-button"><ArrowLeft :size="16" aria-hidden="true" /> Utforska kollektionen</NuxtLink>
     </div>
+    <section v-if="recentProducts.length" class="norrli-private-recommendations" aria-labelledby="recently-viewed-title"><div class="norrli-recent-heading"><h2 id="recently-viewed-title">Nyligen visade produktidéer</h2><button type="button" @click="clearRecent">Rensa historiken</button></div><p>Endast sparat i denna webbläsare. Du kan radera historiken när du vill.</p><div class="nordic-featured-grid norrli-saved-grid"><ProductCard v-for="product in recentProducts" :key="product.id" :product="product"/></div></section>
   </main>
 </template>
